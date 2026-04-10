@@ -1,7 +1,8 @@
 import './css/app.css'
 import { ReactElement } from 'react'
 import { client } from './client'
-import Layout from '~/layouts/default'
+import DefaultLayout from '~/layouts/default'
+import AuthLayout from '~/layouts/auth-layout'
 import { Data } from '@generated/data'
 import { createRoot } from 'react-dom/client'
 import { createInertiaApp } from '@inertiajs/react'
@@ -13,6 +14,8 @@ const appName = import.meta.env.VITE_APP_NAME || 'AdonisJS'
 createInertiaApp({
   title: (title) => (title ? `${title} - ${appName}` : appName),
   resolve: (name) => {
+    const Layout = name.startsWith('auth/') ? AuthLayout : DefaultLayout
+
     return resolvePageComponent(
       `./pages/${name}.tsx`,
       import.meta.glob('./pages/**/*.tsx'),

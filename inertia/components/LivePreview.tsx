@@ -1,4 +1,5 @@
 import { Users, Sun, AlertTriangle, ArrowRight } from "lucide-react";
+import { Link } from "@adonisjs/inertia/react";
 import "../css/components/LivePreview.css";
 
 const stats = [
@@ -29,9 +30,9 @@ const LivePreview = () => {
             </div>
           ))}
         </div>
-        <a href="#" className="sf-live-preview__details-link">
+        <Link route="session.create" className="sf-live-preview__details-link">
           Détails complets <ArrowRight className="sf-live-preview__details-icon" />
-        </a>
+        </Link>
       </div>
 
       <div className="sf-live-preview__alert">
@@ -41,9 +42,9 @@ const LivePreview = () => {
             Connexion requise pour consulter les détails des alertes de sécurité et recevoir des notifications push.
           </p>
         </div>
-        <a href="#" className="sf-live-preview__alert-link">
+        <Link route="session.create" className="sf-live-preview__alert-link">
           S'identifier
-        </a>
+        </Link>
       </div>
     </section>
   );

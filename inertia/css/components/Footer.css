@@ -134,6 +134,32 @@
   color: hsl(var(--foreground));
 }
 
+.sf-auth-footer {
+  border-top: 1px solid hsl(var(--border));
+  background-color: hsl(var(--background));
+}
+
+.sf-auth-footer__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.sf-auth-footer__link {
+  color: hsl(var(--secondary));
+  font-weight: 600;
+  transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sf-auth-footer__link:hover {
+  color: hsl(var(--foreground));
+}
+
 @media (min-width: 768px) {
   .sf-footer__grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -145,5 +171,10 @@
 
   .sf-footer__bottom-links {
     margin-top: 0;
+  }
+
+  .sf-auth-footer__container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
 }

@@ -1,5 +1,13 @@
 import { Zap } from "lucide-react";
+import { Link } from "@adonisjs/inertia/react";
 import "../css/components/Footer.css";
+
+const navLinks = [
+  { label: "Programme", href: "#" },
+  { label: "Plan Interactif", href: "#" },
+  { label: "Infos Pratiques", href: "#" },
+  { label: "Se Connecter", route: "session.create" as const },
+];
 
 const Footer = () => {
   return (
@@ -21,9 +29,15 @@ const Footer = () => {
           <div>
             <h4 className="sf-footer__heading">Navigation</h4>
             <ul className="sf-footer__list">
-              {["Programme", "Plan Interactif", "Infos Pratiques", "Se Connecter"].map((l) => (
-                <li key={l}>
-                  <a href="#" className="sf-footer__link">{l}</a>
+              {navLinks.map((link) => (
+                <li key={link.label}>
+                  {"route" in link ? (
+                    <Link route={link.route} className="sf-footer__link">
+                      {link.label}
+                    </Link>
+                  ) : (
+                    <a href={link.href} className="sf-footer__link">{link.label}</a>
+                  )}
                 </li>
               ))}
             </ul>
