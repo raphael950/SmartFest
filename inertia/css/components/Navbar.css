@@ -1,0 +1,57 @@
+.sf-navbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 50;
+  border-bottom: 1px solid hsl(var(--border));
+  background-color: hsl(var(--background) / 0.8);
+  backdrop-filter: blur(12px);
+}
+
+.sf-navbar__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 3.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin: 0;
+}
+
+.sf-navbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sf-navbar__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  background-color: hsl(var(--secondary));
+}
+
+.sf-navbar__logo-icon {
+  width: 1rem;
+  height: 1rem;
+  color: hsl(var(--secondary-foreground));
+}
+
+.sf-navbar__title {
+  color: hsl(var(--foreground));
+  font-weight: 700;
+}
+
+.sf-navbar__login-btn {
+  border-color: hsl(var(--secondary));
+  color: hsl(var(--secondary));
+}
+
+.sf-navbar__login-btn:hover {
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
+}
