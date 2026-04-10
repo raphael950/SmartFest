@@ -1,69 +1,148 @@
 import { Form } from '@adonisjs/inertia/react'
+import { useMemo, useState } from 'react'
+import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react'
 
 export default function Signup() {
-  return (
-    <div className="form-container">
-      <div>
-        <h1> Signup </h1>
-        <p>Enter your details below to create your account</p>
-      </div>
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirm, setShowConfirm] = useState(false)
+  const [password, setPassword] = useState('')
 
-      <div>
+  // Password strength calc
+  // useMemo() to avoid recalculating on every render
+  const strength = useMemo(() => {
+    if (!password) return 0
+    let score = 0
+    if (password.length >= 8) score += 1
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score += 1
+    if (/\d/.test(password)) score += 1
+    if (/[^a-zA-Z\d]/.test(password)) score += 1
+    return score
+  }, [password])
+
+  const strengthText = ['', 'Faible', 'Moyen', 'Bon', 'Excellent']
+
+  return (
+    <div className="signup-page">
+      <div className="signup-card">
+        <div className="signup-header">
+          <h1>Rejoignez l'aventure</h1>
+          <p>
+            Complétez vos informations pour accéder à votre dashboard personnalisé et aux services
+            exclusifs.
+          </p>
+          <div className="signup-step">Étape 1/3</div>
+        </div>
+
         <Form route="new_account.store">
           {({ errors }) => (
             <>
-              <div>
-                <label htmlFor="fullName">Full name</label>
-                <input
-                  type="text"
-                  name="fullName"
-                  id="fullName"
-                  data-invalid={errors.fullName ? 'true' : undefined}
-                />
-                {errors.fullName && <div>{errors.fullName}</div>}
-              </div>
+              <section className="signup-section">
+                <h2>Identité</h2>
 
-              <div>
-                <label htmlFor="email">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  autoComplete="email"
-                  data-invalid={errors.email ? 'true' : undefined}
-                />
-                {errors.email && <div>{errors.email}</div>}
-              </div>
+                <div className="field">
+                  <label htmlFor="email">Adresse Email</label>
+                  <div className="input-wrap">
+                    <Mail size={18} className="field-icon" />
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      placeholder="festivalier@gmail.com"
+                      data-invalid={errors.email ? 'true' : undefined}
+                    />
+                  </div>
+                  {errors.email ? <div className="field-error">{errors.email}</div> : null}
+                </div>
 
-              <div>
-                <label htmlFor="password">Password</label>
-                <input
-                  type="password"
-                  name="password"
-                  id="password"
-                  autoComplete="new-password"
-                  data-invalid={errors.password ? 'true' : undefined}
-                />
-                {errors.password && <div>{errors.password}</div>}
-              </div>
+                <div className="field">
+                  <label htmlFor="fullName">Nom d'utilisateur (Pseudo)</label>
+                  <div className="input-wrap">
+                    <User size={18} className="field-icon" />
+                    <input
+                      id="fullName"
+                      name="fullName"
+                      type="text"
+                      placeholder="VibeMaster2024"
+                      data-invalid={errors.fullName ? 'true' : undefined}
+                    />
+                  </div>
+                  {errors.fullName ? <div className="field-error">{errors.fullName}</div> : null}
+                </div>
+              </section>
 
-              <div>
-                <label htmlFor="passwordConfirmation">Confirm password</label>
-                <input
-                  type="password"
-                  name="passwordConfirmation"
-                  id="passwordConfirmation"
-                  autoComplete="new-password"
-                  data-invalid={errors.passwordConfirmation ? 'true' : undefined}
-                />
-                {errors.passwordConfirmation && <div>{errors.passwordConfirmation}</div>}
-              </div>
+              <section className="signup-section">
+                <h2>Sécurité</h2>
 
-              <div>
-                <button type="submit" className="button">
-                  Sign up
-                </button>
-              </div>
+                <div className="field">
+                  <label htmlFor="password">Mot de passe</label>
+                  <div className="input-wrap">
+                    <Lock size={18} className="field-icon" />
+                    <input
+                      id="password"
+                      name="password"
+                      type={showPassword ? 'text' : 'password'}
+                      autoComplete="new-password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      data-invalid={errors.password ? 'true' : undefined}
+                    />
+                    <button
+                      type="button"
+                      className="icon-button"
+                      aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+                      onClick={() => setShowPassword((v) => !v)}
+                    >
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  </div>
+
+                  {password ? (
+                    <div className="password-strength">
+                      <div className="strength-bars">
+                        {[0, 1, 2, 3].map((i) => (
+                          <span
+                            key={i}
+                            className={`strength-segment ${i < strength ? `level-${strength}` : ''}`}
+                          />
+                        ))}
+                      </div>
+                      <span className="strength-label">{strengthText[strength]}</span>
+                    </div>
+                  ) : null}
+
+                  {errors.password ? <div className="field-error">{errors.password}</div> : null}
+                </div>
+
+                <div className="field">
+                  <label htmlFor="passwordConfirmation">Confirmer le mot de passe</label>
+                  <div className="input-wrap">
+                    <Lock size={18} className="field-icon" />
+                    <input
+                      id="passwordConfirmation"
+                      name="passwordConfirmation"
+                      type={showConfirm ? 'text' : 'password'}
+                      autoComplete="new-password"
+                      data-invalid={errors.passwordConfirmation ? 'true' : undefined}
+                    />
+                    <button
+                      type="button"
+                      className="icon-button"
+                      aria-label={showConfirm ? 'Masquer la confirmation' : 'Afficher la confirmation'}
+                      onClick={() => setShowConfirm((v) => !v)}
+                    >
+                      {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  </div>
+                  {errors.passwordConfirmation ? (
+                    <div className="field-error">{errors.passwordConfirmation}</div>
+                  ) : null}
+                </div>
+              </section>
+
+              <button type="submit" className="signup-submit">
+                Continuer
+              </button>
             </>
           )}
         </Form>
