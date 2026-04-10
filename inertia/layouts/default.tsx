@@ -2,7 +2,6 @@ import { Data } from '@generated/data'
 import { toast, Toaster } from 'sonner'
 import { usePage } from '@inertiajs/react'
 import { ReactElement, useEffect } from 'react'
-import { Form, Link } from '@adonisjs/inertia/react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 export default function Layout({ children }: { children: ReactElement<Data.SharedProps> }) {
