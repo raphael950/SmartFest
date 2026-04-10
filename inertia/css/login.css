@@ -1,0 +1,60 @@
+/* Login page only */
+.auth-page {
+  background: #f8f7fb;
+}
+
+.auth-alert {
+  margin-bottom: 24px;
+  padding: 18px 20px;
+  border: 1px solid #d6d8e1;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.auth-alert strong {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.auth-alert p {
+  color: #4b5563;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.forgot-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.forgot-link {
+  color: #6b4de6;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+}
+
+.login-footer {
+  border-top: 1px solid #ececf3;
+  margin-top: 28px;
+  padding: 22px 0 6px;
+  text-align: center;
+  color: #667085;
+  font-size: 16px;
+}
+
+.login-footer a {
+  color: #6b4de6;
+  font-weight: 700;
+}
+
+.login-footer a:hover {
+  text-decoration: underline;
+}
