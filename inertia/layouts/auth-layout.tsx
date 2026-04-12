@@ -2,8 +2,9 @@ import { Data } from '@generated/data'
 import { toast, Toaster } from 'sonner'
 import { usePage } from '@inertiajs/react'
 import { ReactElement, useEffect } from 'react'
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
+import AuthBar from '@/components/AuthBar'
+import AuthFooter from '@/components/AuthFooter'
+
 export default function Layout({ children }: { children: ReactElement<Data.SharedProps> }) {
   useEffect(() => {
     toast.dismiss()
@@ -20,10 +21,10 @@ export default function Layout({ children }: { children: ReactElement<Data.Share
 
   return (
     <>
-      <Navbar />
-      <main>{children}</main>
-      <Toaster position="top-center" richColors />
-      <Footer />
+        <AuthBar />
+        <main>{children}</main>
+        <Toaster position="top-center" richColors />
+        <AuthFooter />
     </>
   )
 }

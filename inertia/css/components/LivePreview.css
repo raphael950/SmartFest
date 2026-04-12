@@ -1,0 +1,143 @@
+.sf-live-preview {
+  padding: 2.5rem 1rem;
+}
+
+.sf-live-preview__header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.sf-live-preview__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: hsl(var(--foreground));
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+}
+
+.sf-live-preview__pulse {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background-color: hsl(var(--destructive));
+  animation: sf-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.sf-live-preview__updated-at {
+  color: hsl(var(--muted-foreground));
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.sf-live-preview__stats {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.sf-live-preview__stat-card {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.5rem;
+  background-color: hsl(var(--card));
+}
+
+.sf-live-preview__stat-icon {
+  width: 1rem;
+  height: 1rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.sf-live-preview__stat-label {
+  font-size: 10px;
+  color: hsl(var(--muted-foreground));
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.sf-live-preview__stat-value {
+  color: hsl(var(--foreground));
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+}
+
+.sf-live-preview__details-link {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: hsl(var(--secondary));
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+}
+
+.sf-live-preview__details-link:hover {
+  text-decoration: underline;
+}
+
+.sf-live-preview__details-icon {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.sf-live-preview__alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background-color: hsl(var(--accent));
+}
+
+.sf-live-preview__alert-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sf-live-preview__alert-icon {
+  width: 1rem;
+  height: 1rem;
+  color: hsl(var(--festival-warning));
+}
+
+.sf-live-preview__alert-text {
+  color: hsl(var(--muted-foreground));
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.sf-live-preview__alert-link {
+  margin-left: 1rem;
+  white-space: nowrap;
+  color: hsl(var(--secondary));
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+}
+
+.sf-live-preview__alert-link:hover {
+  text-decoration: underline;
+}
+
+@keyframes sf-pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@media (min-width: 768px) {
+  .sf-live-preview__header {
+    flex-direction: row;
+    align-items: center;
+  }
+}
