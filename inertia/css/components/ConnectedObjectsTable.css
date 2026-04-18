@@ -34,7 +34,7 @@
 
 .iot-registry__stats {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 10px;
   margin-bottom: 12px;
 }
@@ -66,6 +66,10 @@
 }
 
 .iot-stat-card__value.is-alert {
+  color: color-mix(in srgb, var(--shell-accent) 52%, var(--racing-yellow));
+}
+
+.iot-stat-card__value.is-maintenance {
   color: var(--racing-yellow);
 }
 
@@ -222,6 +226,12 @@
   color: var(--shell-muted);
 }
 
+.iot-action-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .iot-action-btn {
   border: 1px solid color-mix(in srgb, var(--shell-border) 85%, transparent);
   width: 30px;
@@ -245,6 +255,12 @@
 .iot-action-btn__icon {
   width: 14px;
   height: 14px;
+}
+
+.iot-action-btn.is-delete:hover {
+  color: var(--shell-accent);
+  border-color: color-mix(in srgb, var(--shell-accent) 55%, var(--shell-border));
+  background: color-mix(in srgb, var(--shell-accent) 14%, transparent);
 }
 
 .iot-pill {

@@ -18,6 +18,24 @@ const routes = {
     tokens: [{"old":"/objets","type":0,"val":"objets","end":""}],
     types: placeholder as Registry['objets']['types'],
   },
+  'objets.store': {
+    methods: ["POST"],
+    pattern: '/objets',
+    tokens: [{"old":"/objets","type":0,"val":"objets","end":""}],
+    types: placeholder as Registry['objets.store']['types'],
+  },
+  'objets.update': {
+    methods: ["PUT"],
+    pattern: '/objets/:identifier',
+    tokens: [{"old":"/objets/:identifier","type":0,"val":"objets","end":""},{"old":"/objets/:identifier","type":1,"val":"identifier","end":""}],
+    types: placeholder as Registry['objets.update']['types'],
+  },
+  'objets.destroy': {
+    methods: ["DELETE"],
+    pattern: '/objets/:identifier',
+    tokens: [{"old":"/objets/:identifier","type":0,"val":"objets","end":""},{"old":"/objets/:identifier","type":1,"val":"identifier","end":""}],
+    types: placeholder as Registry['objets.destroy']['types'],
+  },
   'new_account.create': {
     methods: ["GET","HEAD"],
     pattern: '/signup',

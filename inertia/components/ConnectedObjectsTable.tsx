@@ -1,11 +1,25 @@
-import connectedObjectsData from '@/data/connected-objects.json'
-import { Plus, RefreshCw, Wifi } from 'lucide-react'
+import { router } from '@inertiajs/react'
+import { Plus, RefreshCw, Trash2, Wifi } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import '@/css/components/ConnectedObjectsTable.css'
 import type { ConnectedObject, DeviceStatus } from '@/types/connected-objects'
 import type { ConnectedObjectEditableFields } from '@/types/connected-object-edit-modal'
 import ConnectedObjectEditModal from '@/components/ConnectedObjectEditModal'
 import ConnectedObjectCreateModal from '@/components/ConnectedObjectCreateModal'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+
+type ConnectedObjectsTableProps = {
+  devices: ConnectedObject[]
+}
 
 type DeviceFilter = 'all' | 'online' | 'warning' | 'offline' | 'maintenance'
 
@@ -30,8 +44,6 @@ const statusClass: Record<DeviceStatus, string> = {
   maintenance: 'is-maintenance',
   offline: 'is-offline',
 }
-
-const initialDevices = connectedObjectsData as ConnectedObject[]
 
 const getBatteryTone = (battery: number) => {
   if (battery >= 75) {
@@ -58,46 +70,25 @@ const getMeterSegments = (value: number, max = 100, segments = 5) => {
   return Math.round((safe / max) * segments)
 }
 
-const getRandomInt = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min
-
-const generateFirmwareVersion = () => {
-  const major = getRandomInt(1, 5)
-  const minor = getRandomInt(0, 9)
-  const patch = getRandomInt(0, 9)
-  return `v${major}.${minor}.${patch}`
-}
-
-const generateIdentifier = (devices: ConnectedObject[], type: string) => {
-  const prefix = (type || 'DEV')
-    .toUpperCase()
-    .replace(/[^A-Z0-9]/g, '')
-    .slice(0, 3) || 'DEV'
-
-  let identifier = `${prefix}-${getRandomInt(100, 999)}`
-  while (devices.some((device) => device.identifier === identifier)) {
-    identifier = `${prefix}-${getRandomInt(100, 999)}`
-  }
-
-  return identifier
-}
-
-const ConnectedObjectsTable = () => {
-  const [devices, setDevices] = useState<ConnectedObject[]>(initialDevices)
+const ConnectedObjectsTable = ({ devices: initialDevices }: ConnectedObjectsTableProps) => {
   const [activeFilter, setActiveFilter] = useState<DeviceFilter>('all')
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [selectedIdentifier, setSelectedIdentifier] = useState<string | null>(null)
+  const [deleteCandidate, setDeleteCandidate] = useState<ConnectedObject | null>(null)
 
-  const countByStatus = (status: DeviceStatus) => devices.filter((device) => device.status === status).length
+  const countByStatus = (status: DeviceStatus) =>
+    initialDevices.filter((device) => device.status === status).length
 
-  const total = devices.length
+  const total = initialDevices.length
   const online = countByStatus('online')
   const alerts = countByStatus('alert')
+  const maintenance = countByStatus('maintenance')
   const disconnected = countByStatus('offline')
 
   const selectedDevice = useMemo(
-    () => devices.find((device) => device.identifier === selectedIdentifier) ?? null,
-    [devices, selectedIdentifier]
+    () => initialDevices.find((device) => device.identifier === selectedIdentifier) ?? null,
+    [initialDevices, selectedIdentifier]
   )
 
   const openEditModal = (device: ConnectedObject) => {
@@ -119,24 +110,13 @@ const ConnectedObjectsTable = () => {
   }
 
   const handleCreate = (values: ConnectedObjectEditableFields) => {
-    setDevices((prevDevices) => {
-      const createdDevice: ConnectedObject = {
-        identifier: generateIdentifier(prevDevices, values.type),
-        name: values.name,
-        type: values.type,
-        sector: values.sector,
-        status: values.status,
-        battery: getRandomInt(15, 100),
-        latencyMs: getRandomInt(5, 220),
-        signal: getRandomInt(20, 100),
-        firmware: generateFirmwareVersion(),
-      }
-
-      return [createdDevice, ...prevDevices]
+    router.post('/objets', values, {
+      preserveScroll: true,
+      onSuccess: () => {
+        setActiveFilter('all')
+        closeCreateModal()
+      },
     })
-
-    setActiveFilter('all')
-    closeCreateModal()
   }
 
   const handleUpdate = (identifier: string, updates: ConnectedObjectEditableFields) => {
@@ -144,37 +124,51 @@ const ConnectedObjectsTable = () => {
       return
     }
 
-    setDevices((prevDevices) =>
-      prevDevices.map((device) => {
-        if (device.identifier !== identifier) {
-          return device
-        }
+    router.put(`/objets/${identifier}`, updates, {
+      preserveScroll: true,
+      onSuccess: () => {
+        closeEditModal()
+      },
+    })
+  }
 
-        return {
-          ...device,
-          ...updates,
-        }
-      })
-    )
+  const handleDelete = (identifier: string) => {
+    if (!identifier) {
+      return
+    }
 
-    closeEditModal()
+    router.delete(`/objets/${identifier}`, {
+      preserveScroll: true,
+      onSuccess: () => {
+        closeEditModal()
+        setDeleteCandidate(null)
+      },
+    })
+  }
+
+  const openDeleteConfirm = (device: ConnectedObject) => {
+    setDeleteCandidate(device)
+  }
+
+  const closeDeleteConfirm = () => {
+    setDeleteCandidate(null)
   }
 
   const filteredDevices = useMemo(() => {
     switch (activeFilter) {
       case 'online':
-        return devices.filter((device) => device.status === 'online')
+        return initialDevices.filter((device) => device.status === 'online')
       case 'warning':
-        return devices.filter((device) => device.status === 'alert')
+        return initialDevices.filter((device) => device.status === 'alert')
       case 'offline':
-        return devices.filter((device) => device.status === 'offline')
+        return initialDevices.filter((device) => device.status === 'offline')
       case 'maintenance':
-        return devices.filter((device) => device.status === 'maintenance')
+        return initialDevices.filter((device) => device.status === 'maintenance')
       case 'all':
       default:
-        return devices
+        return initialDevices
     }
-  }, [activeFilter, devices])
+  }, [activeFilter, initialDevices])
 
   return (
     <section className="iot-registry">
@@ -195,6 +189,10 @@ const ConnectedObjectsTable = () => {
         <article className="iot-stat-card">
           <p className="iot-stat-card__label">ALERTES</p>
           <p className="iot-stat-card__value is-alert">{alerts}</p>
+        </article>
+        <article className="iot-stat-card">
+          <p className="iot-stat-card__label">MAINTENANCE</p>
+          <p className="iot-stat-card__value is-maintenance">{maintenance}</p>
         </article>
         <article className="iot-stat-card">
           <p className="iot-stat-card__label">DECONNECTES</p>
@@ -304,17 +302,30 @@ const ConnectedObjectsTable = () => {
                 </td>
                 <td className="iot-table__muted">{device.firmware}</td>
                 <td>
-                  <button
-                    type="button"
-                    className="iot-action-btn"
-                    aria-label={`Mettre a jour ${device.name}`}
-                    onClick={(event) => {
-                      event.stopPropagation()
-                      openEditModal(device)
-                    }}
-                  >
-                    <RefreshCw className="iot-action-btn__icon" />
-                  </button>
+                  <div className="iot-action-cell">
+                    <button
+                      type="button"
+                      className="iot-action-btn"
+                      aria-label={`Mettre a jour ${device.name}`}
+                      onClick={(event) => {
+                        event.stopPropagation()
+                        openEditModal(device)
+                      }}
+                    >
+                      <RefreshCw className="iot-action-btn__icon" />
+                    </button>
+                    <button
+                      type="button"
+                      className="iot-action-btn is-delete"
+                      aria-label={`Supprimer ${device.name}`}
+                      onClick={(event) => {
+                        event.stopPropagation()
+                        openDeleteConfirm(device)
+                      }}
+                    >
+                      <Trash2 className="iot-action-btn__icon" />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -330,6 +341,33 @@ const ConnectedObjectsTable = () => {
       />
 
       <ConnectedObjectCreateModal open={isCreateOpen} onClose={closeCreateModal} onCreate={handleCreate} />
+
+      <AlertDialog open={Boolean(deleteCandidate)} onOpenChange={(open) => !open && closeDeleteConfirm()}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Supprimer cet objet ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Cette action est irreversible. L&apos;objet
+              {deleteCandidate ? ` ${deleteCandidate.name}` : ''}
+              {' '}sera supprime definitivement.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={() => {
+                if (!deleteCandidate) {
+                  return
+                }
+                handleDelete(deleteCandidate.identifier)
+              }}
+            >
+              Supprimer
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </section>
   )
 }

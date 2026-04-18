@@ -7,19 +7,54 @@
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
+export class ConnectedObjectSchema extends BaseModel {
+  static $columns = ['createdAt', 'firmware', 'id', 'identifier', 'name', 'sector', 'status', 'type', 'updatedAt'] as const
+  $columns = ConnectedObjectSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare firmware: string
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare identifier: string
+  @column()
+  declare name: string
+  @column()
+  declare sector: string
+  @column()
+  declare status: string
+  @column()
+  declare type: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
 export class UserSchema extends BaseModel {
-  static $columns = ['createdAt', 'email', 'fullName', 'id', 'password', 'updatedAt'] as const
+  static $columns = ['age', 'birthDate', 'createdAt', 'email', 'followedTeam', 'fullName', 'gender', 'id', 'jobTitle', 'password', 'pseudo', 'updatedAt'] as const
   $columns = UserSchema.$columns
+  @column()
+  declare age: number | null
+  @column.date()
+  declare birthDate: DateTime | null
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
   @column()
   declare email: string
   @column()
+  declare followedTeam: string | null
+  @column()
   declare fullName: string | null
+  @column()
+  declare gender: string | null
   @column({ isPrimary: true })
   declare id: number
+  @column()
+  declare jobTitle: string | null
   @column({ serializeAs: null })
   declare password: string
+  @column()
+  declare pseudo: string | null
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
 }

@@ -25,7 +25,7 @@ const ConnectedObjectEditModal = ({ open, device, onClose, onSave }: ConnectedOb
       open={open}
       onClose={onClose}
       title="Mettre a jour un objet"
-      description="Modification locale en memoire pour le prototype (non persistante tant que la DB n&apos;est pas branchee)."
+      description="Modification persistante en base de donnees pour l&apos;objet selectionne."
       submitLabel="Mettre a jour"
       initialValues={
         device
