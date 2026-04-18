@@ -1,6 +1,7 @@
 .sf-shell {
   position: relative;
   min-height: 100vh;
+  height: 100vh;
   display: flex;
   background: var(--shell-bg);
   color: var(--shell-fg);
@@ -10,6 +11,10 @@
 .sf-shell__sidebar {
   position: relative;
   width: clamp(280px, 22vw, 340px);
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+  flex-shrink: 0;
   border-right: 1px solid var(--shell-border);
   background: linear-gradient(180deg, var(--shell-sidebar-start) 0%, var(--shell-sidebar-end) 100%);
   display: flex;
@@ -181,8 +186,10 @@
 .sf-shell__main {
   flex: 1;
   min-width: 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
+  overflow: auto;
 }
 
 .sf-shell__content {
@@ -194,10 +201,14 @@
 @media (max-width: 1024px) {
   .sf-shell {
     flex-direction: column;
+    height: auto;
   }
 
   .sf-shell__sidebar {
     width: 100%;
+    height: auto;
+    max-height: none;
+    overflow: visible;
     border-right: 0;
     border-bottom: 1px solid var(--shell-border);
     backdrop-filter: none;
