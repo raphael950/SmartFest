@@ -1,5 +1,5 @@
 import type { Data } from '@generated/data'
-import { Link } from '@adonisjs/inertia/react'
+import { Form, Link } from '@adonisjs/inertia/react'
 import { usePage } from '@inertiajs/react'
 import { useMemo } from 'react'
 import {
@@ -122,10 +122,12 @@ const Navbar = ({ isMobileOpen, onMobileClose }: NavbarProps) => {
 
         <div className="sf-shell__sidebar-bottom">
           {user ? (
-            <button type="button" className="sf-shell__logout-btn" onClick={onMobileClose}>
-              <LogOut className="sf-shell__nav-icon" />
-              <span>Déconnexion</span>
-            </button>
+            <Form route="session.destroy" className="sf-shell__logout-form" onSubmit={onMobileClose}>
+              <button type="submit" className="sf-shell__logout-btn">
+                <LogOut className="sf-shell__nav-icon" />
+                <span>Déconnexion</span>
+              </button>
+            </Form>
           ) : (
             <Link route="session.create" className="sf-shell__logout-btn" onClick={onMobileClose}>
               <LogOut className="sf-shell__nav-icon" />

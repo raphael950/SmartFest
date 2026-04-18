@@ -1,5 +1,5 @@
 import type { Data } from '@generated/data'
-import { Link } from '@adonisjs/inertia/react'
+import { Form, Link } from '@adonisjs/inertia/react'
 import { usePage } from '@inertiajs/react'
 import { ChevronDown, Menu, UserRound } from 'lucide-react'
 import { useState } from 'react'
@@ -30,45 +30,47 @@ const Upbar = ({ isMobileNavOpen, onToggleMobileNav }: UpbarProps) => {
         <h1 className="sf-shell__page-title">Accueil</h1>
       </div>
 
-      <div className="sf-shell__profile-wrap">
-        <button
-          type="button"
-          className="sf-shell__profile-btn"
-          onClick={() => setIsProfileOpen((state) => !state)}
-        >
-          <span className="sf-shell__profile-avatar">
-            <UserRound className="sf-shell__profile-avatar-icon" />
-          </span>
-          <span className="sf-shell__profile-text">
-            <span className="sf-shell__profile-name">{user?.fullName || 'Jean Dupont'}</span>
-            <span className="sf-shell__profile-role">Direction</span>
-          </span>
-          <ChevronDown className="sf-shell__profile-chevron" />
-        </button>
+      {user ? (
+        <div className="sf-shell__profile-wrap">
+          <button
+            type="button"
+            className="sf-shell__profile-btn"
+            onClick={() => setIsProfileOpen((state) => !state)}
+          >
+            <span className="sf-shell__profile-avatar">
+              <UserRound className="sf-shell__profile-avatar-icon" />
+            </span>
+            <span className="sf-shell__profile-text">
+              <span className="sf-shell__profile-name">{user.fullName || user.pseudo || 'Mon compte'}</span>
+              <span className="sf-shell__profile-role">Connecte</span>
+            </span>
+            <ChevronDown className="sf-shell__profile-chevron" />
+          </button>
 
-        {isProfileOpen && (
-          <div className="sf-shell__profile-menu">
-            <Link route="profile.edit" className="sf-shell__profile-menu-item">
-              Editer mon profil
-            </Link>
-            <Link route="profile.me" className="sf-shell__profile-menu-item">
-              Voir mon profil public
-            </Link>
-            <button type="button" className="sf-shell__profile-menu-item">
-              Paramètres
-            </button>
-            {user ? (
-              <button type="button" className="sf-shell__profile-menu-item is-danger">
-                Déconnexion
-              </button>
-            ) : (
-              <Link route="session.create" className="sf-shell__profile-menu-item is-danger">
-                Se connecter
+          {isProfileOpen && (
+            <div className="sf-shell__profile-menu">
+              <Link route="profile.edit" className="sf-shell__profile-menu-item">
+                Editer mon profil
               </Link>
-            )}
-          </div>
-        )}
-      </div>
+              <Link route="profile.me" className="sf-shell__profile-menu-item">
+                Voir mon profil public
+              </Link>
+              <button type="button" className="sf-shell__profile-menu-item">
+                Paramètres
+              </button>
+              <Form
+                route="session.destroy"
+                className="sf-shell__profile-menu-item-form"
+                onSubmit={() => setIsProfileOpen(false)}
+              >
+                <button type="submit" className="sf-shell__profile-menu-item is-danger">
+                  Déconnexion
+                </button>
+              </Form>
+            </div>
+          )}
+        </div>
+      ) : null}
     </header>
   )
 }
