@@ -30,7 +30,12 @@ const navItems: NavItem[] = [
   { label: 'Objets', icon: BarChart3, href: '/objets' },
 ]
 
-const Navbar = () => {
+type NavbarProps = {
+  isMobileOpen: boolean
+  onMobileClose: () => void
+}
+
+const Navbar = ({ isMobileOpen, onMobileClose }: NavbarProps) => {
   const page = usePage<Data.SharedProps>()
   const user = page.props.user
   const currentPath = page.url
@@ -56,67 +61,82 @@ const Navbar = () => {
   }, [currentPathname])
 
   return (
-    <aside className="sf-shell__sidebar">
-      <div className="sf-shell__brand">
-        <div className="sf-shell__brand-logo">
-          <Flag className="sf-shell__brand-icon" />
+    <>
+      <aside className={`sf-shell__sidebar ${isMobileOpen ? 'is-mobile-open' : ''}`}>
+        <div className="sf-shell__brand">
+          <div className="sf-shell__brand-logo">
+            <Flag className="sf-shell__brand-icon" />
+          </div>
+          <div>
+            <p className="sf-shell__brand-title">Le Mans</p>
+            <p className="sf-shell__brand-subtitle">Bugatti Circuit</p>
+          </div>
         </div>
-        <div>
-          <p className="sf-shell__brand-title">Le Mans</p>
-          <p className="sf-shell__brand-subtitle">Bugatti Circuit</p>
-        </div>
-      </div>
 
-      <nav className="sf-shell__nav" aria-label="Navigation principale">
-        {navItems.map((item) => {
-          const Icon = item.icon
-          const isActive = item.label === activeItem
+        <nav className="sf-shell__nav" aria-label="Navigation principale">
+          {navItems.map((item) => {
+            const Icon = item.icon
+            const isActive = item.label === activeItem
 
-          if (item.href) {
+            if (item.href) {
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className={`sf-shell__nav-link ${isActive ? 'is-active' : ''}`}
+                  onClick={onMobileClose}
+                >
+                  <Icon className="sf-shell__nav-icon" />
+                  <span>{item.label}</span>
+                </Link>
+              )
+            }
+
+            if (!item.route) {
+              return (
+                <button key={item.label} type="button" className="sf-shell__nav-link" onClick={onMobileClose}>
+                  <Icon className="sf-shell__nav-icon" />
+                  <span>{item.label}</span>
+                </button>
+              )
+            }
+
             return (
-              <Link key={item.label} href={item.href} className={`sf-shell__nav-link ${isActive ? 'is-active' : ''}`}>
+              <Link
+                key={item.label}
+                route={item.route}
+                className={`sf-shell__nav-link ${isActive ? 'is-active' : ''}`}
+                onClick={onMobileClose}
+              >
                 <Icon className="sf-shell__nav-icon" />
                 <span>{item.label}</span>
               </Link>
             )
-          }
+          })}
+        </nav>
 
-          if (!item.route) {
-            return (
-              <button key={item.label} type="button" className="sf-shell__nav-link">
-                <Icon className="sf-shell__nav-icon" />
-                <span>{item.label}</span>
-              </button>
-            )
-          }
-
-          return (
-            <Link
-              key={item.label}
-              route={item.route}
-              className={`sf-shell__nav-link ${isActive ? 'is-active' : ''}`}
-            >
-              <Icon className="sf-shell__nav-icon" />
-              <span>{item.label}</span>
+        <div className="sf-shell__sidebar-bottom">
+          {user ? (
+            <button type="button" className="sf-shell__logout-btn" onClick={onMobileClose}>
+              <LogOut className="sf-shell__nav-icon" />
+              <span>Déconnexion</span>
+            </button>
+          ) : (
+            <Link route="session.create" className="sf-shell__logout-btn" onClick={onMobileClose}>
+              <LogOut className="sf-shell__nav-icon" />
+              <span>Connexion</span>
             </Link>
-          )
-        })}
-      </nav>
+          )}
+        </div>
+      </aside>
 
-      <div className="sf-shell__sidebar-bottom">
-        {user ? (
-          <button type="button" className="sf-shell__logout-btn">
-            <LogOut className="sf-shell__nav-icon" />
-            <span>Déconnexion</span>
-          </button>
-        ) : (
-          <Link route="session.create" className="sf-shell__logout-btn">
-            <LogOut className="sf-shell__nav-icon" />
-            <span>Connexion</span>
-          </Link>
-        )}
-      </div>
-    </aside>
+      <button
+        type="button"
+        className={`sf-shell__mobile-overlay ${isMobileOpen ? 'is-visible' : ''}`}
+        aria-label="Fermer le menu"
+        onClick={onMobileClose}
+      />
+    </>
   )
 }
 
