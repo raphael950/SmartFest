@@ -131,16 +131,6 @@ export default function ProfileShow({ profile }: InertiaProps<ProfilePageProps>)
         <div className="profile-grid">
           <article className="profile-item">
             <span className="profile-item-icon">
-              <UserRound size={16} />
-            </span>
-            <div>
-              <p className="profile-item-label">Pseudo</p>
-              <p className="profile-item-value">{profile.pseudo || 'Non renseigne'}</p>
-            </div>
-          </article>
-
-          <article className="profile-item">
-            <span className="profile-item-icon">
               <VenusAndMars size={16} />
             </span>
             <div>
@@ -164,7 +154,7 @@ export default function ProfileShow({ profile }: InertiaProps<ProfilePageProps>)
               <Briefcase size={16} />
             </span>
             <div>
-              <p className="profile-item-label">Nom du metier</p>
+              <p className="profile-item-label">Metier</p>
               <p className="profile-item-value">{profile.jobTitle || 'Non renseigne'}</p>
             </div>
           </article>
