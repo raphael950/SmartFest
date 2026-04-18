@@ -8,6 +8,12 @@ export interface ApiDefinition {
     update: typeof routes['objets.update']
     destroy: typeof routes['objets.destroy']
   }
+  profile: {
+    show: typeof routes['profile.show']
+    me: typeof routes['profile.me']
+    edit: typeof routes['profile.edit']
+    update: typeof routes['profile.update']
+  }
   newAccount: {
     create: typeof routes['new_account.create']
     store: typeof routes['new_account.store']

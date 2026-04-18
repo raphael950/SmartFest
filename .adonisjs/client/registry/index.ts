@@ -36,6 +36,12 @@ const routes = {
     tokens: [{"old":"/objets/:identifier","type":0,"val":"objets","end":""},{"old":"/objets/:identifier","type":1,"val":"identifier","end":""}],
     types: placeholder as Registry['objets.destroy']['types'],
   },
+  'profile.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/profil/:pseudo',
+    tokens: [{"old":"/profil/:pseudo","type":0,"val":"profil","end":""},{"old":"/profil/:pseudo","type":1,"val":"pseudo","end":""}],
+    types: placeholder as Registry['profile.show']['types'],
+  },
   'new_account.create': {
     methods: ["GET","HEAD"],
     pattern: '/signup',
@@ -59,6 +65,24 @@ const routes = {
     pattern: '/login',
     tokens: [{"old":"/login","type":0,"val":"login","end":""}],
     types: placeholder as Registry['session.store']['types'],
+  },
+  'profile.me': {
+    methods: ["GET","HEAD"],
+    pattern: '/mon-profil',
+    tokens: [{"old":"/mon-profil","type":0,"val":"mon-profil","end":""}],
+    types: placeholder as Registry['profile.me']['types'],
+  },
+  'profile.edit': {
+    methods: ["GET","HEAD"],
+    pattern: '/mon-profil/edition',
+    tokens: [{"old":"/mon-profil/edition","type":0,"val":"mon-profil","end":""},{"old":"/mon-profil/edition","type":0,"val":"edition","end":""}],
+    types: placeholder as Registry['profile.edit']['types'],
+  },
+  'profile.update': {
+    methods: ["POST"],
+    pattern: '/mon-profil/edition',
+    tokens: [{"old":"/mon-profil/edition","type":0,"val":"mon-profil","end":""},{"old":"/mon-profil/edition","type":0,"val":"edition","end":""}],
+    types: placeholder as Registry['profile.update']['types'],
   },
   'session.destroy': {
     methods: ["POST"],
