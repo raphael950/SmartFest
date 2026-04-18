@@ -1,11 +1,14 @@
 import { Link } from '@adonisjs/inertia/react'
 import { InertiaProps } from '~/types'
 import { Briefcase, Cake, Sparkles, Trophy, UserRound, VenusAndMars } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import '~/css/profile.css'
 
 type PublicProfile = {
   id: number
+  fullName: string | null
   pseudo: string | null
+  avatarUrl: string | null
   gender: string | null
   birthDate: string | null
   jobTitle: string | null
@@ -28,7 +31,51 @@ const formatBirthDate = (value: string | null) => {
   })
 }
 
+const computeAge = (birthDate: string | null) => {
+  if (!birthDate) {
+    return null
+  }
+
+  const birth = new Date(birthDate)
+  if (Number.isNaN(birth.getTime())) {
+    return null
+  }
+
+  const now = new Date()
+  let years = now.getFullYear() - birth.getFullYear()
+  const monthDiff = now.getMonth() - birth.getMonth()
+
+  if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < birth.getDate())) {
+    years -= 1
+  }
+
+  return years >= 0 ? years : null
+}
+
+const splitIdentity = (fullName: string | null, pseudo: string | null) => {
+  if (!fullName || !fullName.trim()) {
+    return {
+      firstName: pseudo || 'Fan',
+      lastName: 'SmartFest',
+    }
+  }
+
+  const parts = fullName.trim().split(/\s+/)
+  const firstName = parts[0]
+  const lastName = parts.slice(1).join(' ') || '-'
+
+  return { firstName, lastName }
+}
+
 export default function ProfileShow({ profile }: InertiaProps<ProfilePageProps>) {
+  const [isAvatarBroken, setIsAvatarBroken] = useState(false)
+  const age = computeAge(profile.birthDate)
+  const identity = splitIdentity(profile.fullName, profile.pseudo)
+
+  useEffect(() => {
+    setIsAvatarBroken(false)
+  }, [profile.avatarUrl])
+
   return (
     <section className="profile-page">
       <div className="profile-hero-card">
@@ -45,6 +92,41 @@ export default function ProfileShow({ profile }: InertiaProps<ProfilePageProps>)
           </h1>
           <p>Un profil SmartFest public pour partager sa vibe course et sa team preferee.</p>
         </div>
+
+        <article className="profile-identity-card">
+          <div className="profile-identity-avatar-wrap">
+            {profile.avatarUrl && !isAvatarBroken ? (
+              <img
+                src={profile.avatarUrl}
+                alt={`Photo de ${profile.pseudo || 'profil'}`}
+                className="profile-identity-avatar"
+                onError={() => setIsAvatarBroken(true)}
+              />
+            ) : (
+              <div className="profile-identity-avatar-placeholder">
+                <UserRound size={42} />
+              </div>
+            )}
+          </div>
+
+          <div className="profile-identity-info">
+            <p className="profile-identity-kicker">Fiche identite</p>
+            <div className="profile-identity-names">
+              <div>
+                <p className="profile-item-label">Prenom</p>
+                <p className="profile-item-value">{identity.firstName}</p>
+              </div>
+              <div>
+                <p className="profile-item-label">Nom</p>
+                <p className="profile-item-value">{identity.lastName}</p>
+              </div>
+              <div>
+                <p className="profile-item-label">Age</p>
+                <p className="profile-item-value">{age !== null ? `${age} ans` : 'Non renseigne'}</p>
+              </div>
+            </div>
+          </div>
+        </article>
 
         <div className="profile-grid">
           <article className="profile-item">

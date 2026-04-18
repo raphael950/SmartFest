@@ -31,8 +31,10 @@ export class ConnectedObjectSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = ['birthDate', 'createdAt', 'email', 'followedTeam', 'fullName', 'gender', 'id', 'jobTitle', 'password', 'pseudo', 'updatedAt'] as const
+  static $columns = ['avatarPath', 'birthDate', 'createdAt', 'email', 'followedTeam', 'fullName', 'gender', 'id', 'jobTitle', 'password', 'pseudo', 'updatedAt'] as const
   $columns = UserSchema.$columns
+  @column()
+  declare avatarPath: string | null
   @column.date()
   declare birthDate: DateTime | null
   @column.dateTime({ autoCreate: true })
