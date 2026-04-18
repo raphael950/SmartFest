@@ -1,18 +1,34 @@
 import type { Data } from '@generated/data'
 import { Link } from '@adonisjs/inertia/react'
 import { usePage } from '@inertiajs/react'
-import { ChevronDown, UserRound } from 'lucide-react'
+import { ChevronDown, Menu, UserRound } from 'lucide-react'
 import { useState } from 'react'
 import '../css/components/upbar.css'
 
-const Upbar = () => {
+type UpbarProps = {
+  isMobileNavOpen: boolean
+  onToggleMobileNav: () => void
+}
+
+const Upbar = ({ isMobileNavOpen, onToggleMobileNav }: UpbarProps) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const page = usePage<Data.SharedProps>()
   const user = page.props.user
 
   return (
     <header className="sf-shell__topbar">
-      <h1 className="sf-shell__page-title">Accueil</h1>
+      <div className="sf-shell__topbar-left">
+        <button
+          type="button"
+          className="sf-shell__mobile-nav-btn"
+          aria-label="Ouvrir le menu"
+          aria-expanded={isMobileNavOpen}
+          onClick={onToggleMobileNav}
+        >
+          <Menu className="sf-shell__mobile-nav-icon" />
+        </button>
+        <h1 className="sf-shell__page-title">Accueil</h1>
+      </div>
 
       <div className="sf-shell__profile-wrap">
         <button
