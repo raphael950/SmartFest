@@ -54,6 +54,21 @@
   padding: 0 10px;
 }
 
+.iot-edit-modal__input {
+  border-color: var(--shell-border);
+  background: color-mix(in srgb, var(--shell-menu-bg) 80%, transparent);
+  color: var(--shell-fg);
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.iot-edit-modal__input:focus-visible,
+.iot-edit-modal__select:focus-visible {
+  outline: none;
+  border-color: color-mix(in srgb, var(--shell-accent) 72%, var(--shell-border));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--shell-accent) 62%, transparent);
+}
+
 .iot-edit-modal__footer {
   width: 100%;
   max-width: 640px;
