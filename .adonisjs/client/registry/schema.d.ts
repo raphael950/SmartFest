@@ -19,6 +19,54 @@ export interface Registry {
       errorResponse: unknown
     }
   }
+  'objets': {
+    methods: ["GET","HEAD"]
+    pattern: '/objets'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['index']>>>
+    }
+  }
+  'objets.store': {
+    methods: ["POST"]
+    pattern: '/objets'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['store']>>>
+    }
+  }
+  'objets.update': {
+    methods: ["PUT"]
+    pattern: '/objets/:identifier'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { identifier: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['update']>>>
+    }
+  }
+  'objets.destroy': {
+    methods: ["DELETE"]
+    pattern: '/objets/:identifier'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { identifier: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['destroy']>>>
+    }
+  }
   'new_account.create': {
     methods: ["GET","HEAD"]
     pattern: '/signup'

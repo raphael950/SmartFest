@@ -3,6 +3,11 @@ import type { routes } from './index.ts'
 
 export interface ApiDefinition {
   home: typeof routes['home']
+  objets: typeof routes['objets'] & {
+    store: typeof routes['objets.store']
+    update: typeof routes['objets.update']
+    destroy: typeof routes['objets.destroy']
+  }
   newAccount: {
     create: typeof routes['new_account.create']
     store: typeof routes['new_account.store']

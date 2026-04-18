@@ -12,6 +12,10 @@ import { controllers } from '#generated/controllers'
 import router from '@adonisjs/core/services/router'
 
 router.on('/').renderInertia('home', {}).as('home')
+router.get('/objets', [controllers.ConnectedObjects, 'index']).as('objets')
+router.post('/objets', [controllers.ConnectedObjects, 'store']).as('objets.store')
+router.put('/objets/:identifier', [controllers.ConnectedObjects, 'update']).as('objets.update')
+router.delete('/objets/:identifier', [controllers.ConnectedObjects, 'destroy']).as('objets.destroy')
 
 router
   .group(() => {

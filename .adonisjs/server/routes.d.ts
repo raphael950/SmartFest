@@ -5,6 +5,10 @@ type ParamValue = string | number | bigint | boolean
 export type ScannedRoutes = {
   ALL: {
     'home': { paramsTuple?: []; params?: {} }
+    'objets': { paramsTuple?: []; params?: {} }
+    'objets.store': { paramsTuple?: []; params?: {} }
+    'objets.update': { paramsTuple: [ParamValue]; params: {'identifier': ParamValue} }
+    'objets.destroy': { paramsTuple: [ParamValue]; params: {'identifier': ParamValue} }
     'new_account.create': { paramsTuple?: []; params?: {} }
     'new_account.store': { paramsTuple?: []; params?: {} }
     'session.create': { paramsTuple?: []; params?: {} }
@@ -13,18 +17,27 @@ export type ScannedRoutes = {
   }
   GET: {
     'home': { paramsTuple?: []; params?: {} }
+    'objets': { paramsTuple?: []; params?: {} }
     'new_account.create': { paramsTuple?: []; params?: {} }
     'session.create': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
     'home': { paramsTuple?: []; params?: {} }
+    'objets': { paramsTuple?: []; params?: {} }
     'new_account.create': { paramsTuple?: []; params?: {} }
     'session.create': { paramsTuple?: []; params?: {} }
   }
   POST: {
+    'objets.store': { paramsTuple?: []; params?: {} }
     'new_account.store': { paramsTuple?: []; params?: {} }
     'session.store': { paramsTuple?: []; params?: {} }
     'session.destroy': { paramsTuple?: []; params?: {} }
+  }
+  PUT: {
+    'objets.update': { paramsTuple: [ParamValue]; params: {'identifier': ParamValue} }
+  }
+  DELETE: {
+    'objets.destroy': { paramsTuple: [ParamValue]; params: {'identifier': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

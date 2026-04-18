@@ -17,6 +17,7 @@ type NavItem = {
   label: string
   icon: React.ComponentType<{ className?: string }>
   route?: 'home'
+  href?: string
 }
 
 const navItems: NavItem[] = [
@@ -26,7 +27,7 @@ const navItems: NavItem[] = [
   { label: 'Gestion Drapeaux', icon: Flag },
   { label: 'Gestion Incidents', icon: AlertTriangle },
   { label: 'Communication', icon: MessageSquare },
-  { label: 'Objets Connectés', icon: BarChart3 },
+  { label: 'Objets', icon: BarChart3, href: '/objets' },
 ]
 
 type NavbarProps = {
@@ -39,12 +40,25 @@ const Navbar = ({ isMobileOpen, onMobileClose }: NavbarProps) => {
   const user = page.props.user
   const currentPath = page.url
 
-  const activeItem = useMemo(() => {
-    if (currentPath === '/') {
-      return 'Accueil'
-    }
-    return ''
+  const currentPathname = useMemo(() => {
+    return currentPath.split('?')[0].split('#')[0]
   }, [currentPath])
+
+  const activeItem = useMemo(() => {
+    const activeMatch = navItems.find((item) => {
+      if (item.route === 'home') {
+        return currentPathname === '/'
+      }
+
+      if (item.href) {
+        return currentPathname === item.href || currentPathname.startsWith(`${item.href}/`)
+      }
+
+      return false
+    })
+
+    return activeMatch?.label ?? ''
+  }, [currentPathname])
 
   return (
     <>
@@ -63,6 +77,20 @@ const Navbar = ({ isMobileOpen, onMobileClose }: NavbarProps) => {
           {navItems.map((item) => {
             const Icon = item.icon
             const isActive = item.label === activeItem
+
+            if (item.href) {
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className={`sf-shell__nav-link ${isActive ? 'is-active' : ''}`}
+                  onClick={onMobileClose}
+                >
+                  <Icon className="sf-shell__nav-icon" />
+                  <span>{item.label}</span>
+                </Link>
+              )
+            }
 
             if (!item.route) {
               return (
