@@ -1,13 +1,36 @@
 .iot-edit-modal {
+  width: min(760px, calc(100vw - 24px));
+  max-width: calc(100vw - 24px);
+  max-height: calc(100dvh - 24px);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 14px;
+  padding: 20px 16px 16px;
+  overflow: hidden;
   border-color: var(--shell-border);
   background: color-mix(in srgb, var(--shell-bg) 96%, transparent);
   color: var(--shell-fg);
+}
+
+.iot-edit-modal__header {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 34px;
+  align-items: center;
+  text-align: center !important;
 }
 
 .iot-edit-modal__form {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 2px 2px 2px;
 }
 
 .iot-edit-modal__grid {
@@ -31,8 +54,48 @@
   padding: 0 10px;
 }
 
+.iot-edit-modal__footer {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  gap: 8px;
+  padding: 2px;
+}
+
 @media (max-width: 640px) {
+  .iot-edit-modal {
+    width: calc(100vw - 16px);
+    max-width: calc(100vw - 16px);
+    max-height: calc(100dvh - 12px);
+    padding: 14px 10px 10px;
+    gap: 10px;
+  }
+
+  .iot-edit-modal__header {
+    max-width: none;
+    padding: 0 30px;
+  }
+
+  .iot-edit-modal__form {
+    max-width: none;
+    padding: 2px 2px 2px;
+  }
+
+  .iot-edit-modal__footer {
+    max-width: none;
+    padding: 2px;
+  }
+
   .iot-edit-modal__grid {
     grid-template-columns: 1fr;
+  }
+
+  .iot-edit-modal__footer {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .iot-edit-modal__footer button {
+    width: 100%;
   }
 }

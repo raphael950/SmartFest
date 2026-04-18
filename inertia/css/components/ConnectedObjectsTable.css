@@ -424,6 +424,11 @@
 }
 
 @media (max-width: 1024px) {
+  .iot-registry {
+    height: auto;
+    min-height: auto;
+  }
+
   .iot-registry__stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -440,6 +445,18 @@
   .iot-registry__title {
     font-size: 1.4rem;
   }
+
+  .iot-table-wrap {
+    flex: none;
+    min-height: auto;
+    max-height: none;
+    overflow-y: visible;
+    overflow-x: auto;
+  }
+
+  .iot-table {
+    min-width: 880px;
+  }
 }
 
 @media (max-width: 640px) {
@@ -449,5 +466,26 @@
 
   .iot-registry__stats {
     grid-template-columns: 1fr;
+  }
+
+  .iot-registry__breadcrumb {
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+  }
+
+  .iot-table {
+    min-width: 680px;
+  }
+
+  .iot-table thead th,
+  .iot-table tbody td {
+    padding: 10px 8px;
+  }
+
+  .iot-table th:nth-child(7),
+  .iot-table td:nth-child(7),
+  .iot-table th:nth-child(8),
+  .iot-table td:nth-child(8) {
+    display: none;
   }
 }

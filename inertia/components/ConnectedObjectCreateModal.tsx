@@ -56,7 +56,7 @@ const ConnectedObjectCreateModal = ({ open, onClose, onCreate }: ConnectedObject
   return (
     <Dialog open={open} onOpenChange={(nextOpen) => !nextOpen && onClose()}>
       <DialogContent className="iot-edit-modal">
-        <DialogHeader>
+        <DialogHeader className="iot-edit-modal__header">
           <DialogTitle>Ajouter un objet</DialogTitle>
           <DialogDescription>
             Creation locale en memoire: l&apos;ID et les donnees techniques sont generees automatiquement.
@@ -127,7 +127,7 @@ const ConnectedObjectCreateModal = ({ open, onClose, onCreate }: ConnectedObject
           </div>
         </div>
 
-        <DialogFooter>
+        <DialogFooter className="iot-edit-modal__footer">
           <Button type="button" variant="outline" onClick={onClose}>
             Annuler
           </Button>

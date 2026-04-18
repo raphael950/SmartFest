@@ -59,7 +59,7 @@ const ConnectedObjectEditModal = ({ open, device, onClose, onSave }: ConnectedOb
   return (
     <Dialog open={open} onOpenChange={(nextOpen) => !nextOpen && onClose()}>
       <DialogContent className="iot-edit-modal">
-        <DialogHeader>
+        <DialogHeader className="iot-edit-modal__header">
           <DialogTitle>Mettre a jour un objet</DialogTitle>
           <DialogDescription>
             Modification locale en memoire pour le prototype (non persistante tant que la DB n&apos;est pas branchee).
@@ -136,7 +136,7 @@ const ConnectedObjectEditModal = ({ open, device, onClose, onSave }: ConnectedOb
           </div>
         )}
 
-        <DialogFooter>
+        <DialogFooter className="iot-edit-modal__footer">
           <Button type="button" variant="outline" onClick={onClose}>
             Annuler
           </Button>
