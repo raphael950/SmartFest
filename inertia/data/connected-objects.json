@@ -1,0 +1,90 @@
+[
+  {
+    "identifier": "CAM-01",
+    "name": "Camera Principal S1",
+    "type": "CAM",
+    "sector": "S1",
+    "status": "online",
+    "battery": 92,
+    "latencyMs": 8,
+    "signal": 97,
+    "firmware": "v3.2.1"
+  },
+  {
+    "identifier": "CAM-02",
+    "name": "Camera Tribune S2",
+    "type": "CAM",
+    "sector": "S2",
+    "status": "online",
+    "battery": 78,
+    "latencyMs": 11,
+    "signal": 91,
+    "firmware": "v3.2.1"
+  },
+  {
+    "identifier": "CAM-03",
+    "name": "Camera Pitlane S3",
+    "type": "CAM",
+    "sector": "S3",
+    "status": "alert",
+    "battery": 45,
+    "latencyMs": 34,
+    "signal": 62,
+    "firmware": "v3.1.0"
+  },
+  {
+    "identifier": "CAM-04",
+    "name": "Camera Entrée S2",
+    "type": "CAM",
+    "sector": "S2",
+    "status": "online",
+    "battery": 88,
+    "latencyMs": 9,
+    "signal": 94,
+    "firmware": "v3.2.1"
+  },
+  {
+    "identifier": "CAM-05",
+    "name": "Camera Standby S1",
+    "type": "CAM",
+    "sector": "S1",
+    "status": "maintenance",
+    "battery": 55,
+    "latencyMs": 19,
+    "signal": 51,
+    "firmware": "v3.0.4"
+  },
+  {
+    "identifier": "LED-01",
+    "name": "Panneau LED Nord",
+    "type": "LED",
+    "sector": "S1",
+    "status": "online",
+    "battery": 100,
+    "latencyMs": 2,
+    "signal": 99,
+    "firmware": "v2.8.3"
+  },
+  {
+    "identifier": "LED-02",
+    "name": "Panneau LED Est",
+    "type": "LED",
+    "sector": "S2",
+    "status": "online",
+    "battery": 100,
+    "latencyMs": 8,
+    "signal": 95,
+    "firmware": "v2.8.3"
+  },
+  {
+    "identifier": "LED-03",
+    "name": "Panneau LED Sud",
+    "type": "LED",
+    "sector": "S3",
+    "status": "offline",
+    "battery": 0,
+    "latencyMs": 999,
+    "signal": 0,
+    "firmware": "v2.7.1"
+  }
+]

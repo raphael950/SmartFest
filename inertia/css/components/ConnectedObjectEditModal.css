@@ -1,0 +1,38 @@
+.iot-edit-modal {
+  border-color: var(--shell-border);
+  background: color-mix(in srgb, var(--shell-bg) 96%, transparent);
+  color: var(--shell-fg);
+}
+
+.iot-edit-modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.iot-edit-modal__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.iot-edit-modal__row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.iot-edit-modal__select {
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid var(--shell-border);
+  background: color-mix(in srgb, var(--shell-menu-bg) 80%, transparent);
+  color: var(--shell-fg);
+  padding: 0 10px;
+}
+
+@media (max-width: 640px) {
+  .iot-edit-modal__grid {
+    grid-template-columns: 1fr;
+  }
+}
