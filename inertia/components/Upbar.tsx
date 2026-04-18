@@ -48,9 +48,12 @@ const Upbar = ({ isMobileNavOpen, onToggleMobileNav }: UpbarProps) => {
 
         {isProfileOpen && (
           <div className="sf-shell__profile-menu">
-            <button type="button" className="sf-shell__profile-menu-item">
-              Profil
-            </button>
+            <Link route="profile.edit" className="sf-shell__profile-menu-item">
+              Editer mon profil
+            </Link>
+            <Link route="profile.me" className="sf-shell__profile-menu-item">
+              Voir mon profil public
+            </Link>
             <button type="button" className="sf-shell__profile-menu-item">
               Paramètres
             </button>

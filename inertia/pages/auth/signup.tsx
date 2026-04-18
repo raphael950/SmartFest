@@ -1,6 +1,6 @@
 import { Form, Link } from '@adonisjs/inertia/react'
 import { useMemo, useState } from 'react'
-import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react'
+import { Briefcase, CalendarDays, Eye, EyeOff, Lock, Mail, Trophy, User, UserRound } from 'lucide-react'
 import '~/css/signup.css'
 
 export default function Signup() {
@@ -29,7 +29,7 @@ export default function Signup() {
             <p>
               Completez vos informations pour acceder a votre espace et aux services SmartFest.
             </p>
-            <div className="signup-step">Étape 1/3</div>
+            <div className="signup-step">Étape 1/1</div>
           </div>
 
           <Form route="new_account.store" className="auth-form">
@@ -38,6 +38,22 @@ export default function Signup() {
                 <div className="signup-columns">
                   <section className="signup-section">
                     <h2>Identité</h2>
+
+                    <div className="field">
+                      <label htmlFor="pseudo">Pseudo public</label>
+                      <div className="input-wrap">
+                        <UserRound size={18} className="field-icon" />
+                        <input
+                          id="pseudo"
+                          name="pseudo"
+                          type="text"
+                          autoComplete="nickname"
+                          placeholder="VibeMaster2026"
+                          data-invalid={errors.pseudo ? 'true' : undefined}
+                        />
+                      </div>
+                      {errors.pseudo ? <div className="field-error">{errors.pseudo}</div> : null}
+                    </div>
 
                     <div className="field">
                       <label htmlFor="email">Adresse Email</label>
@@ -56,18 +72,83 @@ export default function Signup() {
                     </div>
 
                     <div className="field">
-                      <label htmlFor="fullName">Nom d'utilisateur (Pseudo)</label>
+                      <label htmlFor="fullName">Nom complet (optionnel)</label>
                       <div className="input-wrap">
                         <User size={18} className="field-icon" />
                         <input
                           id="fullName"
                           name="fullName"
                           type="text"
-                          placeholder="VibeMaster2024"
+                          placeholder="Alex Martin"
                           data-invalid={errors.fullName ? 'true' : undefined}
                         />
                       </div>
                       {errors.fullName ? <div className="field-error">{errors.fullName}</div> : null}
+                    </div>
+                  </section>
+
+                  <section className="signup-section">
+                    <h2>Profil public</h2>
+
+                    <div className="signup-grid-two">
+                      <div className="field">
+                        <label htmlFor="gender">Sexe / Genre</label>
+                        <div className="input-wrap">
+                          <UserRound size={18} className="field-icon" />
+                          <input
+                            id="gender"
+                            name="gender"
+                            type="text"
+                            placeholder="Homme, Femme, Non-binaire..."
+                            data-invalid={errors.gender ? 'true' : undefined}
+                          />
+                        </div>
+                        {errors.gender ? <div className="field-error">{errors.gender}</div> : null}
+                      </div>
+                    </div>
+
+                    <div className="field">
+                      <label htmlFor="birthDate">Date de naissance</label>
+                      <div className="input-wrap">
+                        <CalendarDays size={18} className="field-icon" />
+                        <input
+                          id="birthDate"
+                          name="birthDate"
+                          type="date"
+                          data-invalid={errors.birthDate ? 'true' : undefined}
+                        />
+                      </div>
+                      {errors.birthDate ? <div className="field-error">{errors.birthDate}</div> : null}
+                    </div>
+
+                    <div className="field">
+                      <label htmlFor="jobTitle">Nom du metier</label>
+                      <div className="input-wrap">
+                        <Briefcase size={18} className="field-icon" />
+                        <input
+                          id="jobTitle"
+                          name="jobTitle"
+                          type="text"
+                          placeholder="Chef de projet evenementiel"
+                          data-invalid={errors.jobTitle ? 'true' : undefined}
+                        />
+                      </div>
+                      {errors.jobTitle ? <div className="field-error">{errors.jobTitle}</div> : null}
+                    </div>
+
+                    <div className="field">
+                      <label htmlFor="followedTeam">Equipe suivie</label>
+                      <div className="input-wrap">
+                        <Trophy size={18} className="field-icon" />
+                        <input
+                          id="followedTeam"
+                          name="followedTeam"
+                          type="text"
+                          placeholder="Ferrari AF Corse"
+                          data-invalid={errors.followedTeam ? 'true' : undefined}
+                        />
+                      </div>
+                      {errors.followedTeam ? <div className="field-error">{errors.followedTeam}</div> : null}
                     </div>
                   </section>
 

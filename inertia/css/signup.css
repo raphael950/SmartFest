@@ -44,9 +44,15 @@
 
 .auth-page.signup-page .signup-columns {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
   align-items: start;
+}
+
+.auth-page.signup-page .signup-grid-two {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
 }
 
 .auth-page.signup-page .signup-columns .signup-section {
@@ -161,7 +167,7 @@
   }
 
   .auth-page.signup-page .signup-columns {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
   }
 }
@@ -181,5 +187,10 @@
 
   .auth-page.signup-page .signup-columns .signup-section {
     padding: 12px;
+  }
+
+  .auth-page.signup-page .signup-columns,
+  .auth-page.signup-page .signup-grid-two {
+    grid-template-columns: 1fr;
   }
 }

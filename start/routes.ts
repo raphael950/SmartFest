@@ -8,10 +8,28 @@
 */
 
 import { middleware } from '#start/kernel'
+import ProfileController from '#controllers/profile_controller'
 import { controllers } from '#generated/controllers'
+import User from '#models/user'
 import router from '@adonisjs/core/services/router'
 
 router.on('/').renderInertia('home', {}).as('home')
+router
+  .get('/profil/:pseudo', async ({ params, inertia }) => {
+    const user = await User.query().where('pseudo', params.pseudo).firstOrFail()
+
+    return inertia.render('profile/show', {
+      profile: {
+        id: user.id,
+        pseudo: user.pseudo,
+        gender: user.gender,
+        birthDate: user.birthDate ? user.birthDate.toISODate() : null,
+        jobTitle: user.jobTitle,
+        followedTeam: user.followedTeam,
+      },
+    })
+  })
+  .as('profile.show')
 
 router
   .group(() => {
@@ -25,6 +43,19 @@ router
 
 router
   .group(() => {
+    router
+      .get('mon-profil', ({ auth, response }) => {
+        if (auth.user?.pseudo) {
+          return response.redirect().toRoute('profile.show', { pseudo: auth.user.pseudo })
+        }
+
+        return response.redirect().toRoute('profile.edit')
+      })
+      .as('profile.me')
+
+    router.get('mon-profil/edition', [ProfileController, 'edit']).as('profile.edit')
+    router.post('mon-profil/edition', [ProfileController, 'update']).as('profile.update')
+
     router.post('logout', [controllers.Session, 'destroy'])
   })
   .use(middleware.auth())

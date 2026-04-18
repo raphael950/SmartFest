@@ -19,6 +19,18 @@ export interface Registry {
       errorResponse: unknown
     }
   }
+  'profile.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/profil/:pseudo'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { pseudo: ParamValue }
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
   'new_account.create': {
     methods: ["GET","HEAD"]
     pattern: '/signup'
@@ -65,6 +77,42 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/session_controller').default['store']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/session_controller').default['store']>>>
+    }
+  }
+  'profile.me': {
+    methods: ["GET","HEAD"]
+    pattern: '/mon-profil'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'profile.edit': {
+    methods: ["GET","HEAD"]
+    pattern: '/mon-profil/edition'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'profile.update': {
+    methods: ["POST"]
+    pattern: '/mon-profil/edition'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
     }
   }
   'session.destroy': {

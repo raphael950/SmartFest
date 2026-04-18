@@ -10,17 +10,19 @@ import {
   Home,
   LogOut,
   MessageSquare,
+  UserRound,
 } from 'lucide-react'
 import '../css/components/Navbar.css'
 
 type NavItem = {
   label: string
   icon: React.ComponentType<{ className?: string }>
-  route?: 'home'
+  route?: 'home' | 'profile.edit'
 }
 
 const navItems: NavItem[] = [
   { label: 'Accueil', icon: Home, route: 'home' },
+  { label: 'Mon profil', icon: UserRound, route: 'profile.edit' },
   { label: 'Live Timing', icon: Clock3 },
   { label: 'Dashboard Événement', icon: BarChart3 },
   { label: 'Gestion Drapeaux', icon: Flag },
@@ -42,6 +44,9 @@ const Navbar = ({ isMobileOpen, onMobileClose }: NavbarProps) => {
   const activeItem = useMemo(() => {
     if (currentPath === '/') {
       return 'Accueil'
+    }
+    if (currentPath.startsWith('/mon-profil')) {
+      return 'Mon profil'
     }
     return ''
   }, [currentPath])
