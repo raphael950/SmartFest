@@ -149,6 +149,10 @@
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+.sf-shell__profile-menu-item-form {
+  width: 100%;
+}
+
 .sf-shell__profile-menu-item:last-child {
   border-bottom: 0;
 }
