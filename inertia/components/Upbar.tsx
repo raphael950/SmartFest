@@ -2,7 +2,7 @@ import type { Data } from '@generated/data'
 import { Form, Link } from '@adonisjs/inertia/react'
 import { usePage } from '@inertiajs/react'
 import { ChevronDown, Menu, UserRound } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import '../css/components/upbar.css'
 
 type UpbarProps = {
@@ -12,8 +12,13 @@ type UpbarProps = {
 
 const Upbar = ({ isMobileNavOpen, onToggleMobileNav }: UpbarProps) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false)
+  const [isAvatarBroken, setIsAvatarBroken] = useState(false)
   const page = usePage<Data.SharedProps>()
   const user = page.props.user
+
+  useEffect(() => {
+    setIsAvatarBroken(false)
+  }, [user?.avatarPath])
 
   return (
     <header className="sf-shell__topbar">
@@ -38,7 +43,16 @@ const Upbar = ({ isMobileNavOpen, onToggleMobileNav }: UpbarProps) => {
             onClick={() => setIsProfileOpen((state) => !state)}
           >
             <span className="sf-shell__profile-avatar">
-              <UserRound className="sf-shell__profile-avatar-icon" />
+              {user.avatarPath && !isAvatarBroken ? (
+                <img
+                  src={`/${user.avatarPath}`}
+                  alt="Avatar utilisateur"
+                  className="sf-shell__profile-avatar-image"
+                  onError={() => setIsAvatarBroken(true)}
+                />
+              ) : (
+                <UserRound className="sf-shell__profile-avatar-icon" />
+              )}
             </span>
             <span className="sf-shell__profile-text">
               <span className="sf-shell__profile-name">{user.fullName || user.pseudo || 'Mon compte'}</span>

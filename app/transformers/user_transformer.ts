@@ -8,6 +8,7 @@ export default class UserTransformer extends BaseTransformer<User> {
       'fullName',
       'pseudo',
       'email',
+      'avatarPath',
       'gender',
       'birthDate',
       'jobTitle',

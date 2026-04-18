@@ -1,6 +1,7 @@
 import { Form, Link } from '@adonisjs/inertia/react'
 import { InertiaProps } from '~/types'
-import { Briefcase, Cake, Save, Trophy, User, UserRound, VenusAndMars } from 'lucide-react'
+import { ChangeEvent, useState } from 'react'
+import { Briefcase, Cake, Camera, Save, Trophy, User, UserRound, VenusAndMars } from 'lucide-react'
 import '~/css/profile.css'
 
 type EditableProfile = {
@@ -10,6 +11,7 @@ type EditableProfile = {
   birthDate: string | null
   jobTitle: string | null
   followedTeam: string | null
+  avatarUrl: string | null
 }
 
 type ProfileEditPageProps = {
@@ -18,6 +20,23 @@ type ProfileEditPageProps = {
 }
 
 export default function ProfileEdit({ profile, hasPublicProfile }: InertiaProps<ProfileEditPageProps>) {
+  const [avatarPreview, setAvatarPreview] = useState(profile.avatarUrl)
+  const [isAvatarBroken, setIsAvatarBroken] = useState(false)
+
+  const hasAvatarPreview = Boolean(avatarPreview) && !isAvatarBroken
+
+  const onAvatarChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.currentTarget.files?.[0]
+    if (!file) {
+      setAvatarPreview(profile.avatarUrl)
+      setIsAvatarBroken(false)
+      return
+    }
+
+    setAvatarPreview(URL.createObjectURL(file))
+    setIsAvatarBroken(false)
+  }
+
   return (
     <section className="profile-page">
       <div className="profile-hero-card profile-hero-card--edit">
@@ -32,9 +51,43 @@ export default function ProfileEdit({ profile, hasPublicProfile }: InertiaProps<
           </p>
         </div>
 
-        <Form route="profile.update" className="profile-edit-form">
+        <Form route="profile.update" className="profile-edit-form" encType="multipart/form-data">
           {({ errors }) => (
             <>
+              <div className="profile-avatar-edit-card">
+                <div className="profile-avatar-preview">
+                  {hasAvatarPreview ? (
+                    <img
+                      src={avatarPreview!}
+                      alt="Apercu photo de profil"
+                      className="profile-avatar-image"
+                      onError={() => setIsAvatarBroken(true)}
+                    />
+                  ) : (
+                    <UserRound size={38} />
+                  )}
+                </div>
+
+                <div className="profile-avatar-copy">
+                  <h2>Photo de profil</h2>
+                  <p>Ajoute une photo claire pour etre reconnaissable sur ton profil public.</p>
+                </div>
+
+                <label htmlFor="profilePhoto" className="profile-avatar-upload-btn">
+                  <Camera size={16} />
+                  Importer une image
+                </label>
+
+                <input
+                  id="profilePhoto"
+                  name="profilePhoto"
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp,image/avif"
+                  className="profile-avatar-file-input"
+                  onChange={onAvatarChange}
+                />
+              </div>
+
               <div className="profile-edit-grid">
                 <div className="field">
                   <label htmlFor="fullName">Nom complet (optionnel)</label>

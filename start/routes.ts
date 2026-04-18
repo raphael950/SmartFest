@@ -25,7 +25,9 @@ router
     return inertia.render('profile/show', {
       profile: {
         id: user.id,
+        fullName: user.fullName,
         pseudo: user.pseudo,
+        avatarUrl: user.avatarPath ? `/${user.avatarPath}` : null,
         gender: user.gender,
         birthDate: user.birthDate ? user.birthDate.toISODate() : null,
         jobTitle: user.jobTitle,
