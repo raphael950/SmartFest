@@ -1,24 +1,100 @@
-import { Zap } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Link } from "@adonisjs/inertia/react";
-import "../css/components/Navbar.css";
+import type { Data } from '@generated/data'
+import { Link } from '@adonisjs/inertia/react'
+import { usePage } from '@inertiajs/react'
+import { useMemo } from 'react'
+import {
+  AlertTriangle,
+  BarChart3,
+  Clock3,
+  Flag,
+  Home,
+  LogOut,
+  MessageSquare,
+} from 'lucide-react'
+import '../css/components/Navbar.css'
+
+type NavItem = {
+  label: string
+  icon: React.ComponentType<{ className?: string }>
+  route?: 'home'
+}
+
+const navItems: NavItem[] = [
+  { label: 'Accueil', icon: Home, route: 'home' },
+  { label: 'Live Timing', icon: Clock3 },
+  { label: 'Dashboard Événement', icon: BarChart3 },
+  { label: 'Gestion Drapeaux', icon: Flag },
+  { label: 'Gestion Incidents', icon: AlertTriangle },
+  { label: 'Communication', icon: MessageSquare },
+  { label: 'Objets Connectés', icon: BarChart3 },
+]
 
 const Navbar = () => {
-  return (
-    <nav className="sf-navbar">
-      <div className="sf-navbar__container">
-        <div className="sf-navbar__brand">
-          <div className="sf-navbar__logo">
-            <Zap className="sf-navbar__logo-icon" />
-          </div>
-          <span className="sf-navbar__title">Festival Intelligent</span>
-        </div>
-        <Button variant="outline" size="sm" className="sf-navbar__login-btn" asChild>
-          <Link route="session.create">Se connecter</Link>
-        </Button>
-      </div>
-    </nav>
-  );
-};
+  const page = usePage<Data.SharedProps>()
+  const user = page.props.user
+  const currentPath = page.url
 
-export default Navbar;
+  const activeItem = useMemo(() => {
+    if (currentPath === '/') {
+      return 'Accueil'
+    }
+    return ''
+  }, [currentPath])
+
+  return (
+    <aside className="sf-shell__sidebar">
+      <div className="sf-shell__brand">
+        <div className="sf-shell__brand-logo">
+          <Flag className="sf-shell__brand-icon" />
+        </div>
+        <div>
+          <p className="sf-shell__brand-title">Le Mans</p>
+          <p className="sf-shell__brand-subtitle">Bugatti Circuit</p>
+        </div>
+      </div>
+
+      <nav className="sf-shell__nav" aria-label="Navigation principale">
+        {navItems.map((item) => {
+          const Icon = item.icon
+          const isActive = item.label === activeItem
+
+          if (!item.route) {
+            return (
+              <button key={item.label} type="button" className="sf-shell__nav-link">
+                <Icon className="sf-shell__nav-icon" />
+                <span>{item.label}</span>
+              </button>
+            )
+          }
+
+          return (
+            <Link
+              key={item.label}
+              route={item.route}
+              className={`sf-shell__nav-link ${isActive ? 'is-active' : ''}`}
+            >
+              <Icon className="sf-shell__nav-icon" />
+              <span>{item.label}</span>
+            </Link>
+          )
+        })}
+      </nav>
+
+      <div className="sf-shell__sidebar-bottom">
+        {user ? (
+          <button type="button" className="sf-shell__logout-btn">
+            <LogOut className="sf-shell__nav-icon" />
+            <span>Déconnexion</span>
+          </button>
+        ) : (
+          <Link route="session.create" className="sf-shell__logout-btn">
+            <LogOut className="sf-shell__nav-icon" />
+            <span>Connexion</span>
+          </Link>
+        )}
+      </div>
+    </aside>
+  )
+}
+
+export default Navbar

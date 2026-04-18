@@ -1,0 +1,218 @@
+:root {
+  --font-size: 16px;
+
+  /* System */
+  --background: #1a1a1a;
+  --foreground: #ffffff;
+  --card: #242424;
+  --card-foreground: #ffffff;
+  --popover: #242424;
+  --popover-foreground: #ffffff;
+  --primary: #e84c3d;
+  --primary-foreground: #ffffff;
+  --secondary: #2a2a2a;
+  --secondary-foreground: #ffffff;
+  --muted: #2a2a2a;
+  --muted-foreground: #999999;
+  --accent: #e84c3d;
+  --accent-foreground: #ffffff;
+  --destructive: #ff3d3d;
+  --destructive-foreground: #ffffff;
+  --border: rgba(255, 255, 255, 0.1);
+  --input: transparent;
+  --input-background: #2a2a2a;
+  --switch-background: #2a2a2a;
+  --ring: #e84c3d;
+
+  /* Racing palette */
+  --racing-red: #e84c3d;
+  --racing-red-dark: #d43d2e;
+  --racing-red-light: #ff5a4a;
+  --racing-yellow: #ffd700;
+  --racing-yellow-dark: #e6c200;
+  --racing-yellow-light: #ffed4e;
+  --racing-green: #00c853;
+  --racing-green-dark: #00a844;
+  --racing-green-light: #00e676;
+  --racing-blue: #00a8e8;
+  --racing-black: #1a1a1a;
+  --racing-dark: #242424;
+  --racing-darker: #0f0f0f;
+  --racing-gray: #2a2a2a;
+  --racing-gray-light: #3a3a3a;
+  --racing-white: #ffffff;
+
+  /* Flags */
+  --flag-green: #00c853;
+  --flag-green-bg: rgba(0, 200, 83, 0.1);
+  --flag-yellow: #ffd700;
+  --flag-yellow-bg: rgba(255, 215, 0, 0.1);
+  --flag-red: #e84c3d;
+  --flag-red-bg: rgba(232, 76, 61, 0.1);
+  --flag-white: #ffffff;
+  --flag-blue: #00a8e8;
+  --flag-black: #000000;
+
+  /* Status and severity */
+  --severity-low: #00c853;
+  --severity-low-bg: rgba(0, 200, 83, 0.2);
+  --severity-medium: #ffd700;
+  --severity-medium-bg: rgba(255, 215, 0, 0.2);
+  --severity-high: #e84c3d;
+  --severity-high-bg: rgba(232, 76, 61, 0.2);
+  --severity-critical: #ff3d3d;
+  --severity-critical-bg: rgba(255, 61, 61, 0.2);
+  --status-active: #00c853;
+  --status-active-bg: rgba(0, 200, 83, 0.2);
+  --status-inactive: #999999;
+  --status-inactive-bg: rgba(153, 153, 153, 0.2);
+  --status-warning: #ffd700;
+  --status-warning-bg: rgba(255, 215, 0, 0.2);
+  --status-error: #e84c3d;
+  --status-error-bg: rgba(232, 76, 61, 0.2);
+  --status-racing: #00c853;
+  --status-pit: #ffd700;
+  --status-retired: #e84c3d;
+
+  /* Roles */
+  --role-admin: #e84c3d;
+  --role-admin-bg: rgba(232, 76, 61, 0.2);
+  --role-direction: #ffd700;
+  --role-direction-bg: rgba(255, 215, 0, 0.2);
+  --role-commissaire: #00a8e8;
+  --role-commissaire-bg: rgba(0, 168, 232, 0.2);
+  --role-equipe: #00c853;
+  --role-equipe-bg: rgba(0, 200, 83, 0.2);
+  --role-visiteur: #9c27b0;
+  --role-visiteur-bg: rgba(156, 39, 176, 0.2);
+
+  /* Teams */
+  --team-alpine: #0055ff;
+  --team-ferrari: #dc0000;
+  --team-porsche: #000000;
+  --team-toyota: #eb0a1e;
+  --team-aston: #00594f;
+  --team-bmw: #1c69d4;
+  --team-corvette: #ffd700;
+  --team-mercedes: #00d2be;
+
+  /* Charts and telemetry */
+  --chart-1: #e84c3d;
+  --chart-2: #ffd700;
+  --chart-3: #00c853;
+  --chart-4: #00a8e8;
+  --chart-5: #9c27b0;
+  --chart-6: #ff6b35;
+  --chart-7: #00d9ff;
+  --chart-8: #b721ff;
+  --chart-grid: rgba(255, 255, 255, 0.1);
+  --chart-axis: #999999;
+  --chart-tooltip-bg: #242424;
+  --chart-tooltip-border: rgba(255, 255, 255, 0.1);
+  --telemetry-speed: #00a8e8;
+  --telemetry-temperature: #ff6b35;
+  --telemetry-pressure: #9c27b0;
+  --telemetry-fuel: #ffd700;
+  --telemetry-rpm: #e84c3d;
+  --telemetry-battery: #00c853;
+
+  /* Gradients and shadows */
+  --gradient-primary: linear-gradient(135deg, #e84c3d 0%, #ff5a4a 100%);
+  --gradient-success: linear-gradient(135deg, #00c853 0%, #00e676 100%);
+  --gradient-warning: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  --gradient-racing: linear-gradient(135deg, #e84c3d 0%, #ffd700 100%);
+  --gradient-dark: linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.6);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.7);
+  --shadow-glow-red: 0 0 20px rgba(232, 76, 61, 0.5);
+  --shadow-glow-green: 0 0 20px rgba(0, 200, 83, 0.5);
+  --shadow-glow-yellow: 0 0 20px rgba(255, 215, 0, 0.5);
+
+  /* Radius and typography */
+  --radius: 0.5rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+
+  /* Sidebar semantic tokens */
+  --sidebar: #1a1a1a;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #e84c3d;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #2a2a2a;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-ring: #e84c3d;
+
+  /* Project compatibility aliases */
+  --festival-light: #3a3a3a;
+  --festival-success: var(--racing-green);
+  --festival-warning: var(--racing-yellow);
+  --shell-bg: var(--racing-black);
+  --shell-fg: var(--racing-white);
+  --shell-border: var(--sidebar-border);
+  --shell-sidebar-start: var(--racing-black);
+  --shell-sidebar-end: var(--racing-darker);
+  --shell-accent: var(--racing-red);
+  --shell-hover: #232933;
+  --shell-hover-soft: #2a3038;
+  --shell-menu-bg: var(--racing-dark);
+  --shell-menu-border: var(--sidebar-border);
+  --shell-menu-hover: #31353e;
+  --shell-menu-shadow: var(--shadow-xl);
+  --shell-muted: #a7adba;
+  --shell-link: #e8ebf5;
+  --shell-link-strong: #f6f8ff;
+  --shell-role: #c4cad7;
+  --shell-chevron: #d6dbea;
+  --shell-menu-fg: var(--racing-white);
+  --auth-page-bg: var(--racing-black);
+  --auth-card-bg: var(--racing-dark);
+  --auth-card-border: var(--sidebar-border);
+  --auth-input-border: var(--racing-gray-light);
+  --auth-input-background: var(--input-background);
+  --auth-input-text: var(--racing-white);
+  --auth-input-placeholder: #9aa3b2;
+  --auth-icon: #8b93a7;
+  --auth-icon-btn: #b4bbca;
+  --auth-icon-btn-hover-bg: var(--racing-gray-light);
+  --auth-icon-btn-hover-fg: var(--racing-white);
+  --auth-title-muted: #a8b0c1;
+  --auth-submit-bg: var(--racing-red);
+  --auth-submit-hover: var(--racing-red-dark);
+  --auth-focus-ring: rgba(232, 76, 61, 0.25);
+  --danger: var(--destructive);
+  --danger-strong: #ff6b6b;
+  --danger-ring: rgba(255, 61, 61, 0.2);
+}
+
+.dark {
+  --background: #0f0f0f;
+  --foreground: #ffffff;
+  --card: #1a1a1a;
+  --card-foreground: #ffffff;
+  --popover: #1a1a1a;
+  --popover-foreground: #ffffff;
+  --primary: #ff5a4a;
+  --primary-foreground: #ffffff;
+  --secondary: #222222;
+  --secondary-foreground: #ffffff;
+  --muted: #222222;
+  --muted-foreground: #9f9f9f;
+  --accent: #ff5a4a;
+  --accent-foreground: #ffffff;
+  --destructive: #ff4a4a;
+  --destructive-foreground: #ffffff;
+  --border: rgba(255, 255, 255, 0.12);
+  --input: transparent;
+  --ring: #ff5a4a;
+}

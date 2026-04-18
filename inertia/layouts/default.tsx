@@ -3,7 +3,8 @@ import { toast, Toaster } from 'sonner'
 import { usePage } from '@inertiajs/react'
 import { ReactElement, useEffect } from 'react'
 import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
+import Upbar from '@/components/Upbar'
+
 export default function Layout({ children }: { children: ReactElement<Data.SharedProps> }) {
   useEffect(() => {
     toast.dismiss()
@@ -19,11 +20,13 @@ export default function Layout({ children }: { children: ReactElement<Data.Share
   })
 
   return (
-    <>
+    <div className="sf-shell">
       <Navbar />
-      <main>{children}</main>
+      <div className="sf-shell__main">
+        <Upbar />
+        <main className="sf-shell__content">{children}</main>
+      </div>
       <Toaster position="top-center" richColors />
-      <Footer />
-    </>
+    </div>
   )
 }
