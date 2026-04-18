@@ -2,6 +2,7 @@ import { Link } from '@adonisjs/inertia/react'
 import { InertiaProps } from '~/types'
 import { Briefcase, Cake, Sparkles, Trophy, UserRound, VenusAndMars } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import profileBg from '~/images/profile/profile-bg.jpg'
 import '~/css/profile.css'
 
 type PublicProfile = {
@@ -78,7 +79,10 @@ export default function ProfileShow({ profile }: InertiaProps<ProfilePageProps>)
 
   return (
     <section className="profile-page">
-      <div className="profile-hero-card">
+      <div
+        className="profile-hero-card profile-hero-card--public"
+        style={{ '--profile-cover-image': `url(${profileBg})` } as React.CSSProperties}
+      >
         <div className="profile-hero-glow profile-hero-glow--left" />
         <div className="profile-hero-glow profile-hero-glow--right" />
 

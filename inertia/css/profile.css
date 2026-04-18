@@ -6,10 +6,12 @@
 }
 
 .profile-hero-card {
+  --profile-card-radius: 26px;
   position: relative;
   overflow: hidden;
+  isolation: isolate;
   border: 1px solid color-mix(in srgb, var(--auth-card-border) 90%, transparent);
-  border-radius: 26px;
+  border-radius: var(--profile-card-radius);
   background:
     linear-gradient(145deg, color-mix(in srgb, var(--racing-dark) 94%, transparent) 0%, color-mix(in srgb, var(--racing-black) 95%, transparent) 60%),
     radial-gradient(circle at 15% 20%, color-mix(in srgb, var(--racing-blue) 16%, transparent), transparent 42%),
@@ -18,6 +20,31 @@
     0 24px 44px color-mix(in srgb, var(--racing-black) 74%, transparent),
     inset 0 1px 0 color-mix(in srgb, var(--racing-white) 8%, transparent);
   padding: 28px;
+  /* Safari/WebKit fix: force clipping of blurred children within rounded corners */
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+}
+
+.profile-hero-card--public {
+  background:
+    linear-gradient(125deg, color-mix(in srgb, var(--racing-black) 76%, transparent) 0%, color-mix(in srgb, var(--racing-dark) 62%, transparent) 52%, color-mix(in srgb, var(--racing-black) 84%, transparent) 100%),
+    radial-gradient(circle at 12% 14%, color-mix(in srgb, var(--racing-red) 28%, transparent), transparent 44%),
+    radial-gradient(circle at 84% 18%, color-mix(in srgb, var(--racing-blue) 24%, transparent), transparent 42%),
+    var(--profile-cover-image) center 34% / cover no-repeat;
+}
+
+.profile-hero-card--public::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--racing-black) 22%, transparent) 0%, color-mix(in srgb, var(--racing-black) 68%, transparent) 100%),
+    repeating-linear-gradient(
+      115deg,
+      color-mix(in srgb, var(--racing-white) 6%, transparent) 0 2px,
+      transparent 2px 11px
+    );
+  opacity: 0.28;
+  pointer-events: none;
 }
 
 .profile-hero-glow {
@@ -45,6 +72,13 @@
   position: relative;
   z-index: 1;
   margin-bottom: 26px;
+}
+
+.profile-hero-card--public .profile-headline h1,
+.profile-hero-card--public .profile-headline p,
+.profile-hero-card--public .profile-item-value,
+.profile-hero-card--public .profile-btn--ghost {
+  text-shadow: 0 6px 22px color-mix(in srgb, var(--racing-black) 74%, transparent);
 }
 
 .profile-badge {
@@ -392,8 +426,9 @@
   }
 
   .profile-hero-card {
+    --profile-card-radius: 18px;
     padding: 18px 14px;
-    border-radius: 18px;
+    border-radius: var(--profile-card-radius);
   }
 
   .profile-grid {
