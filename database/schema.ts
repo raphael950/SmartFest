@@ -30,29 +30,6 @@ export class ConnectedObjectSchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
-export class ConnectedObjectSchema extends BaseModel {
-  static $columns = ['createdAt', 'firmware', 'id', 'identifier', 'name', 'sector', 'status', 'type', 'updatedAt'] as const
-  $columns = ConnectedObjectSchema.$columns
-  @column.dateTime({ autoCreate: true })
-  declare createdAt: DateTime
-  @column()
-  declare firmware: string
-  @column({ isPrimary: true })
-  declare id: number
-  @column()
-  declare identifier: string
-  @column()
-  declare name: string
-  @column()
-  declare sector: string
-  @column()
-  declare status: string
-  @column()
-  declare type: string
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare updatedAt: DateTime | null
-}
-
 export class UserSchema extends BaseModel {
   static $columns = ['avatarPath', 'birthDate', 'createdAt', 'email', 'followedTeam', 'fullName', 'gender', 'id', 'jobTitle', 'password', 'pseudo', 'updatedAt'] as const
   $columns = UserSchema.$columns
@@ -67,23 +44,15 @@ export class UserSchema extends BaseModel {
   @column()
   declare followedTeam: string | null
   @column()
-  declare followedTeam: string | null
-  @column()
   declare fullName: string | null
-  @column()
-  declare gender: string | null
   @column()
   declare gender: string | null
   @column({ isPrimary: true })
   declare id: number
   @column()
   declare jobTitle: string | null
-  @column()
-  declare jobTitle: string | null
   @column({ serializeAs: null })
   declare password: string
-  @column()
-  declare pseudo: string | null
   @column()
   declare pseudo: string | null
   @column.dateTime({ autoCreate: true, autoUpdate: true })
