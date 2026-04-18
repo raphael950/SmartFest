@@ -1,26 +1,27 @@
 /* Login page only */
 .auth-page {
-  background: #f8f7fb;
+  background: transparent;
 }
 
 .auth-alert {
-  margin-bottom: 24px;
-  padding: 18px 20px;
-  border: 1px solid #d6d8e1;
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  border: 1px solid color-mix(in srgb, var(--shell-accent) 40%, var(--auth-card-border));
   border-radius: 14px;
-  background: #fff;
+  background: color-mix(in srgb, var(--shell-accent) 9%, transparent);
 }
 
 .auth-alert strong {
   display: block;
-  font-size: 18px;
+  font-size: 0.95rem;
   margin-bottom: 4px;
 }
 
 .auth-alert p {
-  color: #4b5563;
+  color: var(--auth-title-muted);
   margin: 0;
   line-height: 1.5;
+  font-size: 0.88rem;
 }
 
 .forgot-row {
@@ -32,9 +33,9 @@
 }
 
 .forgot-link {
-  color: #6b4de6;
+  color: color-mix(in srgb, var(--shell-accent) 70%, var(--racing-white));
   font-weight: 600;
-  font-size: 14px;
+  font-size: 0.8rem;
 }
 
 .forgot-link:hover {
@@ -42,16 +43,16 @@
 }
 
 .login-footer {
-  border-top: 1px solid #ececf3;
-  margin-top: 28px;
-  padding: 22px 0 6px;
+  border-top: 1px solid color-mix(in srgb, var(--auth-card-border) 80%, transparent);
+  margin-top: 14px;
+  padding: 18px 0 2px;
   text-align: center;
-  color: #667085;
-  font-size: 16px;
+  color: var(--auth-title-muted);
+  font-size: 0.9rem;
 }
 
 .login-footer a {
-  color: #6b4de6;
+  color: color-mix(in srgb, var(--shell-accent) 70%, var(--racing-white));
   font-weight: 700;
 }
 

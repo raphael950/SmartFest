@@ -1,5 +1,5 @@
 import { ArrowLeft, Zap } from "lucide-react";
-import "../css/components/Navbar.css";
+import "../css/components/AuthBar.css";
 
 const AuthBar = () => {
   const goBack = () => {
@@ -27,7 +27,7 @@ const AuthBar = () => {
             <div className="sf-navbar__logo">
               <Zap className="sf-navbar__logo-icon" />
             </div>
-            <span className="sf-navbar__title">Festival Intelligent</span>
+            <span className="sf-navbar__title">SmartFest</span>
           </div>
         </div>
       </div>

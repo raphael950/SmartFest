@@ -20,11 +20,11 @@ export default function Layout({ children }: { children: ReactElement<Data.Share
   })
 
   return (
-    <>
-        <AuthBar />
-        <main>{children}</main>
-        <Toaster position="top-center" richColors />
-        <AuthFooter />
-    </>
+    <div className="auth-shell">
+      <AuthBar />
+      <main className="auth-shell__main">{children}</main>
+      <Toaster position="top-center" richColors />
+      <AuthFooter />
+    </div>
   )
 }

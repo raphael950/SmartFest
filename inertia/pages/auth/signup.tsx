@@ -25,10 +25,9 @@ export default function Signup() {
       <div className="auth-card signup-card">
         <div className="auth-inner">
           <div className="auth-header signup-header">
-            <h1>Rejoignez l'aventure</h1>
+            <h1>Creer votre compte</h1>
             <p>
-              Complétez vos informations pour accéder à votre dashboard personnalisé et aux services
-              exclusifs.
+              Completez vos informations pour acceder a votre espace et aux services SmartFest.
             </p>
             <div className="signup-step">Étape 1/3</div>
           </div>

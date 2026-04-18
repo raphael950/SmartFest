@@ -16,7 +16,7 @@ export default function Login() {
         <div className="auth-inner">
           <div className="auth-header">
             <h1>Bon retour !</h1>
-            <p>Connectez-vous pour accéder à vos favoris et vos alertes personnalisées.</p>
+            <p>Connectez-vous pour accéder au tableau de bord et aux outils en temps reel.</p>
           </div>
 
           {flash?.error ? (
@@ -80,7 +80,7 @@ export default function Login() {
 
                 <div className="login-footer">
                   <p>
-                    Pas encore de compte ? <Link route="new_account.create">S&apos;inscrire au festival</Link>
+                    Pas encore de compte ? <Link route="new_account.create">Creer un compte</Link>
                   </p>
                 </div>
               </>

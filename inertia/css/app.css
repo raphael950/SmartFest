@@ -106,50 +106,68 @@
 
 
 /* Auth shared */
+.auth-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(circle at 8% 10%, color-mix(in srgb, var(--racing-blue) 10%, transparent), transparent 42%),
+    radial-gradient(circle at 92% 88%, color-mix(in srgb, var(--shell-accent) 12%, transparent), transparent 36%),
+    var(--auth-page-bg);
+}
+
+.auth-shell__main {
+  flex: 1;
+  display: flex;
+}
+
 .auth-page {
-  min-height: calc(100vh - 65px);
+  min-height: 100%;
   display: grid;
   place-items: center;
-  padding: 24px 16px;
-  background: var(--auth-page-bg);
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  padding: 32px 16px;
+  background: transparent;
 }
 
 .auth-card {
   width: 100%;
-  max-width: 560px;
-  background: var(--auth-card-bg);
+  max-width: 620px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--auth-card-bg) 92%, transparent) 0%, color-mix(in srgb, var(--racing-dark) 96%, transparent) 100%);
   border: 1px solid var(--auth-card-border);
-  border-radius: 18px;
-  box-shadow: var(--shadow-lg);
+  border-radius: 20px;
+  box-shadow: 0 18px 32px color-mix(in srgb, var(--racing-black) 66%, transparent);
   overflow: hidden;
 }
 
 .auth-inner {
-  padding: 28px 28px 24px;
+  padding: 32px 30px 28px;
 }
 
 .auth-header {
-  text-align: center;
-  margin-bottom: 28px;
+  text-align: left;
+  margin-bottom: 24px;
 }
 
 .auth-header h1 {
-  font-size: 40px;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  margin-bottom: 10px;
+  font-size: clamp(2rem, 5vw, 2.45rem);
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+  margin-bottom: 8px;
 }
 
 .auth-header p {
   color: var(--auth-title-muted);
-  font-size: 18px;
-  line-height: 1.45;
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 18px;
 }
 
 .field {
@@ -158,10 +176,11 @@
 
 .field label {
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   color: var(--auth-input-text);
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 0.92rem;
+  letter-spacing: 0.02em;
+  font-weight: 600;
 }
 
 .input-wrap {
@@ -179,14 +198,14 @@
 
 .auth-page input {
   width: 100%;
-  height: 56px;
+  height: 50px;
   border: 1px solid var(--auth-input-border);
-  border-radius: 10px;
-  padding: 0 48px 0 44px;
+  border-radius: 12px;
+  padding: 0 48px 0 46px;
   background: var(--auth-input-background);
   font: inherit;
   color: var(--auth-input-text);
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
 }
 
 .auth-page input::placeholder {
@@ -196,7 +215,8 @@
 .auth-page input:focus {
   outline: none;
   border-color: var(--auth-submit-bg);
-  box-shadow: 0 0 0 4px var(--auth-focus-ring);
+  box-shadow: 0 0 0 3px var(--auth-focus-ring);
+  background: color-mix(in srgb, var(--auth-input-background) 86%, var(--racing-dark));
 }
 
 .auth-page input[data-invalid='true'] {
@@ -235,36 +255,41 @@
 
 .auth-submit {
   width: 100%;
-  height: 56px;
+  height: 52px;
   border: 0;
-  border-radius: 10px;
-  background: var(--auth-submit-bg);
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--auth-submit-bg), color-mix(in srgb, var(--auth-submit-bg) 80%, var(--racing-red-light)));
   color: var(--primary-foreground);
-  font-size: 18px;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
   font-weight: 700;
   cursor: pointer;
-  margin-top: 6px;
+  margin-top: 4px;
 }
 
 .auth-submit:hover {
-  background: var(--auth-submit-hover);
+  background: linear-gradient(135deg, var(--auth-submit-hover), color-mix(in srgb, var(--auth-submit-bg) 72%, var(--racing-red-light)));
 }
 
 @media (max-width: 640px) {
+  .auth-page {
+    padding: 18px 12px;
+  }
+
   .auth-inner {
-    padding: 22px 18px 18px;
+    padding: 20px 16px 16px;
   }
 
   .auth-header h1 {
-    font-size: 32px;
+    font-size: clamp(1.65rem, 8.6vw, 2rem);
   }
 
   .auth-header p {
-    font-size: 16px;
+    font-size: 0.92rem;
   }
 
   .auth-page input,
   .auth-submit {
-    height: 52px;
+    height: 48px;
   }
 }
