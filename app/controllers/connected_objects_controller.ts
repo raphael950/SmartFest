@@ -5,13 +5,36 @@ const ALLOWED_STATUSES = new Set(['online', 'alert', 'maintenance', 'offline'])
 const ALLOWED_TYPES = new Set(['CAM', 'LED'])
 const ALLOWED_SECTORS = new Set(['S1', 'S2', 'S3'])
 
+type SerializedConnectedDevice = {
+  identifier: string
+  name: string
+  type: string
+  sector: string
+  status: ConnectedObject['status']
+  firmware: string
+  battery: number
+  latencyMs: number
+  signal: number
+}
+
 export default class ConnectedObjectsController {
   async index({ inertia }: HttpContext) {
     const objects = await ConnectedObject.query().orderBy('id', 'desc')
-    const devices = objects.map((device) => ({
-      ...device.serialize(),
-      ...this.buildTelemetry(device.identifier, device.status),
-    }))
+    const devices: SerializedConnectedDevice[] = objects.map((device) => {
+      const telemetry = this.buildTelemetry(device.identifier, device.status)
+
+      return {
+        identifier: device.identifier,
+        name: device.name,
+        type: device.type,
+        sector: device.sector,
+        status: device.status,
+        firmware: device.firmware,
+        battery: telemetry.battery,
+        latencyMs: telemetry.latencyMs,
+        signal: telemetry.signal,
+      }
+    })
 
     return inertia.render('objets', { devices })
   }

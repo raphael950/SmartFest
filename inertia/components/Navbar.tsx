@@ -17,7 +17,7 @@ import '../css/components/Navbar.css'
 type NavItem = {
   label: string
   icon: React.ComponentType<{ className?: string }>
-  route?: 'home'
+  route?: 'home' | 'profile.edit'
   href?: string
 }
 
