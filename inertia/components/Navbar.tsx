@@ -27,7 +27,7 @@ const navItems: NavItem[] = [
   { label: 'Live Timing', icon: Clock3 },
   { label: 'Dashboard Événement', icon: BarChart3 },
   { label: 'Gestion Drapeaux', icon: Flag },
-  { label: 'Gestion Incidents', icon: AlertTriangle },
+  { label: 'Gestion Incidents', icon: AlertTriangle, href: '/incidents' },
   { label: 'Communication', icon: MessageSquare },
   { label: 'Objets', icon: BarChart3, href: '/objets' },
 ]

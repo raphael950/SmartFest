@@ -30,6 +30,77 @@ export class ConnectedObjectSchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
+export class EventSchema extends BaseModel {
+  static $columns = ['accentColor', 'createdAt', 'displayOrder', 'endDate', 'id', 'startDate', 'status', 'title', 'updatedAt'] as const
+  $columns = EventSchema.$columns
+  @column()
+  declare accentColor: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare displayOrder: number
+  @column.date()
+  declare endDate: DateTime | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column.date()
+  declare startDate: DateTime
+  @column()
+  declare status: string
+  @column()
+  declare title: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
+export class IncidentSchema extends BaseModel {
+  static $columns = ['createdAt', 'description', 'id', 'sector', 'severity', 'type', 'updatedAt', 'vehicles'] as const
+  $columns = IncidentSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare description: string
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare sector: string
+  @column()
+  declare severity: string
+  @column()
+  declare type: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare vehicles: string
+}
+
+export class TeamSchema extends BaseModel {
+  static $columns = ['accentColor', 'carModel', 'category', 'country', 'createdAt', 'description', 'displayOrder', 'id', 'name', 'teamPrincipal', 'updatedAt'] as const
+  $columns = TeamSchema.$columns
+  @column()
+  declare accentColor: string
+  @column()
+  declare carModel: string
+  @column()
+  declare category: string
+  @column()
+  declare country: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare description: string
+  @column()
+  declare displayOrder: number
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare name: string
+  @column()
+  declare teamPrincipal: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
 export class UserSchema extends BaseModel {
   static $columns = ['avatarPath', 'birthDate', 'createdAt', 'email', 'followedTeam', 'fullName', 'gender', 'id', 'jobTitle', 'password', 'pseudo', 'updatedAt'] as const
   $columns = UserSchema.$columns

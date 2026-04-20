@@ -3,6 +3,9 @@ import type { routes } from './index.ts'
 
 export interface ApiDefinition {
   home: typeof routes['home']
+  incidents: typeof routes['incidents'] & {
+    store: typeof routes['incidents.store']
+  }
   objets: typeof routes['objets'] & {
     store: typeof routes['objets.store']
     update: typeof routes['objets.update']
