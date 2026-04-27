@@ -26,7 +26,7 @@ const navItems: NavItem[] = [
   { label: 'Mon profil', icon: UserRound, route: 'profile.edit' },
   { label: 'Live Timing', icon: Clock3 },
   { label: 'Dashboard Événement', icon: BarChart3 },
-  { label: 'Gestion Drapeaux', icon: Flag },
+  { label: 'Gestion Drapeaux', icon: Flag, href: '/drapeaux' },
   { label: 'Gestion Incidents', icon: AlertTriangle, href: '/incidents' },
   { label: 'Communication', icon: MessageSquare },
   { label: 'Objets', icon: BarChart3, href: '/objets' },

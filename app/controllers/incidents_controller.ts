@@ -32,7 +32,8 @@ export default class IncidentsController {
     const type = this.sanitize(payload.type, ALLOWED_TYPES, 'autre')
     const vehicles = String(payload.vehicles || '').trim()
     const severity = this.sanitize(payload.severity, ALLOWED_SEVERITIES, 'leger')
-    const sector = this.sanitize(payload.sector, ALLOWED_SECTORS, 'S1')
+    const rawSector = String(payload.sector ?? '').trim()
+    const sector = new Set(['S1', 'S2', 'S3']).has(rawSector) ? rawSector : 'S1'
     const description = String(payload.description || '').trim()
 
     await Incident.create({

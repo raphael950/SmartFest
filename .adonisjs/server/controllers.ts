@@ -5,6 +5,7 @@
 
 export const controllers = {
   ConnectedObjects: () => import('#controllers/connected_objects_controller'),
+  Flags: () => import('#controllers/flags_controller'),
   Incidents: () => import('#controllers/incidents_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
   Profile: () => import('#controllers/profile_controller'),

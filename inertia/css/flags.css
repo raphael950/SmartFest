@@ -1,0 +1,257 @@
+.flags-page {
+  min-height: 100%;
+  padding: 1.5rem;
+}
+
+/* ── Sector selector ── */\n/* removed - integrated into form */
+
+/* ── Content grid ── */
+.flags-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .flags-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Left column ── */
+.flags-left {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ── Form fields ── */
+.flags-form {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.flags-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.flags-form__label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--muted-foreground);
+}
+
+.flags-form__select {
+  width: 100%;
+  background: var(--input-background);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.875rem;
+  color: var(--foreground);
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2rem;
+  transition: border-color 0.15s;
+}
+
+.flags-form__select:focus {
+  border-color: var(--racing-red);
+}
+
+.flags-form__buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+/* ── Action buttons ── */
+.flags-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.flags-actions__btn {
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 0.625rem;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+  color: #fff;
+}
+
+.flags-actions__btn:hover {
+  opacity: 0.9;
+}
+
+.flags-actions__btn:active {
+  transform: scale(0.98);
+}
+
+.flags-actions__btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.flags-actions__btn--vert {
+  background: #22c55e;
+}
+
+.flags-actions__btn--jaune {
+  background: #eab308;
+  color: #1a1a1a;
+}
+
+.flags-actions__btn--rouge {
+  background: #ef4444;
+}
+
+.flags-actions__btn--retract {
+  background: var(--secondary);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+}
+
+.flags-actions__btn--retract:hover {
+  background: var(--card);
+}
+
+/* ── History (right column) ── */
+.flags-history {
+  background: var(--card);
+  border: 1px dashed var(--border);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+}
+
+.flags-history__heading {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--foreground);
+  margin-bottom: 1rem;
+}
+
+.flags-history__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 38rem;
+  overflow-y: auto;
+}
+
+.flags-history__empty {
+  text-align: center;
+  color: var(--muted-foreground);
+  padding: 2rem 0;
+  font-size: 0.875rem;
+}
+
+/* ── History card ── */
+.flag-card {
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.875rem 1rem;
+  background: var(--secondary);
+}
+
+.flag-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.375rem;
+}
+
+.flag-card__time {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+}
+
+.flag-card__badge {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.125rem 0.625rem;
+  border-radius: 9999px;
+}
+
+.flag-card__badge--vert {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.flag-card__badge--jaune {
+  background: rgba(234, 179, 8, 0.15);
+  color: #eab308;
+}
+
+.flag-card__badge--rouge {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.flag-card__details {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  font-size: 0.8125rem;
+  color: var(--muted-foreground);
+}
+
+.flag-card__details strong {
+  color: var(--foreground);
+}
+
+.flag-card__incident {
+  font-size: 0.75rem;
+  color: var(--racing-red);
+}
+
+.flag-card__retracted {
+  display: inline-block;
+  margin-top: 0.375rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  opacity: 0.7;
+}
+
+.flag-card--retracted {
+  opacity: 0.5;
+}
+
+.flag-card__retract-btn {
+  margin-top: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--secondary);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.flag-card__retract-btn:hover {
+  background: var(--card);
+}

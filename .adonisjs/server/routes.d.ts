@@ -5,6 +5,8 @@ type ParamValue = string | number | bigint | boolean
 export type ScannedRoutes = {
   ALL: {
     'home': { paramsTuple?: []; params?: {} }
+    'flags': { paramsTuple?: []; params?: {} }
+    'flags.store': { paramsTuple?: []; params?: {} }
     'incidents': { paramsTuple?: []; params?: {} }
     'incidents.store': { paramsTuple?: []; params?: {} }
     'objets': { paramsTuple?: []; params?: {} }
@@ -23,6 +25,7 @@ export type ScannedRoutes = {
   }
   GET: {
     'home': { paramsTuple?: []; params?: {} }
+    'flags': { paramsTuple?: []; params?: {} }
     'incidents': { paramsTuple?: []; params?: {} }
     'objets': { paramsTuple?: []; params?: {} }
     'profile.show': { paramsTuple: [ParamValue]; params: {'pseudo': ParamValue} }
@@ -33,6 +36,7 @@ export type ScannedRoutes = {
   }
   HEAD: {
     'home': { paramsTuple?: []; params?: {} }
+    'flags': { paramsTuple?: []; params?: {} }
     'incidents': { paramsTuple?: []; params?: {} }
     'objets': { paramsTuple?: []; params?: {} }
     'profile.show': { paramsTuple: [ParamValue]; params: {'pseudo': ParamValue} }
@@ -42,6 +46,7 @@ export type ScannedRoutes = {
     'profile.edit': { paramsTuple?: []; params?: {} }
   }
   POST: {
+    'flags.store': { paramsTuple?: []; params?: {} }
     'incidents.store': { paramsTuple?: []; params?: {} }
     'objets.store': { paramsTuple?: []; params?: {} }
     'new_account.store': { paramsTuple?: []; params?: {} }

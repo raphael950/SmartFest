@@ -14,6 +14,8 @@ import User from '#models/user'
 import router from '@adonisjs/core/services/router'
 
 router.on('/').renderInertia('home', {}).as('home')
+router.get('/drapeaux', [controllers.Flags, 'index']).as('flags')
+router.post('/drapeaux', [controllers.Flags, 'store']).as('flags.store')
 router.get('/incidents', [controllers.Incidents, 'index']).as('incidents')
 router.post('/incidents', [controllers.Incidents, 'store']).as('incidents.store')
 router.get('/objets', [controllers.ConnectedObjects, 'index']).as('objets')
