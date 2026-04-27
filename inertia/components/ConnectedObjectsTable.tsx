@@ -1,5 +1,5 @@
 import { router } from '@inertiajs/react'
-import { Plus, RefreshCw, Trash2, Wifi } from 'lucide-react'
+import { Plus, RefreshCw, Search, Trash2, Wifi } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import '@/css/components/ConnectedObjectsTable.css'
 import type { ConnectedObject, DeviceStatus } from '@/types/connected-objects'
@@ -72,6 +72,7 @@ const getMeterSegments = (value: number, max = 100, segments = 5) => {
 
 const ConnectedObjectsTable = ({ devices: initialDevices }: ConnectedObjectsTableProps) => {
   const [activeFilter, setActiveFilter] = useState<DeviceFilter>('all')
+  const [searchQuery, setSearchQuery] = useState('')
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [selectedIdentifier, setSelectedIdentifier] = useState<string | null>(null)
@@ -155,20 +156,42 @@ const ConnectedObjectsTable = ({ devices: initialDevices }: ConnectedObjectsTabl
   }
 
   const filteredDevices = useMemo(() => {
-    switch (activeFilter) {
-      case 'online':
-        return initialDevices.filter((device) => device.status === 'online')
-      case 'warning':
-        return initialDevices.filter((device) => device.status === 'alert')
-      case 'offline':
-        return initialDevices.filter((device) => device.status === 'offline')
-      case 'maintenance':
-        return initialDevices.filter((device) => device.status === 'maintenance')
-      case 'all':
-      default:
-        return initialDevices
+    const statusFiltered = (() => {
+      switch (activeFilter) {
+        case 'online':
+          return initialDevices.filter((device) => device.status === 'online')
+        case 'warning':
+          return initialDevices.filter((device) => device.status === 'alert')
+        case 'offline':
+          return initialDevices.filter((device) => device.status === 'offline')
+        case 'maintenance':
+          return initialDevices.filter((device) => device.status === 'maintenance')
+        case 'all':
+        default:
+          return initialDevices
+      }
+    })()
+
+    const normalizedSearch = searchQuery.trim().toLowerCase()
+    if (!normalizedSearch) {
+      return statusFiltered
     }
-  }, [activeFilter, initialDevices])
+
+    return statusFiltered.filter((device) => {
+      const searchableContent = [
+        device.name,
+        device.identifier,
+        device.type,
+        device.sector,
+        statusLabel[device.status],
+        device.firmware,
+      ]
+        .join(' ')
+        .toLowerCase()
+
+      return searchableContent.includes(normalizedSearch)
+    })
+  }, [activeFilter, initialDevices, searchQuery])
 
   return (
     <section className="iot-registry">
@@ -214,10 +237,23 @@ const ConnectedObjectsTable = ({ devices: initialDevices }: ConnectedObjectsTabl
           ))}
         </div>
 
-        <button type="button" className="iot-create-btn" onClick={openCreateModal}>
-          <Plus className="iot-create-btn__icon" />
-          AJOUTER OBJET
-        </button>
+        <div className="iot-registry__toolbar-actions">
+          <label className="iot-search" aria-label="Rechercher un objet">
+            <Search className="iot-search__icon" aria-hidden="true" />
+            <input
+              type="search"
+              className="iot-search__input"
+              placeholder="Rechercher nom, ID, secteur, firmware..."
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+            />
+          </label>
+
+          <button type="button" className="iot-create-btn" onClick={openCreateModal}>
+            <Plus className="iot-create-btn__icon" />
+            AJOUTER OBJET
+          </button>
+        </div>
       </div>
 
       <div className="iot-table-wrap">
@@ -236,99 +272,107 @@ const ConnectedObjectsTable = ({ devices: initialDevices }: ConnectedObjectsTabl
             </tr>
           </thead>
           <tbody>
-            {filteredDevices.map((device) => (
-              <tr
-                key={device.identifier}
-                className="iot-table__row-interactive"
-                onClick={() => openEditModal(device)}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter' || event.key === ' ') {
-                    event.preventDefault()
-                    openEditModal(device)
-                  }
-                }}
-                tabIndex={0}
-                role="button"
-                aria-label={`Modifier ${device.name}`}
-              >
-                <td className="iot-table__id">{device.name}</td>
-                <td>
-                  <span className={`iot-pill iot-pill--type ${device.type === 'LED' ? 'is-led' : 'is-cam'}`}>
-                    {device.type}
-                  </span>
-                </td>
-                <td className="iot-table__muted">{device.sector}</td>
-                <td>
-                  <span className={`iot-pill iot-pill--status ${statusClass[device.status]}`}>
-                    {statusLabel[device.status]}
-                  </span>
-                </td>
-                <td>
-                  <div className="iot-progress-cell">
-                    <div className={`iot-meter iot-meter--battery ${getBatteryTone(device.battery)}`}>
-                      <div className="iot-meter__bars" aria-hidden="true">
-                        {Array.from({ length: 5 }, (_, index) => (
-                          <span
-                            key={`${device.identifier}-battery-${index}`}
-                            className={`iot-meter__bar ${index < getMeterSegments(device.battery) ? 'is-filled' : ''}`}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                    <span>{device.battery}%</span>
-                  </div>
-                </td>
-                <td>
-                  <div className="iot-progress-cell">
-                    <div className={`iot-meter iot-meter--latency ${getLatencyTone(device.latencyMs)}`}>
-                      <Wifi className="iot-meter__icon" />
-                      <div className="iot-meter__bars" aria-hidden="true">
-                        {Array.from({ length: 5 }, (_, index) => (
-                          <span
-                            key={`${device.identifier}-latency-${index}`}
-                            className={`iot-meter__bar ${index < getMeterSegments(Math.max(0, 100 - Math.min(device.latencyMs, 100))) ? 'is-filled' : ''}`}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                    <span>{device.latencyMs}ms</span>
-                  </div>
-                </td>
-                <td>
-                  <div className="iot-progress-cell">
-                    <progress max={100} value={device.signal} className="iot-progress iot-progress--signal" />
-                    <span>{device.signal}%</span>
-                  </div>
-                </td>
-                <td className="iot-table__muted">{device.firmware}</td>
-                <td>
-                  <div className="iot-action-cell">
-                    <button
-                      type="button"
-                      className="iot-action-btn"
-                      aria-label={`Mettre a jour ${device.name}`}
-                      onClick={(event) => {
-                        event.stopPropagation()
-                        openEditModal(device)
-                      }}
-                    >
-                      <RefreshCw className="iot-action-btn__icon" />
-                    </button>
-                    <button
-                      type="button"
-                      className="iot-action-btn is-delete"
-                      aria-label={`Supprimer ${device.name}`}
-                      onClick={(event) => {
-                        event.stopPropagation()
-                        openDeleteConfirm(device)
-                      }}
-                    >
-                      <Trash2 className="iot-action-btn__icon" />
-                    </button>
-                  </div>
+            {filteredDevices.length === 0 ? (
+              <tr>
+                <td className="iot-table__empty" colSpan={9}>
+                  Aucun objet ne correspond a la recherche.
                 </td>
               </tr>
-            ))}
+            ) : (
+              filteredDevices.map((device) => (
+                <tr
+                  key={device.identifier}
+                  className="iot-table__row-interactive"
+                  onClick={() => openEditModal(device)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault()
+                      openEditModal(device)
+                    }
+                  }}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`Modifier ${device.name}`}
+                >
+                  <td className="iot-table__id">{device.name}</td>
+                  <td>
+                    <span className={`iot-pill iot-pill--type ${device.type === 'LED' ? 'is-led' : 'is-cam'}`}>
+                      {device.type}
+                    </span>
+                  </td>
+                  <td className="iot-table__muted">{device.sector}</td>
+                  <td>
+                    <span className={`iot-pill iot-pill--status ${statusClass[device.status]}`}>
+                      {statusLabel[device.status]}
+                    </span>
+                  </td>
+                  <td>
+                    <div className="iot-progress-cell">
+                      <div className={`iot-meter iot-meter--battery ${getBatteryTone(device.battery)}`}>
+                        <div className="iot-meter__bars" aria-hidden="true">
+                          {Array.from({ length: 5 }, (_, index) => (
+                            <span
+                              key={`${device.identifier}-battery-${index}`}
+                              className={`iot-meter__bar ${index < getMeterSegments(device.battery) ? 'is-filled' : ''}`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      <span>{device.battery}%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div className="iot-progress-cell">
+                      <div className={`iot-meter iot-meter--latency ${getLatencyTone(device.latencyMs)}`}>
+                        <Wifi className="iot-meter__icon" />
+                        <div className="iot-meter__bars" aria-hidden="true">
+                          {Array.from({ length: 5 }, (_, index) => (
+                            <span
+                              key={`${device.identifier}-latency-${index}`}
+                              className={`iot-meter__bar ${index < getMeterSegments(Math.max(0, 100 - Math.min(device.latencyMs, 100))) ? 'is-filled' : ''}`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      <span>{device.latencyMs}ms</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div className="iot-progress-cell">
+                      <progress max={100} value={device.signal} className="iot-progress iot-progress--signal" />
+                      <span>{device.signal}%</span>
+                    </div>
+                  </td>
+                  <td className="iot-table__muted">{device.firmware}</td>
+                  <td>
+                    <div className="iot-action-cell">
+                      <button
+                        type="button"
+                        className="iot-action-btn"
+                        aria-label={`Mettre a jour ${device.name}`}
+                        onClick={(event) => {
+                          event.stopPropagation()
+                          openEditModal(device)
+                        }}
+                      >
+                        <RefreshCw className="iot-action-btn__icon" />
+                      </button>
+                      <button
+                        type="button"
+                        className="iot-action-btn is-delete"
+                        aria-label={`Supprimer ${device.name}`}
+                        onClick={(event) => {
+                          event.stopPropagation()
+                          openDeleteConfirm(device)
+                        }}
+                      >
+                        <Trash2 className="iot-action-btn__icon" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
