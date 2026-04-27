@@ -236,6 +236,19 @@
   gap: 16px;
 }
 
+.home-event-card--interactive,
+.home-team-card--interactive {
+  width: 100%;
+  cursor: pointer;
+  border: 1px solid color-mix(in srgb, var(--border) 90%, transparent);
+  color: var(--foreground);
+  font: inherit;
+}
+
+.home-event-card--interactive {
+  text-align: left;
+}
+
 .home-event-card::after,
 .home-team-card::after {
   content: "";
@@ -284,6 +297,14 @@
   color: #cfd4dd;
 }
 
+.home-event-card__cta {
+  color: color-mix(in srgb, var(--event-accent) 72%, white);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
 .home-team-card {
   min-height: 196px;
   padding: 28px 24px 32px;
@@ -294,14 +315,6 @@
   gap: 14px;
   text-align: center;
   overflow: hidden;
-}
-
-.home-team-card--interactive {
-  width: 100%;
-  cursor: pointer;
-  border: 1px solid color-mix(in srgb, var(--border) 90%, transparent);
-  color: var(--foreground);
-  font: inherit;
 }
 
 .home-team-card::before {
