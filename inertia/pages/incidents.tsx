@@ -2,7 +2,7 @@ import { router } from '@inertiajs/react'
 import { AlertTriangle } from 'lucide-react'
 import { useState } from 'react'
 import type { InertiaProps } from '@/types'
-import type { Incident, IncidentSeverity, IncidentType } from '@/types/incidents'
+import type { Incident, IncidentSeverity, IncidentType, Team } from '@/types/incidents'
 import '@/css/incidents.css'
 
 const INCIDENT_TYPE_OPTIONS: { value: IncidentType; label: string }[] = [
@@ -41,6 +41,7 @@ const TYPE_LABELS: Record<string, string> = {
 
 type IncidentsPageProps = {
   incidents: Incident[]
+  teams: Team[]
 }
 
 const formatTime = (dateString: string) => {
@@ -52,7 +53,7 @@ const formatSector = (sector: string) => {
   return `Secteur ${sector.replace('S', '')}`
 }
 
-const IncidentsPage = ({ incidents }: InertiaProps<IncidentsPageProps>) => {
+const IncidentsPage = ({ incidents, teams }: InertiaProps<IncidentsPageProps>) => {
   const [type, setType] = useState<IncidentType | ''>('')
   const [vehicles, setVehicles] = useState('')
   const [severity, setSeverity] = useState<IncidentSeverity>('leger')
@@ -62,13 +63,13 @@ const IncidentsPage = ({ incidents }: InertiaProps<IncidentsPageProps>) => {
   const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    if (!type || !vehicles.trim() || !sector || !description.trim()) {
+    if (!type || !sector) {
       return
     }
 
     router.post('/incidents', {
       type,
-      vehicles: vehicles.trim(),
+      vehicles: vehicles || '',
       severity,
       sector,
       description: description.trim(),
@@ -112,17 +113,22 @@ const IncidentsPage = ({ incidents }: InertiaProps<IncidentsPageProps>) => {
             </div>
 
             <div className="incidents-create__field">
-              <label className="incidents-create__label incidents-create__label--required" htmlFor="incident-vehicles">
-                Véhicules impliqués
+              <label className="incidents-create__label" htmlFor="incident-vehicles">
+                Véhicule impliqué
               </label>
-              <input
+              <select
                 id="incident-vehicles"
-                className="incidents-create__input"
-                type="text"
-                placeholder="Séparer par virgule"
+                className="incidents-create__select"
                 value={vehicles}
                 onChange={(e) => setVehicles(e.target.value)}
-              />
+              >
+                <option value="">Aucun</option>
+                {teams.map((team) => (
+                  <option key={team.id} value={team.carModel}>
+                    {team.name} — {team.carModel}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="incidents-create__field">
@@ -160,7 +166,7 @@ const IncidentsPage = ({ incidents }: InertiaProps<IncidentsPageProps>) => {
           </div>
 
           <div className="incidents-create__field">
-            <label className="incidents-create__label incidents-create__label--required" htmlFor="incident-description">
+            <label className="incidents-create__label" htmlFor="incident-description">
               Description
             </label>
             <textarea
@@ -202,9 +208,9 @@ const IncidentsPage = ({ incidents }: InertiaProps<IncidentsPageProps>) => {
                 </div>
 
                 <p className="incident-card__type">{TYPE_LABELS[incident.type] || incident.type}</p>
-                <p className="incident-card__vehicles">Véhicules: {incident.vehicles}</p>
+                {incident.vehicles && <p className="incident-card__vehicles">Véhicule: {incident.vehicles}</p>}
 
-                <div className="incident-card__description">{incident.description}</div>
+                {incident.description && <div className="incident-card__description">{incident.description}</div>}
               </article>
             ))
           )}

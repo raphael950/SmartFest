@@ -11,7 +11,7 @@ export default class Incident extends BaseModel {
   declare type: string
 
   @column()
-  declare vehicles: string
+  declare vehicles: string | null
 
   @column()
   declare severity: string
@@ -20,7 +20,7 @@ export default class Incident extends BaseModel {
   declare sector: string
 
   @column()
-  declare description: string
+  declare description: string | null
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

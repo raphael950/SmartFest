@@ -59,7 +59,7 @@ export class IncidentSchema extends BaseModel {
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
   @column()
-  declare description: string
+  declare description: string | null
   @column({ isPrimary: true })
   declare id: number
   @column()
@@ -71,7 +71,7 @@ export class IncidentSchema extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
   @column()
-  declare vehicles: string
+  declare vehicles: string | null
 }
 
 export class TeamSchema extends BaseModel {

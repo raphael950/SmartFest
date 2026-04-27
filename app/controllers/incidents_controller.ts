@@ -1,4 +1,5 @@
 import Incident from '#models/incident'
+import db from '@adonisjs/lucid/services/db'
 import type { HttpContext } from '@adonisjs/core/http'
 
 const ALLOWED_TYPES = new Set(['contact', 'sortie_piste', 'panne_mecanique', 'incendie', 'debris', 'autre'])
@@ -8,6 +9,7 @@ const ALLOWED_SECTORS = new Set(['S1', 'S2', 'S3'])
 export default class IncidentsController {
   async index({ inertia }: HttpContext) {
     const incidents = await Incident.query().orderBy('created_at', 'desc')
+    const teams = await db.from('teams').select('id', 'name', 'car_model').orderBy('display_order')
 
     return inertia.render('incidents', {
       incidents: incidents.map((incident) => ({
@@ -20,6 +22,7 @@ export default class IncidentsController {
         createdAt: incident.createdAt.toISO() ?? '',
         updatedAt: incident.updatedAt?.toISO() ?? null,
       })),
+      teams: teams.map((t) => ({ id: t.id, name: t.name, carModel: t.car_model })),
     })
   }
 
@@ -32,17 +35,13 @@ export default class IncidentsController {
     const sector = this.sanitize(payload.sector, ALLOWED_SECTORS, 'S1')
     const description = String(payload.description || '').trim()
 
-    if (!vehicles) {
-      session.flash('error', 'Les véhicules impliqués sont requis.')
-      return response.redirect().back()
-    }
-
-    if (!description) {
-      session.flash('error', 'La description est requise.')
-      return response.redirect().back()
-    }
-
-    await Incident.create({ type, vehicles, severity, sector, description })
+    await Incident.create({
+      type,
+      vehicles: vehicles || null,
+      severity,
+      sector,
+      description: description || null,
+    })
 
     return response.redirect().back()
   }
