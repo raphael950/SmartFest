@@ -3,21 +3,7 @@ import { useMemo, useState } from 'react'
 import { Mail, Search, Sparkles, Trophy, UserRound, Users } from 'lucide-react'
 import type { InertiaProps } from '@/types'
 import '@/css/networking.css'
-
-type NetworkingUser = {
-  id: number
-  pseudo: string
-  fullName: string | null
-  email: string
-  avatarUrl: string | null
-  followedTeam: string | null
-  jobTitle: string | null
-  isCurrentUser: boolean
-}
-
-type NetworkingPageProps = {
-  users: NetworkingUser[]
-}
+import { NetworkingPageProps } from '@/types/networking.types'
 
 const NetworkingPage = ({ users }: InertiaProps<NetworkingPageProps>) => {
   const [searchTerm, setSearchTerm] = useState('')

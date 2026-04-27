@@ -32,6 +32,7 @@ export interface ApiDefinition {
   networking: {
     index: typeof routes['networking.index']
   }
+  liveTiming: typeof routes['live-timing']
   admin: {
     users: {
       index: typeof routes['admin.users.index']

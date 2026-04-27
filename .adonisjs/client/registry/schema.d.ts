@@ -223,6 +223,18 @@ export interface Registry {
       errorResponse: unknown
     }
   }
+  'live-timing': {
+    methods: ["GET","HEAD"]
+    pattern: '/live-timing'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
   'session.destroy': {
     methods: ["POST"]
     pattern: '/logout'

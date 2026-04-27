@@ -1,10 +1,7 @@
 import ConnectedObjectsTable from '@/components/ConnectedObjectsTable'
 import type { InertiaProps } from '@/types'
-import type { ConnectedObject } from '../types/connected-objects.types.ts'
+import type { ObjetsPageProps } from '../types/connected-objects.types.ts'
 
-type ObjetsPageProps = {
-  devices: ConnectedObject[]
-}
 
 const ObjetsPage = ({ devices }: InertiaProps<ObjetsPageProps>) => {
   return (
