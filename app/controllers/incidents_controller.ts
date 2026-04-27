@@ -32,7 +32,9 @@ export default class IncidentsController {
   }
 
   async store({ request, response, session }: HttpContext) {
-    const payload = request.only(['type', 'vehicles', 'severity', 'sector', 'description'])
+    const payload = request.only(['type', 'vehicles', 'severity', 'sector', 'description']) as Partial<
+      Record<'type' | 'vehicles' | 'severity' | 'sector' | 'description', unknown>
+    >
 
     const type = this.sanitize(payload.type, ALLOWED_TYPES, 'autre')
     const vehicles = String(payload.vehicles || '').trim()
