@@ -28,7 +28,7 @@ router.post('/objets', [controllers.ConnectedObjects, 'store']).as('objets.store
 router.put('/objets/:identifier', [controllers.ConnectedObjects, 'update']).as('objets.update')
 router.delete('/objets/:identifier', [controllers.ConnectedObjects, 'destroy']).as('objets.destroy')
 router
-  .get('/profil/:pseudo', async ({ params, inertia }) => {
+  .get('/profil/:pseudo', async ({ params, inertia, auth }) => {
     const user = await User.query().where('pseudo', params.pseudo).firstOrFail()
     const levelProgress = userLevelService.getProgress(user.points)
 
@@ -47,6 +47,7 @@ router
         levelLabel: levelProgress.levelLabel,
         levelProgress,
       },
+      canEdit: auth.user?.id === user.id,
     })
   })
   .as('profile.show')

@@ -19,7 +19,6 @@ import '../css/components/Navbar.css'
 
 const baseNavItems: NavItem[] = [
   { label: 'Accueil', icon: Home, route: 'home' },
-  { label: 'Mon profil', icon: UserRound, route: 'profile.edit' },
   { label: 'Networking', icon: Users, href: '/networking' },
   { label: 'Live Timing', icon: Clock3 },
   { label: 'Gestion Drapeaux', icon: Flag },
@@ -55,9 +54,6 @@ const Navbar = ({ isMobileOpen, onMobileClose }: NavbarProps) => {
     const activeMatch = navItems.find((item) => {
       if (item.route === 'home') {
         return currentPathname === '/'
-      }
-      if (item.route === 'profile.edit') {
-        return currentPathname.startsWith('/mon-profil')
       }
 
       if (item.href === '/networking') {
