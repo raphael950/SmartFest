@@ -1,0 +1,14 @@
+import type React from 'react'
+
+export type NavbarRoute = 'home' | 'profile.edit' | 'incidents' | 'objets'
+
+export type NavItem = {
+  label: string
+  icon: React.ComponentType<{ className?: string }>
+  route?: NavbarRoute
+}
+
+export type NavbarProps = {
+  isMobileOpen: boolean
+  onMobileClose: () => void
+}

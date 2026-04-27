@@ -1,0 +1,32 @@
+.home-page {
+  min-height: 100%;
+  padding: 24px;
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--racing-red) 16%, transparent), transparent 28%),
+    radial-gradient(circle at bottom left, color-mix(in srgb, var(--racing-yellow) 8%, transparent), transparent 24%),
+    linear-gradient(180deg, var(--racing-black) 0%, var(--racing-darker) 100%);
+}
+
+.home-page__inner {
+  width: min(1280px, 100%);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+@media (max-width: 900px) {
+  .home-page {
+    padding: 18px;
+  }
+
+  .home-page__inner {
+    gap: 32px;
+  }
+}
+
+@media (max-width: 640px) {
+  .home-page {
+    padding: 14px;
+  }
+}

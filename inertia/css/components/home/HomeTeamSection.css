@@ -1,0 +1,59 @@
+.home-team-card {
+  min-height: 196px;
+  padding: 28px 24px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.home-team-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at top center, color-mix(in srgb, var(--team-accent) 16%, transparent), transparent 38%),
+    linear-gradient(180deg, color-mix(in srgb, var(--racing-white) 3%, transparent) 0%, transparent 26%);
+  pointer-events: none;
+}
+
+.home-team-card h4,
+.home-team-card p {
+  position: relative;
+  z-index: 1;
+}
+
+.home-team-card p {
+  margin: 0;
+  color: var(--shell-muted);
+  font-size: 1rem;
+}
+
+.home-team-card__cta {
+  position: relative;
+  z-index: 1;
+  margin-top: 4px;
+  color: color-mix(in srgb, var(--team-accent) 72%, var(--racing-white));
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.home-team-card__emoji {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--team-accent) 14%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--team-accent) 22%, transparent);
+  font-size: 2.3rem;
+  line-height: 1;
+}

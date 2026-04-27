@@ -1,0 +1,46 @@
+.home-event-card {
+  min-height: 172px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.home-event-card--interactive {
+  text-align: left;
+}
+
+.home-event-card__date {
+  margin: 0;
+  color: var(--event-accent);
+  font-size: 0.96rem;
+  font-weight: 700;
+}
+
+.home-status-pill {
+  margin-top: auto;
+  width: fit-content;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.home-status-pill[data-tone='live'] {
+  background: color-mix(in srgb, var(--racing-green) 18%, transparent);
+  color: var(--racing-green-light);
+}
+
+.home-status-pill[data-tone='upcoming'] {
+  background: color-mix(in srgb, var(--racing-white) 10%, transparent);
+  color: var(--shell-muted);
+}
+
+.home-event-card__cta {
+  color: color-mix(in srgb, var(--event-accent) 72%, white);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}

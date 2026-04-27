@@ -12,13 +12,8 @@ import {
   MessageSquare,
   UserRound,
 } from 'lucide-react'
+import type { NavItem, NavbarProps } from '@/types/navbar'
 import '../css/components/Navbar.css'
-
-type NavItem = {
-  label: string
-  icon: React.ComponentType<{ className?: string }>
-  route?: 'home' | 'profile.edit' | 'incidents' | 'objets'
-}
 
 const navItems: NavItem[] = [
   { label: 'Accueil', icon: Home, route: 'home' },
@@ -29,11 +24,6 @@ const navItems: NavItem[] = [
   { label: 'Communication', icon: MessageSquare },
   { label: 'Objets', icon: BarChart3, route: 'objets' },
 ]
-
-type NavbarProps = {
-  isMobileOpen: boolean
-  onMobileClose: () => void
-}
 
 const Navbar = ({ isMobileOpen, onMobileClose }: NavbarProps) => {
   const page = usePage<Data.SharedProps>()

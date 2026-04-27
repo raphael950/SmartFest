@@ -1,0 +1,191 @@
+.home-hero {
+  position: relative;
+  min-height: clamp(380px, 58vh, 520px);
+  border: 1px solid color-mix(in srgb, var(--border) 92%, transparent);
+  border-radius: 30px;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      120deg,
+      color-mix(in srgb, var(--racing-black) 20%, transparent) 0%,
+      color-mix(in srgb, var(--racing-dark) 12%, transparent) 50%,
+      color-mix(in srgb, var(--shell-accent) 24%, transparent) 100%
+    ),
+    url('../../../images/home/hero-track.jpg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  box-shadow: 0 26px 54px color-mix(in srgb, var(--racing-black) 36%, transparent);
+}
+
+.home-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--racing-black) 95%, transparent) 0%,
+    color-mix(in srgb, var(--racing-black) 85%, transparent) 34%,
+    color-mix(in srgb, var(--racing-black) 38%, transparent) 58%,
+    color-mix(in srgb, var(--racing-black) 8%, transparent) 100%
+  );
+}
+
+.home-hero__content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  min-height: inherit;
+  max-width: 580px;
+  padding: clamp(32px, 4vw, 54px);
+}
+
+.home-hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  border: 1px solid color-mix(in srgb, var(--racing-red) 55%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--racing-red) 18%, transparent);
+  padding: 10px 16px;
+  color: var(--racing-white);
+  font-size: 0.94rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.home-hero__badge-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--racing-white);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--racing-red) 20%, transparent);
+  animation: home-live-pulse 1.8s ease-in-out infinite;
+}
+
+.home-hero__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.home-hero__copy h2 {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  font-size: clamp(2.8rem, 6vw, 4.8rem);
+  line-height: 0.96;
+  letter-spacing: -0.045em;
+}
+
+.home-hero__copy h2 span {
+  color: var(--racing-red);
+}
+
+.home-hero__copy p {
+  margin: 0;
+  max-width: 34rem;
+  color: color-mix(in srgb, var(--racing-white) 88%, transparent);
+  font-size: clamp(1rem, 1.45vw, 1.35rem);
+  line-height: 1.55;
+}
+
+.home-hero__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  width: fit-content;
+  border: 0;
+  border-radius: 18px;
+  padding: 16px 22px;
+  background: var(--gradient-primary);
+  color: var(--racing-white);
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 700;
+  box-shadow: 0 16px 32px color-mix(in srgb, var(--racing-red) 28%, transparent);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.home-hero__cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 20px 36px color-mix(in srgb, var(--racing-red) 34%, transparent);
+  filter: brightness(1.04);
+}
+
+.home-hero__cta-icon {
+  width: 18px;
+  height: 18px;
+}
+
+@keyframes home-live-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(0.82);
+    opacity: 0.76;
+  }
+}
+
+@media (max-width: 1100px) {
+  .home-hero__copy h2 {
+    font-size: clamp(2.5rem, 7vw, 4.2rem);
+  }
+}
+
+@media (max-width: 900px) {
+  .home-hero {
+    min-height: 420px;
+  }
+
+  .home-hero::before {
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--racing-black) 84%, transparent) 0%,
+      color-mix(in srgb, var(--racing-black) 76%, transparent) 44%,
+      color-mix(in srgb, var(--racing-black) 20%, transparent) 100%
+    );
+  }
+
+  .home-hero__content {
+    max-width: 100%;
+    padding: 24px;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .home-hero {
+    min-height: 360px;
+    border-radius: 24px;
+  }
+
+  .home-hero__content {
+    gap: 18px;
+    padding: 20px;
+  }
+
+  .home-hero__copy h2 {
+    font-size: clamp(2.2rem, 12vw, 3.1rem);
+  }
+
+  .home-hero__copy p {
+    font-size: 0.98rem;
+  }
+
+  .home-hero__cta {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 18px;
+  }
+}
