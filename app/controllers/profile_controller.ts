@@ -80,6 +80,6 @@ export default class ProfileController {
     await user.save()
 
     session.flash('success', 'Profil mis a jour avec succes.')
-    return response.redirect().toRoute('profile.edit')
+    return response.redirect().toRoute('profile.me')
   }
 }

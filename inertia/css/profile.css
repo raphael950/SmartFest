@@ -242,6 +242,81 @@
   color: color-mix(in srgb, var(--shell-accent) 80%, var(--racing-white));
 }
 
+.profile-btn--primary {
+  border: 1px solid color-mix(in srgb, var(--shell-accent) 54%, transparent);
+  color: var(--racing-black);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--shell-accent) 94%, var(--racing-white)),
+    color-mix(in srgb, var(--racing-red) 30%, var(--shell-accent))
+  );
+  box-shadow: 0 14px 28px color-mix(in srgb, var(--shell-accent) 18%, transparent);
+}
+
+.profile-btn--primary:hover {
+  color: var(--racing-black);
+  filter: brightness(1.02);
+}
+
+.profile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.profile-edit-modal {
+  width: min(980px, calc(100vw - 24px));
+  max-width: none;
+  max-height: calc(100vh - 24px);
+  overflow: auto;
+  padding: 22px;
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--racing-dark) 96%, transparent) 0%, color-mix(in srgb, var(--racing-black) 96%, transparent) 100%),
+    radial-gradient(circle at 10% 10%, color-mix(in srgb, var(--racing-blue) 18%, transparent), transparent 40%),
+    radial-gradient(circle at 90% 90%, color-mix(in srgb, var(--racing-red) 18%, transparent), transparent 38%);
+}
+
+.profile-edit-modal__header {
+  padding-right: 36px;
+}
+
+.profile-edit-modal .profile-edit-form {
+  margin-top: 10px;
+}
+
+.profile-edit-modal .profile-avatar-edit-card {
+  grid-template-columns: 88px minmax(0, 1fr) auto auto;
+}
+
+.profile-edit-modal .profile-actions--edit {
+  justify-content: space-between;
+}
+
+@media (max-width: 860px) {
+  .profile-grid,
+  .profile-identity-names,
+  .profile-edit-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-identity-card,
+  .profile-avatar-edit-card {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+
+  .profile-edit-modal {
+    width: min(100vw - 16px, 980px);
+    padding: 18px;
+  }
+
+  .profile-edit-modal .profile-actions--edit {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
 .profile-hero-card--edit {
   max-width: 920px;
   margin: 0 auto;

@@ -3,6 +3,7 @@ import { InertiaProps } from '~/types'
 import { Briefcase, Cake, Sparkles, Trophy, UserRound, VenusAndMars } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import profileBg from '~/images/profile/profile-bg.jpg'
+import ProfileEditModal from '@/components/profile/ProfileEditModal'
 import '~/css/profile.css'
 
 type PublicProfile = {
@@ -30,6 +31,7 @@ type PublicProfile = {
 
 type ProfilePageProps = {
   profile: PublicProfile
+  canEdit: boolean
 }
 
 const formatBirthDate = (value: string | null) => {
@@ -80,8 +82,9 @@ const splitIdentity = (fullName: string | null, pseudo: string | null) => {
   return { firstName, lastName }
 }
 
-export default function ProfileShow({ profile }: InertiaProps<ProfilePageProps>) {
+export default function ProfileShow({ profile, canEdit }: InertiaProps<ProfilePageProps>) {
   const [isAvatarBroken, setIsAvatarBroken] = useState(false)
+  const [isEditOpen, setIsEditOpen] = useState(false)
   const age = computeAge(profile.birthDate)
   const identity = splitIdentity(profile.fullName, profile.pseudo)
 
@@ -217,11 +220,34 @@ export default function ProfileShow({ profile }: InertiaProps<ProfilePageProps>)
         </div>
 
         <div className="profile-actions">
+          {canEdit ? (
+            <button type="button" className="profile-btn profile-btn--primary" onClick={() => setIsEditOpen(true)}>
+              Editer mon profil
+            </button>
+          ) : null}
+
           <Link route="home" className="profile-btn profile-btn--ghost">
             Retour accueil
           </Link>
         </div>
       </div>
+
+      {canEdit ? (
+        <ProfileEditModal
+          open={isEditOpen}
+          onOpenChange={setIsEditOpen}
+          profile={{
+            fullName: profile.fullName,
+            pseudo: profile.pseudo,
+            gender: profile.gender,
+            birthDate: profile.birthDate,
+            jobTitle: profile.jobTitle,
+            followedTeam: profile.followedTeam,
+            avatarUrl: profile.avatarUrl,
+          }}
+          hasPublicProfile={Boolean(profile.pseudo)}
+        />
+      ) : null}
     </section>
   )
 }
