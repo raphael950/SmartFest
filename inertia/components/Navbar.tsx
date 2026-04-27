@@ -3,6 +3,7 @@ import { Form, Link } from '@adonisjs/inertia/react'
 import { usePage } from '@inertiajs/react'
 import { useMemo } from 'react'
 import {
+  Shield,
   AlertTriangle,
   BarChart3,
   Clock3,
@@ -10,6 +11,7 @@ import {
   Home,
   LogOut,
   MessageSquare,
+  Users,
   UserRound,
 } from 'lucide-react'
 import '../css/components/Navbar.css'
@@ -18,11 +20,13 @@ type NavItem = {
   label: string
   icon: React.ComponentType<{ className?: string }>
   route?: 'home' | 'profile.edit' | 'incidents' | 'objets'
+  href?: string
 }
 
-const navItems: NavItem[] = [
+const baseNavItems: NavItem[] = [
   { label: 'Accueil', icon: Home, route: 'home' },
   { label: 'Mon profil', icon: UserRound, route: 'profile.edit' },
+  { label: 'Networking', icon: Users, href: '/networking' },
   { label: 'Live Timing', icon: Clock3 },
   { label: 'Gestion Drapeaux', icon: Flag },
   { label: 'Gestion Incidents', icon: AlertTriangle, route: 'incidents' },
@@ -39,6 +43,15 @@ const Navbar = ({ isMobileOpen, onMobileClose }: NavbarProps) => {
   const page = usePage<Data.SharedProps>()
   const user = page.props.user
   const currentPath = page.url
+  const isAdmin = Boolean((user as { isAdmin?: boolean } | undefined)?.isAdmin)
+
+  const navItems = useMemo<NavItem[]>(() => {
+    if (!isAdmin) {
+      return baseNavItems
+    }
+
+    return [...baseNavItems, { label: 'Admin', icon: Shield, href: '/admin/users' } satisfies NavItem]
+  }, [isAdmin])
 
   const currentPathname = useMemo(() => {
     return currentPath.split('?')[0].split('#')[0]
@@ -53,12 +66,20 @@ const Navbar = ({ isMobileOpen, onMobileClose }: NavbarProps) => {
         return currentPathname.startsWith('/mon-profil')
       }
 
+      if (item.href === '/networking') {
+        return currentPathname === '/networking' || currentPathname.startsWith('/networking/')
+      }
+
       if (item.route === 'incidents') {
         return currentPathname === '/incidents' || currentPathname.startsWith('/incidents/')
       }
 
       if (item.route === 'objets') {
         return currentPathname === '/objets' || currentPathname.startsWith('/objets/')
+      }
+
+      if (item.href === '/admin/users') {
+        return currentPathname === '/admin/users' || currentPathname.startsWith('/admin/users/')
       }
 
       return false
@@ -86,6 +107,20 @@ const Navbar = ({ isMobileOpen, onMobileClose }: NavbarProps) => {
             const isActive = item.label === activeItem
 
             if (!item.route) {
+              if (item.href) {
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    className={`sf-shell__nav-link ${isActive ? 'is-active' : ''}`}
+                    onClick={onMobileClose}
+                  >
+                    <Icon className="sf-shell__nav-icon" />
+                    <span>{item.label}</span>
+                  </Link>
+                )
+              }
+
               return (
                 <button key={item.label} type="button" className="sf-shell__nav-link" onClick={onMobileClose}>
                   <Icon className="sf-shell__nav-icon" />

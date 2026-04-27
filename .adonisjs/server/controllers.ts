@@ -4,10 +4,12 @@
  */
 
 export const controllers = {
+  AdminUsers: () => import('#controllers/admin_users_controller'),
   ConnectedObjects: () => import('#controllers/connected_objects_controller'),
   Home: () => import('#controllers/home_controller'),
   Incidents: () => import('#controllers/incidents_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
   Profile: () => import('#controllers/profile_controller'),
   Session: () => import('#controllers/session_controller'),
+  Networking: () => import('#controllers/networking_controller'),
 }

@@ -16,6 +16,7 @@ const Upbar = ({ isMobileNavOpen, onToggleMobileNav }: UpbarProps) => {
   const profileWrapRef = useRef<HTMLDivElement | null>(null)
   const page = usePage<Data.SharedProps>()
   const user = page.props.user
+  const isAdmin = Boolean((user as { isAdmin?: boolean } | undefined)?.isAdmin)
 
   useEffect(() => {
     setIsAvatarBroken(false)
@@ -86,7 +87,7 @@ const Upbar = ({ isMobileNavOpen, onToggleMobileNav }: UpbarProps) => {
             </span>
             <span className="sf-shell__profile-text">
               <span className="sf-shell__profile-name">{user.fullName || user.pseudo || 'Mon compte'}</span>
-              <span className="sf-shell__profile-role">Connecte</span>
+              <span className="sf-shell__profile-role">{isAdmin ? 'Admin' : 'Connecte'}</span>
             </span>
             <ChevronDown className="sf-shell__profile-chevron" />
           </button>

@@ -11,6 +11,12 @@ export default class SessionController {
 
     try {
       const user = await User.verifyCredentials(email, password)
+
+      if (!user.isVerified) {
+        session.flash('error', 'Compte en attente de validation par un administrateur.')
+        return response.redirect().back()
+      }
+
       await auth.use('web').login(user)
       return response.redirect().toRoute('home')
     } catch {
