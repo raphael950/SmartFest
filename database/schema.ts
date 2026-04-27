@@ -53,6 +53,27 @@ export class EventSchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
+export class IncidentSchema extends BaseModel {
+  static $columns = ['createdAt', 'description', 'id', 'sector', 'severity', 'type', 'updatedAt', 'vehicles'] as const
+  $columns = IncidentSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare description: string | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare sector: string
+  @column()
+  declare severity: string
+  @column()
+  declare type: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare vehicles: string | null
+}
+
 export class TeamSchema extends BaseModel {
   static $columns = ['accentColor', 'carModel', 'category', 'country', 'createdAt', 'description', 'displayOrder', 'id', 'name', 'teamPrincipal', 'updatedAt'] as const
   $columns = TeamSchema.$columns
