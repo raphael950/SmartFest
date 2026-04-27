@@ -2,21 +2,8 @@ import { router } from '@inertiajs/react'
 import { CheckCircle2, KeyRound, Mail, Shield, Trash2, UserRound } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import type { InertiaProps } from '@/types'
+import type { AdminUsersPageProps, UserRole } from '@/types/admin-users.types'
 import '@/css/admin-users.css'
-
-type AdminUser = {
-  id: number
-  email: string
-  fullName: string | null
-  pseudo: string | null
-  isVerified: boolean
-  isAdmin: boolean
-  createdAt: string
-}
-
-type AdminUsersPageProps = {
-  users: AdminUser[]
-}
 
 const formatDate = (value: string) => {
   return new Date(value).toLocaleDateString('fr-FR', {
@@ -28,6 +15,7 @@ const formatDate = (value: string) => {
 
 const AdminUsersPage = ({ users }: InertiaProps<AdminUsersPageProps>) => {
   const [passwordByUser, setPasswordByUser] = useState<Record<number, string>>({})
+  const [roleByUser, setRoleByUser] = useState<Record<number, UserRole>>({})
   const [searchTerm, setSearchTerm] = useState('')
 
   const stats = useMemo(() => {
@@ -76,12 +64,27 @@ const AdminUsersPage = ({ users }: InertiaProps<AdminUsersPageProps>) => {
     })
   }
 
+  const updateRole = (userId: number) => {
+    const role = roleByUser[userId] ?? 'simple'
+
+    router.post(
+      `/admin/users/${userId}/role`,
+      { role },
+      {
+        preserveScroll: true,
+      }
+    )
+  }
+
   const verifyUser = (userId: number) => {
     router.post(`/admin/users/${userId}/verify`, {}, { preserveScroll: true })
   }
 
-  const grantAdmin = (userId: number) => {
-    router.post(`/admin/users/${userId}/grant-admin`, {}, { preserveScroll: true })
+  const setRole = (userId: number, role: UserRole) => {
+    setRoleByUser((current) => ({
+      ...current,
+      [userId]: role,
+    }))
   }
 
   const deleteUser = (userId: number, email: string) => {
@@ -141,6 +144,7 @@ const AdminUsersPage = ({ users }: InertiaProps<AdminUsersPageProps>) => {
         {filteredUsers.map((user) => {
           const displayName = user.fullName || user.pseudo || 'Utilisateur'
           const passwordValue = passwordByUser[user.id] ?? ''
+          const selectedRole = roleByUser[user.id] ?? user.role
 
           return (
             <article className="admin-user-card" key={user.id}>
@@ -158,11 +162,10 @@ const AdminUsersPage = ({ users }: InertiaProps<AdminUsersPageProps>) => {
                   </div>
                 </div>
                 <div className="admin-user-card__badges">
-                  {user.isAdmin ? (
-                    <span className="admin-user-card__badge is-admin">
-                      <Shield size={13} /> Admin
-                    </span>
-                  ) : null}
+                  <span className={`admin-user-card__badge is-${user.role}`}>
+                    {user.role === 'admin' ? <Shield size={13} /> : null}
+                    {user.role === 'simple' ? 'Simple' : user.role === 'complexe' ? 'Complexe' : 'Admin'}
+                  </span>
                   <span className={`admin-user-card__badge ${user.isVerified ? 'is-verified' : 'is-pending'}`}>
                     <CheckCircle2 size={13} />
                     {user.isVerified ? 'Verifie' : 'A valider'}
@@ -197,6 +200,28 @@ const AdminUsersPage = ({ users }: InertiaProps<AdminUsersPageProps>) => {
                 </div>
               </div>
 
+              <div className="admin-user-card__password-row">
+                <label htmlFor={`role-${user.id}`} className="admin-user-card__label">
+                  Role utilisateur
+                </label>
+                <div className="admin-user-card__password-controls">
+                  <select
+                    id={`role-${user.id}`}
+                    className="admin-user-card__input"
+                    value={selectedRole}
+                    onChange={(event) => setRole(user.id, event.target.value as UserRole)}
+                  >
+                    <option value="simple">Simple</option>
+                    <option value="complexe">Complexe</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                  <button type="button" className="admin-user-card__action" onClick={() => updateRole(user.id)}>
+                    <Shield size={15} />
+                    Appliquer
+                  </button>
+                </div>
+              </div>
+
               <div className="admin-user-card__footer">
                 <div className="admin-user-card__footer-actions">
                   {!user.isVerified ? (
@@ -207,11 +232,6 @@ const AdminUsersPage = ({ users }: InertiaProps<AdminUsersPageProps>) => {
                     <span className="admin-user-card__validated-text">Compte deja verifie</span>
                   )}
 
-                  {!user.isAdmin && user.isVerified ? (
-                    <button type="button" className="admin-user-card__promote" onClick={() => grantAdmin(user.id)}>
-                      Ajouter admin
-                    </button>
-                  ) : null}
                 </div>
 
                 <button

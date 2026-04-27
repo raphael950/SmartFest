@@ -5,6 +5,7 @@
  */
 
 import { BaseModel, column } from '@adonisjs/lucid/orm'
+import type { UserRole } from '#models/user_role'
 import { DateTime } from 'luxon'
 
 export class ConnectedObjectSchema extends BaseModel {
@@ -119,7 +120,7 @@ export class TeamSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = ['avatarPath', 'birthDate', 'createdAt', 'email', 'followedTeam', 'fullName', 'gender', 'id', 'isAdmin', 'isVerified', 'jobTitle', 'password', 'pseudo', 'updatedAt'] as const
+  static $columns = ['avatarPath', 'birthDate', 'createdAt', 'email', 'followedTeam', 'fullName', 'gender', 'id', 'isVerified', 'jobTitle', 'password', 'pseudo', 'role', 'updatedAt'] as const
   $columns = UserSchema.$columns
   @column()
   declare avatarPath: string | null
@@ -138,8 +139,6 @@ export class UserSchema extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
   @column()
-  declare isAdmin: boolean
-  @column()
   declare isVerified: boolean
   @column()
   declare jobTitle: string | null
@@ -151,6 +150,8 @@ export class UserSchema extends BaseModel {
   declare points: number
   @column()
   declare pseudo: string | null
+  @column()
+  declare role: UserRole
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
 }

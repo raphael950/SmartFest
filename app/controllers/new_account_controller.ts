@@ -10,10 +10,11 @@ export default class NewAccountController {
   async store({ request, response, session, auth }: HttpContext) {
     const payload = await request.validateUsing(signupValidator)
     const hasExistingUser = Boolean(await User.query().select('id').first())
+    const role = hasExistingUser ? 'simple' : 'admin'
 
     const user = await User.create({
       ...payload,
-      isAdmin: !hasExistingUser,
+      role,
       isVerified: !hasExistingUser,
     })
 
