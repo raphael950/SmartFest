@@ -53,6 +53,44 @@ export class EventSchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
+export class FlagSchema extends BaseModel {
+  static $columns = ['color', 'createdAt', 'id', 'incidentId', 'sector', 'updatedAt'] as const
+  $columns = FlagSchema.$columns
+  @column()
+  declare color: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare incidentId: number | null
+  @column()
+  declare sector: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
+export class IncidentSchema extends BaseModel {
+  static $columns = ['createdAt', 'description', 'id', 'sector', 'severity', 'type', 'updatedAt', 'vehicles'] as const
+  $columns = IncidentSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare description: string | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare sector: string
+  @column()
+  declare severity: string
+  @column()
+  declare type: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare vehicles: string | null
+}
+
 export class TeamSchema extends BaseModel {
   static $columns = ['accentColor', 'carModel', 'category', 'country', 'createdAt', 'description', 'displayOrder', 'id', 'name', 'teamPrincipal', 'updatedAt'] as const
   $columns = TeamSchema.$columns
@@ -81,7 +119,7 @@ export class TeamSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = ['avatarPath', 'birthDate', 'createdAt', 'email', 'followedTeam', 'fullName', 'gender', 'id', 'jobTitle', 'password', 'pseudo', 'updatedAt'] as const
+  static $columns = ['avatarPath', 'birthDate', 'createdAt', 'email', 'followedTeam', 'fullName', 'gender', 'id', 'jobTitle', 'level', 'password', 'points', 'pseudo', 'updatedAt'] as const
   $columns = UserSchema.$columns
   @column()
   declare avatarPath: string | null
@@ -101,8 +139,12 @@ export class UserSchema extends BaseModel {
   declare id: number
   @column()
   declare jobTitle: string | null
+  @column()
+  declare level: string
   @column({ serializeAs: null })
   declare password: string
+  @column()
+  declare points: number
   @column()
   declare pseudo: string | null
   @column.dateTime({ autoCreate: true, autoUpdate: true })

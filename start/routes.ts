@@ -12,6 +12,7 @@ import HomeController from '#controllers/home_controller'
 import ProfileController from '#controllers/profile_controller'
 import { controllers } from '#generated/controllers'
 import User from '#models/user'
+import userLevelService from '#services/user_level_service'
 import router from '@adonisjs/core/services/router'
 
 router.get('/', [HomeController, 'index']).as('home')
@@ -22,6 +23,7 @@ router.delete('/objets/:identifier', [controllers.ConnectedObjects, 'destroy']).
 router
   .get('/profil/:pseudo', async ({ params, inertia }) => {
     const user = await User.query().where('pseudo', params.pseudo).firstOrFail()
+    const levelProgress = userLevelService.getProgress(user.points)
 
     return inertia.render('profile/show', {
       profile: {
@@ -33,6 +35,10 @@ router
         birthDate: user.birthDate ? user.birthDate.toISODate() : null,
         jobTitle: user.jobTitle,
         followedTeam: user.followedTeam,
+        points: user.points,
+        level: levelProgress.level,
+        levelLabel: levelProgress.levelLabel,
+        levelProgress,
       },
     })
   })

@@ -301,9 +301,95 @@
   padding: 12px;
   background: color-mix(in srgb, var(--shell-menu-bg) 72%, transparent);
   display: grid;
-  grid-template-columns: 88px minmax(0, 1fr) auto;
+  grid-template-columns: 88px minmax(0, 1fr) auto auto;
   gap: 12px;
   align-items: center;
+}
+
+.profile-points-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--shell-accent) 40%, transparent);
+  background: color-mix(in srgb, var(--shell-accent) 12%, transparent);
+  color: var(--racing-white);
+}
+
+.profile-points-chip svg {
+  flex-shrink: 0;
+}
+
+.profile-points-chip__label {
+  display: block;
+  color: var(--shell-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.profile-points-progress,
+.profile-progress-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.profile-points-progress {
+  min-width: 220px;
+}
+
+.profile-points-progress__header,
+.profile-progress-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.profile-points-progress__target,
+.profile-progress-card__target {
+  color: var(--shell-muted);
+  font-size: 0.82rem;
+  text-align: right;
+}
+
+.profile-progress-card__summary {
+  margin: 0;
+  color: var(--shell-muted);
+  font-size: 0.82rem;
+}
+
+.profile-progress-bar {
+  position: relative;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--shell-menu-bg) 86%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--auth-card-border) 80%, transparent);
+}
+
+.profile-progress-bar__fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--racing-red) 86%, var(--racing-red-light)),
+    color-mix(in srgb, var(--racing-blue) 88%, var(--racing-white))
+  );
+}
+
+.profile-points-progress__footer,
+.profile-progress-card__scale {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--shell-muted);
+  font-size: 0.76rem;
 }
 
 .profile-avatar-preview {

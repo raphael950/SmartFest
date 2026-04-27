@@ -1,4 +1,5 @@
 import User from '#models/user'
+import pointsService from '#services/points_service'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class SessionController {
@@ -11,6 +12,7 @@ export default class SessionController {
 
     try {
       const user = await User.verifyCredentials(email, password)
+      await pointsService.awardLogin(user)
       await auth.use('web').login(user)
       return response.redirect().toRoute('home')
     } catch {

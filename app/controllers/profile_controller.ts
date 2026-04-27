@@ -1,4 +1,5 @@
 import User from '#models/user'
+import userLevelService from '#services/user_level_service'
 import { updateProfileValidator } from '#validators/user'
 import app from '@adonisjs/core/services/app'
 import type { HttpContext } from '@adonisjs/core/http'
@@ -12,6 +13,7 @@ export default class ProfileController {
 
   async edit({ auth, inertia }: HttpContext) {
     const user = auth.user!
+    const levelProgress = userLevelService.getProgress(user.points)
 
     return inertia.render('profile/edit', {
       profile: {
@@ -21,6 +23,10 @@ export default class ProfileController {
         birthDate: user.birthDate ? user.birthDate.toISODate() : null,
         jobTitle: user.jobTitle,
         followedTeam: user.followedTeam,
+        points: user.points,
+        level: levelProgress.level,
+        levelLabel: levelProgress.levelLabel,
+        levelProgress,
         avatarUrl: this.avatarUrl(user.avatarPath),
       },
       hasPublicProfile: Boolean(user.pseudo),

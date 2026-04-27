@@ -1,4 +1,5 @@
 import ConnectedObject from '#models/connected_object'
+import pointsService from '#services/points_service'
 import type { HttpContext } from '@adonisjs/core/http'
 
 const ALLOWED_STATUSES = new Set(['online', 'alert', 'maintenance', 'offline'])
@@ -18,7 +19,11 @@ type SerializedConnectedDevice = {
 }
 
 export default class ConnectedObjectsController {
-  async index({ inertia }: HttpContext) {
+  async index({ inertia, auth }: HttpContext) {
+    if (auth.user) {
+      await pointsService.awardObjectConsultation(auth.user)
+    }
+
     const objects = await ConnectedObject.query().orderBy('id', 'desc')
     const devices: SerializedConnectedDevice[] = objects.map((device) => {
       const telemetry = this.buildTelemetry(device.identifier, device.status)
