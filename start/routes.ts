@@ -13,6 +13,7 @@ import IncidentsController from '#controllers/incidents_controller'
 import ProfileController from '#controllers/profile_controller'
 import AdminUsersController from '#controllers/admin_users_controller'
 import NetworkingController from '#controllers/networking_controller'
+import LiveTimingController from '#controllers/live_timing_controller'
 import { controllers } from '#generated/controllers'
 import User from '#models/user'
 import userLevelService from '#services/user_level_service'
@@ -78,74 +79,7 @@ router
     router.post('mon-profil/edition', [ProfileController, 'update']).as('profile.update')
     router.get('networking', [NetworkingController, 'index']).as('networking.index')
     
-    router.get('live-timing', ({ inertia }) => {
-      // Mock data for live timing
-      const mockDrivers = [
-        {
-          id: 1,
-          number: 51,
-          name: 'Alex Martin',
-          team: 'Ferrari AF Corse',
-          position: 1,
-          bestLap: '3:45.234',
-          lastLap: '3:45.897',
-          gap: null,
-          status: 'live' as const,
-        },
-        {
-          id: 2,
-          number: 52,
-          name: 'Jean Dupont',
-          team: 'Porsche GT Team',
-          position: 2,
-          bestLap: '3:46.123',
-          lastLap: '3:46.445',
-          gap: '+0.889',
-          status: 'live' as const,
-        },
-        {
-          id: 3,
-          number: 63,
-          name: 'Sophie Bernard',
-          team: 'BMW M Team',
-          position: 3,
-          bestLap: '3:47.012',
-          lastLap: '3:47.334',
-          gap: '+1.778',
-          status: 'pit' as const,
-        },
-        {
-          id: 4,
-          number: 33,
-          name: 'Marco Rossi',
-          team: 'Lamborghini SC63',
-          position: 4,
-          bestLap: '3:47.892',
-          lastLap: '3:48.123',
-          gap: '+2.889',
-          status: 'live' as const,
-        },
-        {
-          id: 5,
-          number: 99,
-          name: 'Anna Leclerc',
-          team: 'Corvette Racing',
-          position: 5,
-          bestLap: '3:48.456',
-          lastLap: '3:48.678',
-          gap: '+3.444',
-          status: 'retired' as const,
-        },
-      ]
-
-      return inertia.render('live-timing', {
-        drivers: mockDrivers,
-        sessionStatus: 'live' as const,
-        elapsedTime: '1:24:56',
-        currentLap: 42,
-        totalLaps: 70,
-      })
-    }).as('live-timing')
+      router.get('live-timing', [LiveTimingController, 'index']).as('live-timing')
 
     router.post('logout', [controllers.Session, 'destroy']).as('session.destroy')
   })
