@@ -26,4 +26,16 @@ export interface ApiDefinition {
     store: typeof routes['session.store']
     destroy: typeof routes['session.destroy']
   }
+  networking: {
+    index: typeof routes['networking.index']
+  }
+  admin: {
+    users: {
+      index: typeof routes['admin.users.index']
+      password: typeof routes['admin.users.password']
+      verify: typeof routes['admin.users.verify']
+      grantAdmin: typeof routes['admin.users.grant_admin']
+      destroy: typeof routes['admin.users.destroy']
+    }
+  }
 }

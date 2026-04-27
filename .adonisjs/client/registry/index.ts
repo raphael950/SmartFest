@@ -96,11 +96,47 @@ const routes = {
     tokens: [{"old":"/mon-profil/edition","type":0,"val":"mon-profil","end":""},{"old":"/mon-profil/edition","type":0,"val":"edition","end":""}],
     types: placeholder as Registry['profile.update']['types'],
   },
+  'networking.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/networking',
+    tokens: [{"old":"/networking","type":0,"val":"networking","end":""}],
+    types: placeholder as Registry['networking.index']['types'],
+  },
   'session.destroy': {
     methods: ["POST"],
     pattern: '/logout',
     tokens: [{"old":"/logout","type":0,"val":"logout","end":""}],
     types: placeholder as Registry['session.destroy']['types'],
+  },
+  'admin.users.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/users',
+    tokens: [{"old":"/admin/users","type":0,"val":"admin","end":""},{"old":"/admin/users","type":0,"val":"users","end":""}],
+    types: placeholder as Registry['admin.users.index']['types'],
+  },
+  'admin.users.password': {
+    methods: ["PUT"],
+    pattern: '/admin/users/:id/password',
+    tokens: [{"old":"/admin/users/:id/password","type":0,"val":"admin","end":""},{"old":"/admin/users/:id/password","type":0,"val":"users","end":""},{"old":"/admin/users/:id/password","type":1,"val":"id","end":""},{"old":"/admin/users/:id/password","type":0,"val":"password","end":""}],
+    types: placeholder as Registry['admin.users.password']['types'],
+  },
+  'admin.users.verify': {
+    methods: ["POST"],
+    pattern: '/admin/users/:id/verify',
+    tokens: [{"old":"/admin/users/:id/verify","type":0,"val":"admin","end":""},{"old":"/admin/users/:id/verify","type":0,"val":"users","end":""},{"old":"/admin/users/:id/verify","type":1,"val":"id","end":""},{"old":"/admin/users/:id/verify","type":0,"val":"verify","end":""}],
+    types: placeholder as Registry['admin.users.verify']['types'],
+  },
+  'admin.users.grant_admin': {
+    methods: ["POST"],
+    pattern: '/admin/users/:id/grant-admin',
+    tokens: [{"old":"/admin/users/:id/grant-admin","type":0,"val":"admin","end":""},{"old":"/admin/users/:id/grant-admin","type":0,"val":"users","end":""},{"old":"/admin/users/:id/grant-admin","type":1,"val":"id","end":""},{"old":"/admin/users/:id/grant-admin","type":0,"val":"grant-admin","end":""}],
+    types: placeholder as Registry['admin.users.grant_admin']['types'],
+  },
+  'admin.users.destroy': {
+    methods: ["DELETE"],
+    pattern: '/admin/users/:id',
+    tokens: [{"old":"/admin/users/:id","type":0,"val":"admin","end":""},{"old":"/admin/users/:id","type":0,"val":"users","end":""},{"old":"/admin/users/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['admin.users.destroy']['types'],
   },
 } as const satisfies Record<string, AdonisEndpoint>
 

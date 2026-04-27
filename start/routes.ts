@@ -11,6 +11,8 @@ import { middleware } from '#start/kernel'
 import HomeController from '#controllers/home_controller'
 import IncidentsController from '#controllers/incidents_controller'
 import ProfileController from '#controllers/profile_controller'
+import AdminUsersController from '#controllers/admin_users_controller'
+import NetworkingController from '#controllers/networking_controller'
 import { controllers } from '#generated/controllers'
 import User from '#models/user'
 import router from '@adonisjs/core/services/router'
@@ -43,11 +45,11 @@ router
 
 router
   .group(() => {
-    router.get('signup', [controllers.NewAccount, 'create'])
-    router.post('signup', [controllers.NewAccount, 'store'])
+    router.get('signup', [controllers.NewAccount, 'create']).as('new_account.create')
+    router.post('signup', [controllers.NewAccount, 'store']).as('new_account.store')
 
-    router.get('login', [controllers.Session, 'create'])
-    router.post('login', [controllers.Session, 'store'])
+    router.get('login', [controllers.Session, 'create']).as('session.create')
+    router.post('login', [controllers.Session, 'store']).as('session.store')
   })
   .use(middleware.guest())
 
@@ -65,7 +67,19 @@ router
 
     router.get('mon-profil/edition', [ProfileController, 'edit']).as('profile.edit')
     router.post('mon-profil/edition', [ProfileController, 'update']).as('profile.update')
+    router.get('networking', [NetworkingController, 'index']).as('networking.index')
 
-    router.post('logout', [controllers.Session, 'destroy'])
+    router.post('logout', [controllers.Session, 'destroy']).as('session.destroy')
   })
   .use(middleware.auth())
+
+router
+  .group(() => {
+    router.get('admin/users', [AdminUsersController, 'index']).as('admin.users.index')
+    router.put('admin/users/:id/password', [AdminUsersController, 'updatePassword']).as('admin.users.password')
+    router.post('admin/users/:id/verify', [AdminUsersController, 'verify']).as('admin.users.verify')
+    router.post('admin/users/:id/grant-admin', [AdminUsersController, 'grantAdmin']).as('admin.users.grant_admin')
+    router.delete('admin/users/:id', [AdminUsersController, 'destroy']).as('admin.users.destroy')
+  })
+  .use(middleware.auth())
+  .use(middleware.admin())

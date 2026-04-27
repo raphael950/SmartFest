@@ -41,6 +41,10 @@ const readProjectDbEnv = () => {
 
 const projectDbEnv = readProjectDbEnv()
 const getDbEnv = (key: keyof typeof projectDbEnv) => projectDbEnv[key]
+const getNumberDbEnv = (key: keyof typeof projectDbEnv, fallback: number) => {
+  const value = Number(getDbEnv(key))
+  return Number.isFinite(value) && value > 0 ? value : fallback
+}
 
 const dbConfig = defineConfig({
   connection: 'pg',
@@ -60,6 +64,10 @@ const dbConfig = defineConfig({
         ssl: {
           rejectUnauthorized: false,
         },
+      },
+      pool: {
+        min: getNumberDbEnv('PG_POOL_MIN', 1),
+        max: getNumberDbEnv('PG_POOL_MAX', 5),
       },
       migrations: {
         naturalSort: true,

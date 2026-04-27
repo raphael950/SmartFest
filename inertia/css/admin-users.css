@@ -1,0 +1,374 @@
+.admin-users-page {
+  min-height: 100%;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.admin-users-hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top right, rgba(232, 76, 61, 0.24), transparent 42%),
+    radial-gradient(circle at bottom left, rgba(255, 215, 0, 0.2), transparent 48%),
+    linear-gradient(140deg, rgba(15, 15, 15, 0.96), rgba(36, 36, 36, 0.94));
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  box-shadow: var(--shadow-lg);
+}
+
+.admin-users-hero__eyebrow {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--racing-yellow);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.admin-users-hero__title {
+  margin: 0.3rem 0 0;
+  color: var(--foreground);
+  font-size: clamp(1.35rem, 1.9vw, 1.8rem);
+}
+
+.admin-users-hero__subtitle {
+  margin: 0.6rem 0 0;
+  color: var(--muted-foreground);
+  max-width: 68ch;
+  line-height: 1.5;
+  font-size: 0.92rem;
+}
+
+.admin-users-stats {
+  min-width: 260px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(72px, 1fr));
+  gap: 0.65rem;
+  align-self: end;
+}
+
+.admin-users-stat-card {
+  background: color-mix(in srgb, var(--racing-black) 78%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 0.65rem 0.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.admin-users-stat-card span {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted-foreground);
+}
+
+.admin-users-stat-card strong {
+  color: var(--foreground);
+  font-size: 1.2rem;
+}
+
+.admin-users-stat-card.is-verified {
+  border-color: color-mix(in srgb, var(--racing-green) 44%, var(--border));
+}
+
+.admin-users-stat-card.is-pending {
+  border-color: color-mix(in srgb, var(--racing-yellow) 45%, var(--border));
+}
+
+.admin-users-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.admin-users-toolbar {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 0.45rem;
+  background: color-mix(in srgb, var(--racing-black) 76%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 0.85rem;
+}
+
+.admin-users-toolbar__label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted-foreground);
+  font-weight: 700;
+}
+
+.admin-users-toolbar__search {
+  width: 100%;
+  background: var(--input-background);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  border-radius: 0.55rem;
+  padding: 0.62rem 0.75rem;
+  font-size: 0.9rem;
+}
+
+.admin-users-toolbar__search:focus {
+  outline: none;
+  border-color: var(--racing-red);
+  box-shadow: 0 0 0 3px rgba(232, 76, 61, 0.16);
+}
+
+.admin-users-toolbar__meta {
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: 0.8rem;
+}
+
+.admin-users-empty {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--muted-foreground);
+  text-align: center;
+  border: 1px dashed var(--border);
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+
+.admin-user-card {
+  background: linear-gradient(180deg, rgba(45, 45, 45, 0.86), rgba(31, 31, 31, 0.96));
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  box-shadow: var(--shadow-md);
+}
+
+.admin-user-card__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.admin-user-card__identity {
+  display: flex;
+  gap: 0.65rem;
+}
+
+.admin-user-card__avatar {
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, var(--racing-red), var(--racing-yellow));
+  color: var(--foreground);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-user-card__name {
+  margin: 0;
+  color: var(--foreground);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.admin-user-card__email {
+  margin: 0.22rem 0 0;
+  color: var(--muted-foreground);
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.admin-user-card__badges {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.3rem;
+}
+
+.admin-user-card__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 9999px;
+  padding: 0.23rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border: 1px solid transparent;
+}
+
+.admin-user-card__badge.is-admin {
+  background: var(--role-admin-bg);
+  color: var(--role-admin);
+  border-color: color-mix(in srgb, var(--role-admin) 35%, transparent);
+}
+
+.admin-user-card__badge.is-verified {
+  background: var(--status-active-bg);
+  color: var(--status-active);
+  border-color: color-mix(in srgb, var(--status-active) 35%, transparent);
+}
+
+.admin-user-card__badge.is-pending {
+  background: var(--status-warning-bg);
+  color: var(--status-warning);
+  border-color: color-mix(in srgb, var(--status-warning) 35%, transparent);
+}
+
+.admin-user-card__meta {
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: 0.78rem;
+}
+
+.admin-user-card__password-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.admin-user-card__label {
+  color: var(--muted-foreground);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.admin-user-card__password-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.admin-user-card__input {
+  width: 100%;
+  min-width: 0;
+  background: var(--input-background);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  border-radius: 0.55rem;
+  padding: 0.55rem 0.65rem;
+  font-size: 0.84rem;
+}
+
+.admin-user-card__input:focus {
+  outline: none;
+  border-color: var(--racing-red);
+  box-shadow: 0 0 0 3px rgba(232, 76, 61, 0.2);
+}
+
+.admin-user-card__action,
+.admin-user-card__validate,
+.admin-user-card__promote,
+.admin-user-card__delete {
+  border: none;
+  border-radius: 0.55rem;
+  padding: 0.55rem 0.75rem;
+  font-weight: 700;
+  font-size: 0.78rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.32rem;
+  transition: transform 120ms ease, filter 120ms ease;
+}
+
+.admin-user-card__action:hover,
+.admin-user-card__validate:hover,
+.admin-user-card__promote:hover,
+.admin-user-card__delete:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+}
+
+.admin-user-card__action {
+  background: var(--gradient-racing);
+  color: #211a15;
+}
+
+.admin-user-card__action:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+  filter: none;
+}
+
+.admin-user-card__footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.admin-user-card__validate {
+  background: var(--gradient-success);
+  color: #092012;
+}
+
+.admin-user-card__promote {
+  background: color-mix(in srgb, var(--racing-blue) 22%, transparent);
+  color: color-mix(in srgb, var(--racing-blue) 78%, var(--racing-white));
+  border: 1px solid color-mix(in srgb, var(--racing-blue) 40%, transparent);
+}
+
+.admin-user-card__validated-text {
+  color: var(--status-active);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.admin-user-card__footer-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.admin-user-card__delete {
+  background: color-mix(in srgb, var(--racing-red) 17%, transparent);
+  color: var(--racing-red-light);
+  border: 1px solid color-mix(in srgb, var(--racing-red) 45%, transparent);
+}
+
+@media (max-width: 920px) {
+  .admin-users-hero {
+    flex-direction: column;
+  }
+
+  .admin-users-stats {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .admin-users-page {
+    padding: 1rem;
+  }
+
+  .admin-user-card__password-controls {
+    flex-direction: column;
+  }
+
+  .admin-user-card__action,
+  .admin-user-card__validate,
+  .admin-user-card__promote,
+  .admin-user-card__delete {
+    width: 100%;
+  }
+
+  .admin-user-card__footer-actions {
+    width: 100%;
+  }
+}

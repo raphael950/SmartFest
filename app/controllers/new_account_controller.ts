@@ -7,11 +7,23 @@ export default class NewAccountController {
     return inertia.render('auth/signup', {})
   }
 
-  async store({ request, response, auth }: HttpContext) {
+  async store({ request, response, session, auth }: HttpContext) {
     const payload = await request.validateUsing(signupValidator)
-    const user = await User.create({ ...payload })
+    const hasExistingUser = Boolean(await User.query().select('id').first())
 
-    await auth.use('web').login(user)
-    response.redirect().toRoute('profile.show', { pseudo: user.pseudo! })
+    const user = await User.create({
+      ...payload,
+      isAdmin: !hasExistingUser,
+      isVerified: !hasExistingUser,
+    })
+
+    if (!hasExistingUser) {
+      await auth.use('web').login(user)
+      session.flash('success', 'Premier compte cree en mode administrateur.')
+      return response.redirect().toRoute('profile.show', { pseudo: user.pseudo! })
+    }
+
+    session.flash('success', 'Compte cree. Un administrateur doit valider votre compte avant connexion.')
+    return response.redirect().toRoute('session.create')
   }
 }

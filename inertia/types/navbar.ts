@@ -6,6 +6,7 @@ export type NavItem = {
   label: string
   icon: React.ComponentType<{ className?: string }>
   route?: NavbarRoute
+  href?: string
 }
 
 export type NavbarProps = {
