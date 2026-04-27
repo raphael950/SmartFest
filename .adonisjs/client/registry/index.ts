@@ -12,6 +12,18 @@ const routes = {
     tokens: [{"old":"/","type":0,"val":"/","end":""}],
     types: placeholder as Registry['home']['types'],
   },
+  'flags': {
+    methods: ["GET","HEAD"],
+    pattern: '/drapeaux',
+    tokens: [{"old":"/drapeaux","type":0,"val":"drapeaux","end":""}],
+    types: placeholder as Registry['flags']['types'],
+  },
+  'flags.store': {
+    methods: ["POST"],
+    pattern: '/drapeaux',
+    tokens: [{"old":"/drapeaux","type":0,"val":"drapeaux","end":""}],
+    types: placeholder as Registry['flags.store']['types'],
+  },
   'incidents': {
     methods: ["GET","HEAD"],
     pattern: '/incidents',

@@ -7,11 +7,11 @@ import {
   type IncidentSeverity,
   type IncidentType,
 } from '#models/incident.types'
-import type { HttpContext } from '@adonisjs/core/http'
 
 const ALLOWED_TYPES: ReadonlySet<IncidentType> = new Set(INCIDENT_TYPES)
 const ALLOWED_SEVERITIES: ReadonlySet<IncidentSeverity> = new Set(INCIDENT_SEVERITIES)
 const ALLOWED_SECTORS: ReadonlySet<IncidentSector> = new Set(INCIDENT_SECTORS)
+import type { HttpContext } from '@adonisjs/core/http'
 
 export default class IncidentsController {
   async index({ inertia }: HttpContext) {
@@ -32,9 +32,7 @@ export default class IncidentsController {
   }
 
   async store({ request, response, session }: HttpContext) {
-    const payload = request.only(['type', 'vehicles', 'severity', 'sector', 'description']) as Partial<
-      Record<'type' | 'vehicles' | 'severity' | 'sector' | 'description', unknown>
-    >
+    const payload = request.only(['type', 'vehicles', 'severity', 'sector', 'description'])
 
     const type = this.sanitize(payload.type, ALLOWED_TYPES, 'autre')
     const vehicles = String(payload.vehicles || '').trim()

@@ -53,6 +53,21 @@ export class EventSchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
+export class FlagSchema extends BaseModel {
+  static $columns = ['color', 'createdAt', 'id', 'sector', 'updatedAt'] as const
+  $columns = FlagSchema.$columns
+  @column()
+  declare color: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare sector: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
 export class IncidentSchema extends BaseModel {
   static $columns = ['createdAt', 'description', 'id', 'sector', 'severity', 'type', 'updatedAt', 'vehicles'] as const
   $columns = IncidentSchema.$columns
@@ -126,8 +141,12 @@ export class UserSchema extends BaseModel {
   declare isVerified: boolean
   @column()
   declare jobTitle: string | null
+  @column()
+  declare level: string
   @column({ serializeAs: null })
   declare password: string
+  @column()
+  declare points: number
   @column()
   declare pseudo: string | null
   @column.dateTime({ autoCreate: true, autoUpdate: true })

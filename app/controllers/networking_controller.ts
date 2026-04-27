@@ -10,8 +10,10 @@ export default class NetworkingController {
       .where('is_verified', true)
       .orderBy('created_at', 'desc')
 
+    const usersWithPseudo = users.filter((user): user is User & { pseudo: string } => user.pseudo !== null)
+
     return inertia.render('networking', {
-      users: users.map((user) => ({
+      users: usersWithPseudo.map((user) => ({
         id: user.id,
         pseudo: user.pseudo,
         fullName: user.fullName,
