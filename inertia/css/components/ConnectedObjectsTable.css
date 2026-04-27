@@ -313,6 +313,33 @@
   background: color-mix(in srgb, var(--shell-accent) 14%, transparent);
 }
 
+.iot-action-btn.is-toggle:hover {
+  color: var(--racing-green);
+  border-color: color-mix(in srgb, var(--racing-green) 55%, var(--shell-border));
+  background: color-mix(in srgb, var(--racing-green) 14%, transparent);
+}
+
+.iot-action-btn.is-toggle.is-online-status {
+  color: var(--racing-green);
+  border-color: color-mix(in srgb, var(--racing-green) 55%, var(--shell-border));
+}
+
+.iot-action-btn.is-disabled,
+.iot-action-btn:disabled {
+  cursor: not-allowed;
+  color: color-mix(in srgb, var(--shell-muted) 70%, transparent);
+  border-color: color-mix(in srgb, var(--shell-border) 60%, transparent);
+  background: color-mix(in srgb, var(--shell-menu-bg) 45%, transparent);
+  opacity: 0.6;
+}
+
+.iot-action-btn.is-disabled:hover,
+.iot-action-btn:disabled:hover {
+  color: color-mix(in srgb, var(--shell-muted) 70%, transparent);
+  border-color: color-mix(in srgb, var(--shell-border) 60%, transparent);
+  background: color-mix(in srgb, var(--shell-menu-bg) 45%, transparent);
+}
+
 .iot-pill {
   display: inline-flex;
   align-items: center;

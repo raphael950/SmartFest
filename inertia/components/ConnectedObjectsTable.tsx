@@ -1,5 +1,5 @@
 import { router } from '@inertiajs/react'
-import { Plus, RefreshCw, Search, Trash2, Wifi } from 'lucide-react'
+import { Plus, Power, RefreshCw, Search, Trash2, Wifi } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import '@/css/components/ConnectedObjectsTable.css'
 import type { ConnectedObject, DeviceStatus } from '@/types/connected-objects'
@@ -80,6 +80,8 @@ const getMeterSegments = (value: number, max = 100, segments = 5) => {
   return Math.round((safe / max) * segments)
 }
 
+const canToggleAvailability = (status: DeviceStatus) => status === 'online' || status === 'offline'
+
 const ConnectedObjectsTable = ({ devices: initialDevices }: ConnectedObjectsTableProps) => {
   const [activeFilter, setActiveFilter] = useState<DeviceFilter>('all')
   const [searchQuery, setSearchQuery] = useState('')
@@ -155,6 +157,22 @@ const ConnectedObjectsTable = ({ devices: initialDevices }: ConnectedObjectsTabl
         setDeleteCandidate(null)
       },
     })
+  }
+
+  const handleToggleAvailability = (device: ConnectedObject) => {
+    if (!canToggleAvailability(device.status)) {
+      return
+    }
+
+    const nextStatus: DeviceStatus = device.status === 'online' ? 'offline' : 'online'
+    const updates: ConnectedObjectEditableFields = {
+      name: device.name,
+      type: device.type,
+      sector: device.sector,
+      status: nextStatus,
+    }
+
+    handleUpdate(device.identifier, updates)
   }
 
   const openDeleteConfirm = (device: ConnectedObject) => {
@@ -366,6 +384,27 @@ const ConnectedObjectsTable = ({ devices: initialDevices }: ConnectedObjectsTabl
                         }}
                       >
                         <RefreshCw className="iot-action-btn__icon" />
+                      </button>
+                      <button
+                        type="button"
+                        className={`iot-action-btn is-toggle ${device.status === 'online' ? 'is-online-status' : ''} ${canToggleAvailability(device.status) ? '' : 'is-disabled'}`}
+                        aria-label={
+                          canToggleAvailability(device.status)
+                            ? (device.status === 'online' ? `Desactiver ${device.name}` : `Activer ${device.name}`)
+                            : `Activation indisponible pour ${device.name}`
+                        }
+                        title={
+                          canToggleAvailability(device.status)
+                            ? (device.status === 'online' ? 'Desactiver' : 'Activer')
+                            : 'Indisponible en maintenance ou en alerte'
+                        }
+                        disabled={!canToggleAvailability(device.status)}
+                        onClick={(event) => {
+                          event.stopPropagation()
+                          handleToggleAvailability(device)
+                        }}
+                      >
+                        <Power className="iot-action-btn__icon" />
                       </button>
                       <button
                         type="button"
