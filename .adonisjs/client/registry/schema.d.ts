@@ -19,102 +19,6 @@ export interface Registry {
       errorResponse: unknown
     }
   }
-  'incidents': {
-    methods: ["GET","HEAD"]
-    pattern: '/incidents'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: unknown
-      errorResponse: unknown
-    }
-  }
-  'incidents.store': {
-    methods: ["POST"]
-    pattern: '/incidents'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: unknown
-      errorResponse: unknown
-    }
-  }
-  'flags': {
-    methods: ["GET","HEAD"]
-    pattern: '/drapeaux'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/flags_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/flags_controller').default['index']>>>
-    }
-  }
-  'flags.store': {
-    methods: ["POST"]
-    pattern: '/drapeaux'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/flags_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/flags_controller').default['store']>>>
-    }
-  }
-  'objets': {
-    methods: ["GET","HEAD"]
-    pattern: '/objets'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['index']>>>
-    }
-  }
-  'objets.store': {
-    methods: ["POST"]
-    pattern: '/objets'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['store']>>>
-    }
-  }
-  'objets.update': {
-    methods: ["PUT"]
-    pattern: '/objets/:identifier'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { identifier: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['update']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['update']>>>
-    }
-  }
-  'objets.destroy': {
-    methods: ["DELETE"]
-    pattern: '/objets/:identifier'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { identifier: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['destroy']>>>
-    }
-  }
   'profile.show': {
     methods: ["GET","HEAD"]
     pattern: '/profil/:pseudo'
@@ -271,9 +175,9 @@ export interface Registry {
       errorResponse: unknown
     }
   }
-  'admin.users.grant_admin': {
+  'admin.users.role': {
     methods: ["POST"]
-    pattern: '/admin/users/:id/grant-admin'
+    pattern: '/admin/users/:id/role'
     types: {
       body: {}
       paramsTuple: [ParamValue]
@@ -293,6 +197,102 @@ export interface Registry {
       query: {}
       response: unknown
       errorResponse: unknown
+    }
+  }
+  'incidents': {
+    methods: ["GET","HEAD"]
+    pattern: '/incidents'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'incidents.store': {
+    methods: ["POST"]
+    pattern: '/incidents'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'flags': {
+    methods: ["GET","HEAD"]
+    pattern: '/drapeaux'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/flags_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/flags_controller').default['index']>>>
+    }
+  }
+  'flags.store': {
+    methods: ["POST"]
+    pattern: '/drapeaux'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/flags_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/flags_controller').default['store']>>>
+    }
+  }
+  'objets': {
+    methods: ["GET","HEAD"]
+    pattern: '/objets'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['index']>>>
+    }
+  }
+  'objets.store': {
+    methods: ["POST"]
+    pattern: '/objets'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['store']>>>
+    }
+  }
+  'objets.update': {
+    methods: ["PUT"]
+    pattern: '/objets/:identifier'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { identifier: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['update']>>>
+    }
+  }
+  'objets.destroy': {
+    methods: ["DELETE"]
+    pattern: '/objets/:identifier'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { identifier: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['destroy']>>>
     }
   }
 }

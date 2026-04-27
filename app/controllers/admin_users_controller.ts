@@ -1,5 +1,6 @@
 import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
+import { USER_ROLE_LABELS, hasMinimumRole, parseUserRole } from '#models/user_role'
 
 export default class AdminUsersController {
   async index({ inertia }: HttpContext) {
@@ -12,7 +13,7 @@ export default class AdminUsersController {
         fullName: user.fullName,
         pseudo: user.pseudo,
         isVerified: user.isVerified,
-        isAdmin: user.isAdmin,
+        role: user.role,
         createdAt: user.createdAt.toISO() ?? user.createdAt.toJSDate().toISOString(),
       })),
     })
@@ -46,16 +47,29 @@ export default class AdminUsersController {
     return response.redirect().back()
   }
 
-  async grantAdmin({ response, session, params }: HttpContext) {
+  async updateRole({ auth, request, response, session, params }: HttpContext) {
     const user = await User.findOrFail(params.id)
+    const role = parseUserRole(request.input('role'))
 
-    if (!user.isAdmin) {
-      user.isAdmin = true
-      user.isVerified = true
-      await user.save()
+    if (!role) {
+      session.flash('error', 'Role invalide.')
+      return response.redirect().back()
     }
 
-    session.flash('success', `Droits admin accordes a ${user.email}.`)
+    if (auth.user && auth.user.id === user.id && role !== 'admin') {
+      session.flash('error', 'Vous ne pouvez pas retirer votre propre role administrateur.')
+      return response.redirect().back()
+    }
+
+    user.role = role
+
+    if (hasMinimumRole(role, 'complexe')) {
+      user.isVerified = true
+    }
+
+    await user.save()
+
+    session.flash('success', `Role ${USER_ROLE_LABELS[role]} mis a jour pour ${user.email}.`)
     return response.redirect().back()
   }
 
