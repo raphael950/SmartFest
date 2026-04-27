@@ -2,7 +2,7 @@ import { router } from '@inertiajs/react'
 import { Clock } from 'lucide-react'
 import { useState } from 'react'
 import type { InertiaProps } from '@/types'
-import type { Flag as FlagType, FlagColor } from '@/types/flags'
+import type { Flag as FlagType, FlagColor } from '../types/flag.types.ts'
 import '@/css/flags.css'
 
 const SECTOR_OPTIONS = ['S1', 'S2', 'S3']

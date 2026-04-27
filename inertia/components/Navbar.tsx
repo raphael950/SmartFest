@@ -1,7 +1,7 @@
 import type { Data } from '@generated/data'
 import { Form, Link } from '@adonisjs/inertia/react'
 import { usePage } from '@inertiajs/react'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   Shield,
   AlertTriangle,
@@ -14,7 +14,7 @@ import {
   Users,
   UserRound,
 } from 'lucide-react'
-import type { NavItem, NavbarProps } from '@/types/navbar'
+import type { NavItem, NavbarProps } from '@/types/navbar.types'
 import '../css/components/Navbar.css'
 
 const baseNavItems: NavItem[] = [
@@ -33,6 +33,11 @@ const Navbar = ({ isMobileOpen, onMobileClose }: NavbarProps) => {
   const user = page.props.user
   const currentPath = page.url
   const isAdmin = Boolean((user as { isAdmin?: boolean } | undefined)?.isAdmin)
+  const [isAvatarBroken, setIsAvatarBroken] = useState(false)
+
+  useEffect(() => {
+    setIsAvatarBroken(false)
+  }, [user?.avatarPath])
 
   const navItems = useMemo<NavItem[]>(() => {
     if (!isAdmin) {
@@ -133,6 +138,24 @@ const Navbar = ({ isMobileOpen, onMobileClose }: NavbarProps) => {
         </nav>
 
         <div className="sf-shell__sidebar-bottom">
+          {user ? (
+            <Link route="profile.me" className="sf-shell__sidebar-profile-btn" onClick={onMobileClose}>
+              <span className="sf-shell__profile-avatar">
+                {user.avatarPath && !isAvatarBroken ? (
+                  <img
+                    src={`/${user.avatarPath}`}
+                    alt="Avatar utilisateur"
+                    className="sf-shell__profile-avatar-image"
+                    onError={() => setIsAvatarBroken(true)}
+                  />
+                ) : (
+                  <UserRound className="sf-shell__profile-avatar-icon" />
+                )}
+              </span>
+              <span className="sf-shell__profile-name">{user.fullName || user.pseudo || 'Mon compte'}</span>
+            </Link>
+          ) : null}
+
           {user ? (
             <Form route="session.destroy" className="sf-shell__logout-form" onSubmit={onMobileClose}>
               <button type="submit" className="sf-shell__logout-btn">

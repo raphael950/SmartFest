@@ -1,4 +1,4 @@
-import type { ConnectedObject } from '@/types/connected-objects'
+import type { ConnectedObject } from './connected-objects.types.ts'
 
 export type ConnectedObjectEditableFields = Pick<ConnectedObject, 'name' | 'type' | 'status' | 'sector'>
 

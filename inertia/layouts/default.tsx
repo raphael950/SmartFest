@@ -1,9 +1,9 @@
 import { Data } from '@generated/data'
 import { toast, Toaster } from 'sonner'
 import { usePage } from '@inertiajs/react'
+import { Menu } from 'lucide-react'
 import { ReactElement, useEffect, useState } from 'react'
 import Navbar from '@/components/Navbar'
-import Upbar from '@/components/Upbar'
 
 export default function Layout({ children }: { children: ReactElement<Data.SharedProps> }) {
   const page = usePage<Data.SharedProps>()
@@ -49,10 +49,15 @@ export default function Layout({ children }: { children: ReactElement<Data.Share
     <div className="sf-shell">
       <Navbar isMobileOpen={isMobileNavOpen} onMobileClose={() => setIsMobileNavOpen(false)} />
       <div className="sf-shell__main">
-        <Upbar
-          isMobileNavOpen={isMobileNavOpen}
-          onToggleMobileNav={() => setIsMobileNavOpen((prev) => !prev)}
-        />
+        <button
+          type="button"
+          className={`sf-shell__mobile-fab ${isMobileNavOpen ? 'is-open' : ''}`}
+          aria-label="Ouvrir le menu"
+          aria-expanded={isMobileNavOpen}
+          onClick={() => setIsMobileNavOpen((prev) => !prev)}
+        >
+          <Menu className="sf-shell__mobile-nav-icon" />
+        </button>
         <main className="sf-shell__content">{children}</main>
       </div>
       <Toaster position="top-center" richColors />

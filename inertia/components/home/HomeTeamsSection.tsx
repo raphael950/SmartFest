@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react'
 import { ChevronLeft, ChevronRight, Flag } from 'lucide-react'
-import type { TeamCard } from '@/types/home'
+import type { TeamCard } from '../../types/home.types.ts'
 import '@/css/components/home/HomeSections.css'
 import '@/css/components/home/HomeTeamSection.css'
 

@@ -1,4 +1,4 @@
-import type { DeviceStatus } from '@/types/connected-objects'
+import type { DeviceStatus } from '../types/connected-objects.types.ts'
 
 export const CONNECTED_OBJECT_STATUS_OPTIONS: Array<{ value: DeviceStatus; label: string }> = [
   { value: 'online', label: 'EN LIGNE' },

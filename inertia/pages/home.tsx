@@ -4,7 +4,7 @@ import HomeEventsSection from '@/components/home/HomeEventsSection'
 import HomeHero from '@/components/home/HomeHero'
 import HomeTeamDialog from '@/components/home/HomeTeamDialog'
 import HomeTeamsSection from '@/components/home/HomeTeamsSection'
-import type { EventCard, HomePageProps, TeamCard } from '@/types/home'
+import type { EventCard, HomePageProps, TeamCard } from '../types/home.types.ts'
 import type { InertiaProps } from '~/types'
 import '~/css/pages/home.css'
 

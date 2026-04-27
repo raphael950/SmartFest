@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import type { EventCard } from '@/types/home'
+import type { EventCard } from '../../types/home.types.ts'
 import '@/css/components/home/HomeDialog.css'
 
 const eventEmoji = '\u{1F3C1}'

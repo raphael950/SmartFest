@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import type { DeviceStatus } from '@/types/connected-objects'
+import type { DeviceStatus } from '../types/connected-objects.types.ts'
 import type { ConnectedObjectEditableFields } from '@/types/connected-object-edit-modal'
 import {
   CONNECTED_OBJECT_SECTOR_OPTIONS,

@@ -156,6 +156,60 @@
   padding: 14px;
 }
 
+.sf-shell__sidebar-profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid color-mix(in srgb, var(--shell-border) 78%, transparent);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--shell-menu-bg) 58%, transparent);
+  padding: 8px 10px;
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 0.22s ease, border-color 0.22s ease, transform 0.22s ease;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.sf-shell__sidebar-profile-btn:hover {
+  background: var(--shell-hover);
+  border-color: color-mix(in srgb, var(--shell-accent) 45%, var(--shell-border));
+  transform: translateY(-1px);
+}
+
+.sf-shell__profile-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--shell-accent) 88%, var(--racing-black));
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.sf-shell__profile-avatar-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.sf-shell__profile-avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 999px;
+}
+
+.sf-shell__profile-name {
+  font-size: 0.88rem;
+  font-weight: 650;
+  line-height: 1.1;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .sf-shell__logout-form {
   width: 100%;
 }
@@ -191,6 +245,15 @@
   display: flex;
   flex-direction: column;
   overflow: auto;
+}
+
+.sf-shell__mobile-fab {
+  display: none;
+}
+
+.sf-shell__mobile-nav-icon {
+  width: 18px;
+  height: 18px;
 }
 
 .sf-shell__content {
@@ -247,6 +310,29 @@
 
   .sf-shell__sidebar-bottom {
     padding: 14px;
+  }
+
+  .sf-shell__mobile-fab {
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    z-index: 40;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    border: 1px solid color-mix(in srgb, var(--shell-border) 80%, transparent);
+    background: color-mix(in srgb, var(--shell-menu-bg) 75%, transparent);
+    color: var(--shell-fg);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+  }
+
+  .sf-shell__mobile-fab:hover,
+  .sf-shell__mobile-fab.is-open {
+    background: var(--shell-hover-soft);
   }
 
   .sf-shell__mobile-overlay {

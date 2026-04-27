@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react'
 import { CalendarDays } from 'lucide-react'
-import type { EventCard } from '@/types/home'
+import type { EventCard } from '../../types/home.types.ts'
 import '@/css/components/home/HomeSections.css'
 import '@/css/components/home/HomeEventSection.css'
 
