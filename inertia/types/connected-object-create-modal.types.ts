@@ -1,4 +1,4 @@
-import type { ConnectedObjectEditableFields } from '@/types/connected-object-edit-modal'
+import type { ConnectedObjectEditableFields } from "./connected-object-edit-modal.types"
 
 export type ConnectedObjectCreateModalProps = {
   open: boolean

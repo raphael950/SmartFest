@@ -3,7 +3,6 @@ import { Plus, Power, RefreshCw, Search, Trash2, Wifi } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import '@/css/components/ConnectedObjectsTable.css'
 import type { ConnectedObject, DeviceStatus } from '../types/connected-objects.types.ts'
-import type { ConnectedObjectEditableFields } from '@/types/connected-object-edit-modal'
 import ConnectedObjectEditModal from '@/components/ConnectedObjectEditModal'
 import ConnectedObjectCreateModal from '@/components/ConnectedObjectCreateModal'
 import {
@@ -16,6 +15,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
+import type { ConnectedObjectEditableFields } from '@/types/connected-object-edit-modal.types'
 
 type ConnectedObjectsTableProps = {
   devices: ConnectedObject[]

@@ -1,9 +1,13 @@
 import { UserSchema } from '#database/schema'
+import type { UserLevel } from '#services/user_level_service'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 
 export default class User extends compose(UserSchema, withAuthFinder(hash)) {
+  declare points: number
+  declare level: UserLevel
+
   get initials() {
     const baseIdentity = this.fullName || this.pseudo || this.email
     const [first, last] = baseIdentity.split(' ')

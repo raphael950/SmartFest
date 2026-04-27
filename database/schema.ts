@@ -54,7 +54,7 @@ export class EventSchema extends BaseModel {
 }
 
 export class FlagSchema extends BaseModel {
-  static $columns = ['color', 'createdAt', 'id', 'sector', 'updatedAt'] as const
+  static $columns = ['color', 'createdAt', 'id', 'incidentId', 'sector', 'updatedAt'] as const
   $columns = FlagSchema.$columns
   @column()
   declare color: string
@@ -62,6 +62,8 @@ export class FlagSchema extends BaseModel {
   declare createdAt: DateTime
   @column({ isPrimary: true })
   declare id: number
+  @column()
+  declare incidentId: number | null
   @column()
   declare sector: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })

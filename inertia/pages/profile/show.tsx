@@ -14,6 +14,18 @@ type PublicProfile = {
   birthDate: string | null
   jobTitle: string | null
   followedTeam: string | null
+  points: number
+  level: 'debutant' | 'intermediaire' | 'avance' | 'expert'
+  levelLabel: string
+  levelProgress: {
+    nextLevel: 'debutant' | 'intermediaire' | 'avance' | 'expert' | null
+    nextLevelLabel: string | null
+    currentLevelMinPoints: number
+    nextLevelThreshold: number | null
+    progressPercent: number
+    pointsToNextLevel: number
+    isMaxLevel: boolean
+  }
 }
 
 type ProfilePageProps = {
@@ -160,6 +172,36 @@ export default function ProfileShow({ profile }: InertiaProps<ProfilePageProps>)
             <div>
               <p className="profile-item-label">Metier</p>
               <p className="profile-item-value">{profile.jobTitle || 'Non renseigne'}</p>
+            </div>
+          </article>
+
+          <article className="profile-item">
+            <span className="profile-item-icon">
+              <Sparkles size={16} />
+            </span>
+            <div className="profile-progress-card">
+              <div className="profile-progress-card__header">
+                <div>
+                  <p className="profile-item-label">Points & niveau</p>
+                  <p className="profile-item-value">{profile.levelLabel}</p>
+                </div>
+                <span className="profile-progress-card__target">{profile.points} pts</span>
+              </div>
+              <p className="profile-progress-card__summary">
+                {profile.levelProgress.isMaxLevel
+                  ? 'Niveau maximum atteint'
+                  : `${profile.levelProgress.pointsToNextLevel} pts avant ${profile.levelProgress.nextLevelLabel}`}
+              </p>
+              <div className="profile-progress-bar" aria-hidden="true">
+                <span
+                  className="profile-progress-bar__fill"
+                  style={{ width: `${profile.levelProgress.progressPercent}%` }}
+                />
+              </div>
+              <div className="profile-progress-card__scale">
+                <span>{profile.levelProgress.currentLevelMinPoints} pts</span>
+                <span>{profile.levelProgress.nextLevelThreshold ?? profile.points} pts</span>
+              </div>
             </div>
           </article>
 

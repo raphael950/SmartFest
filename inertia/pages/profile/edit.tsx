@@ -11,6 +11,18 @@ type EditableProfile = {
   birthDate: string | null
   jobTitle: string | null
   followedTeam: string | null
+  points: number
+  level: 'debutant' | 'intermediaire' | 'avance' | 'expert'
+  levelLabel: string
+  levelProgress: {
+    nextLevel: 'debutant' | 'intermediaire' | 'avance' | 'expert' | null
+    nextLevelLabel: string | null
+    currentLevelMinPoints: number
+    nextLevelThreshold: number | null
+    progressPercent: number
+    pointsToNextLevel: number
+    isMaxLevel: boolean
+  }
   avatarUrl: string | null
 }
 
@@ -71,6 +83,38 @@ export default function ProfileEdit({ profile, hasPublicProfile }: InertiaProps<
                 <div className="profile-avatar-copy">
                   <h2>Photo de profil</h2>
                   <p>Ajoute une photo claire pour etre reconnaissable sur ton profil public.</p>
+                </div>
+
+                <div className="profile-points-chip">
+                  <Trophy size={16} />
+                  <div>
+                    <span className="profile-points-chip__label">Points</span>
+                    <strong>{profile.points}</strong>
+                  </div>
+                </div>
+
+                <div className="profile-points-progress">
+                  <div className="profile-points-progress__header">
+                    <div>
+                      <span className="profile-points-chip__label">Niveau</span>
+                      <strong>{profile.levelLabel}</strong>
+                    </div>
+                    <span className="profile-points-progress__target">
+                      {profile.levelProgress.isMaxLevel
+                        ? 'Niveau maximum'
+                        : `${profile.levelProgress.pointsToNextLevel} pts avant ${profile.levelProgress.nextLevelLabel}`}
+                    </span>
+                  </div>
+                  <div className="profile-progress-bar" aria-hidden="true">
+                    <span
+                      className="profile-progress-bar__fill"
+                      style={{ width: `${profile.levelProgress.progressPercent}%` }}
+                    />
+                  </div>
+                  <div className="profile-points-progress__footer">
+                    <span>{profile.levelProgress.currentLevelMinPoints} pts</span>
+                    <span>{profile.levelProgress.nextLevelThreshold ?? profile.points} pts</span>
+                  </div>
                 </div>
 
                 <label htmlFor="profilePhoto" className="profile-avatar-upload-btn">

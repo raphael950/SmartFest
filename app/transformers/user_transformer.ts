@@ -15,6 +15,8 @@ export default class UserTransformer extends BaseTransformer<User> {
       'birthDate',
       'jobTitle',
       'followedTeam',
+      'points',
+      'level',
       'createdAt',
       'updatedAt',
       'initials',
