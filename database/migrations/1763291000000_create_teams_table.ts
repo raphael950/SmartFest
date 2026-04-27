@@ -23,6 +23,7 @@ export default class extends BaseSchema {
         { name: 'Toyota Gazoo', country: 'Japon', accent_color: '#eb0a1e', display_order: 4 },
         { name: 'Cadillac Hertz', country: 'Etats-Unis', accent_color: '#f59e0b', display_order: 5 },
         { name: 'Peugeot Sport', country: 'France', accent_color: '#22c55e', display_order: 6 },
+        { name: 'BMW M Team', country: 'Allemagne', accent_color: '#2563eb', display_order: 7 },
       ])
     })
   }

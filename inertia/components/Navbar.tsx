@@ -24,7 +24,6 @@ const navItems: NavItem[] = [
   { label: 'Accueil', icon: Home, route: 'home' },
   { label: 'Mon profil', icon: UserRound, route: 'profile.edit' },
   { label: 'Live Timing', icon: Clock3 },
-  { label: 'Dashboard Événement', icon: BarChart3 },
   { label: 'Gestion Drapeaux', icon: Flag },
   { label: 'Gestion Incidents', icon: AlertTriangle, route: 'incidents' },
   { label: 'Communication', icon: MessageSquare },
@@ -114,7 +113,7 @@ const Navbar = ({ isMobileOpen, onMobileClose }: NavbarProps) => {
             <Form route="session.destroy" className="sf-shell__logout-form" onSubmit={onMobileClose}>
               <button type="submit" className="sf-shell__logout-btn">
                 <LogOut className="sf-shell__nav-icon" />
-                <span>Déconnexion</span>
+                <span>Deconnexion</span>
               </button>
             </Form>
           ) : (

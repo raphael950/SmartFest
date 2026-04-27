@@ -77,6 +77,17 @@ export default class extends BaseSchema {
           car_model: 'Peugeot 9X8',
           team_principal: 'Olivier Jansonnie',
         })
+
+      await db
+        .from(this.tableName)
+        .where('name', 'BMW M Team')
+        .update({
+          description:
+            'BMW M Team s appuie sur une approche tres structuree de l endurance, avec un bon equilibre chassis, une gestion propre des relais et une montee en rythme constante.',
+          category: 'Hypercar',
+          car_model: 'BMW M Hybrid V8',
+          team_principal: 'Andreas Roos',
+        })
     })
   }
 

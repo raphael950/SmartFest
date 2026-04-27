@@ -16,10 +16,15 @@ type EventTone = 'live' | 'upcoming'
 type EventCard = {
   id: number
   date: string
+  startDate: string
+  endDate: string | null
   title: string
   status: string
   tone: EventTone
   accent: string
+  duration: string
+  format: string
+  description: string
 }
 
 type TeamCard = {
@@ -39,9 +44,11 @@ type HomePageProps = {
 }
 
 const teamEmoji = '\u{1F3CE}\uFE0F'
+const eventEmoji = '\u{1F3C1}'
 
 const Home = ({ events, teams }: InertiaProps<HomePageProps>) => {
   const [teamStart, setTeamStart] = useState(0)
+  const [selectedEvent, setSelectedEvent] = useState<EventCard | null>(null)
   const [selectedTeam, setSelectedTeam] = useState<TeamCard | null>(null)
   const canSlideTeams = teams.length > 3
   const visibleTeams = canSlideTeams
@@ -87,17 +94,20 @@ const Home = ({ events, teams }: InertiaProps<HomePageProps>) => {
           <div className="home-events-grid">
             {events.length ? (
               events.map((event) => (
-                <article
+                <button
+                  type="button"
                   key={event.id}
-                  className="home-event-card"
+                  className="home-event-card home-event-card--interactive"
                   style={{ '--event-accent': event.accent } as CSSProperties}
+                  onClick={() => setSelectedEvent(event)}
                 >
                   <p className="home-event-card__date">{event.date}</p>
                   <h4>{event.title}</h4>
                   <span className="home-status-pill" data-tone={event.tone}>
                     {event.status}
                   </span>
-                </article>
+                  <span className="home-event-card__cta">Voir le detail</span>
+                </button>
               ))
             ) : (
               <article className="home-event-card home-event-card--empty">
@@ -169,6 +179,54 @@ const Home = ({ events, teams }: InertiaProps<HomePageProps>) => {
           </div>
         </section>
       </div>
+
+      <Dialog open={Boolean(selectedEvent)} onOpenChange={(open) => !open && setSelectedEvent(null)}>
+        <DialogContent className="home-team-dialog">
+          {selectedEvent ? (
+            <>
+              <DialogHeader className="home-team-dialog__header">
+                <div
+                  className="home-team-dialog__badge"
+                  style={{ '--team-accent': selectedEvent.accent } as CSSProperties}
+                  aria-hidden="true"
+                >
+                  {eventEmoji}
+                </div>
+                <div>
+                  <DialogTitle className="home-team-dialog__title">{selectedEvent.title}</DialogTitle>
+                  <DialogDescription className="home-team-dialog__subtitle">
+                    {selectedEvent.date} / {selectedEvent.status}
+                  </DialogDescription>
+                </div>
+              </DialogHeader>
+
+              <div className="home-team-dialog__grid">
+                <article className="home-team-dialog__info-card">
+                  <span className="home-team-dialog__label">Debut</span>
+                  <strong>{selectedEvent.startDate}</strong>
+                </article>
+                <article className="home-team-dialog__info-card">
+                  <span className="home-team-dialog__label">Fin</span>
+                  <strong>{selectedEvent.endDate ?? 'Date unique'}</strong>
+                </article>
+                <article className="home-team-dialog__info-card">
+                  <span className="home-team-dialog__label">Format</span>
+                  <strong>{selectedEvent.format}</strong>
+                </article>
+                <article className="home-team-dialog__info-card">
+                  <span className="home-team-dialog__label">Duree</span>
+                  <strong>{selectedEvent.duration}</strong>
+                </article>
+              </div>
+
+              <div className="home-team-dialog__body">
+                <p className="home-team-dialog__label">Description</p>
+                <p className="home-team-dialog__text">{selectedEvent.description}</p>
+              </div>
+            </>
+          ) : null}
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={Boolean(selectedTeam)} onOpenChange={(open) => !open && setSelectedTeam(null)}>
         <DialogContent className="home-team-dialog">
