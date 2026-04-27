@@ -20,6 +20,7 @@ declare module '@adonisjs/inertia/types' {
     'flags': ExtractProps<(typeof import('../../inertia/pages/flags.tsx'))['default']>
     'home': ExtractProps<(typeof import('../../inertia/pages/home.tsx'))['default']>
     'incidents': ExtractProps<(typeof import('../../inertia/pages/incidents.tsx'))['default']>
+    'live-timing': ExtractProps<(typeof import('../../inertia/pages/live-timing.tsx'))['default']>
     'networking': ExtractProps<(typeof import('../../inertia/pages/networking.tsx'))['default']>
     'objets': ExtractProps<(typeof import('../../inertia/pages/objets.tsx'))['default']>
     'profile/edit': ExtractProps<(typeof import('../../inertia/pages/profile/edit.tsx'))['default']>

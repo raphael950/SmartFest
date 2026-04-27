@@ -1,6 +1,6 @@
 import type React from 'react'
 
-export type NavbarRoute = 'home' | 'profile.edit' | 'incidents' | 'objets'
+export type NavbarRoute = 'home' | 'incidents' | 'objets' | 'live-timing'
 
 export type NavItem = {
   label: string

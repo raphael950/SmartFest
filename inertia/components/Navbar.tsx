@@ -20,7 +20,7 @@ import '../css/components/Navbar.css'
 const baseNavItems: NavItem[] = [
   { label: 'Accueil', icon: Home, route: 'home' },
   { label: 'Networking', icon: Users, href: '/networking' },
-  { label: 'Live Timing', icon: Clock3 },
+  { label: 'Live Timing', icon: Clock3, route: 'live-timing' },
   { label: 'Gestion Drapeaux', icon: Flag },
   { label: 'Gestion Incidents', icon: AlertTriangle, route: 'incidents' },
   { label: 'Communication', icon: MessageSquare },
@@ -66,6 +66,10 @@ const Navbar = ({ isMobileOpen, onMobileClose }: NavbarProps) => {
 
       if (item.route === 'objets') {
         return currentPathname === '/objets' || currentPathname.startsWith('/objets/')
+      }
+
+      if (item.route === 'live-timing') {
+        return currentPathname === '/live-timing' || currentPathname.startsWith('/live-timing/')
       }
 
       if (item.href === '/admin/users') {

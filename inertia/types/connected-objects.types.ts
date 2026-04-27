@@ -13,3 +13,7 @@ export type ConnectedObject = {
   signal: number
   firmware: string
 }
+
+export type ObjetsPageProps = {
+  devices: ConnectedObject[]
+}
