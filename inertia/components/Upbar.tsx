@@ -2,7 +2,7 @@ import type { Data } from '@generated/data'
 import { Form, Link } from '@adonisjs/inertia/react'
 import { usePage } from '@inertiajs/react'
 import { ChevronDown, Menu, UserRound } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import '../css/components/upbar.css'
 
 type UpbarProps = {
@@ -13,12 +13,35 @@ type UpbarProps = {
 const Upbar = ({ isMobileNavOpen, onToggleMobileNav }: UpbarProps) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const [isAvatarBroken, setIsAvatarBroken] = useState(false)
+  const profileWrapRef = useRef<HTMLDivElement | null>(null)
   const page = usePage<Data.SharedProps>()
   const user = page.props.user
 
   useEffect(() => {
     setIsAvatarBroken(false)
   }, [user?.avatarPath])
+
+  useEffect(() => {
+    if (!isProfileOpen) {
+      return
+    }
+
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (!profileWrapRef.current) {
+        return
+      }
+
+      if (!profileWrapRef.current.contains(event.target as Node)) {
+        setIsProfileOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleOutsideClick)
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick)
+    }
+  }, [isProfileOpen])
 
   return (
     <header className="sf-shell__topbar">
@@ -36,11 +59,18 @@ const Upbar = ({ isMobileNavOpen, onToggleMobileNav }: UpbarProps) => {
       </div>
 
       {user ? (
-        <div className="sf-shell__profile-wrap">
+        <div
+          className="sf-shell__profile-wrap"
+          ref={profileWrapRef}
+          onMouseEnter={() => setIsProfileOpen(true)}
+          onMouseLeave={() => setIsProfileOpen(false)}
+        >
           <button
             type="button"
             className="sf-shell__profile-btn"
             onClick={() => setIsProfileOpen((state) => !state)}
+            aria-expanded={isProfileOpen}
+            aria-haspopup="menu"
           >
             <span className="sf-shell__profile-avatar">
               {user.avatarPath && !isAvatarBroken ? (
@@ -62,7 +92,7 @@ const Upbar = ({ isMobileNavOpen, onToggleMobileNav }: UpbarProps) => {
           </button>
 
           {isProfileOpen && (
-            <div className="sf-shell__profile-menu">
+            <div className="sf-shell__profile-menu" role="menu">
               <Link route="profile.edit" className="sf-shell__profile-menu-item">
                 Editer mon profil
               </Link>
@@ -84,7 +114,11 @@ const Upbar = ({ isMobileNavOpen, onToggleMobileNav }: UpbarProps) => {
             </div>
           )}
         </div>
-      ) : null}
+      ) : (
+        <Link route="session.create" className="sf-shell__login-btn">
+          Se connecter
+        </Link>
+      )}
     </header>
   )
 }
