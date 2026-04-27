@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
+import type { IncidentSector, IncidentSeverity, IncidentType } from '#models/incident.types'
 
 export default class Incident extends BaseModel {
   static readonly table = 'incidents'
@@ -8,16 +9,16 @@ export default class Incident extends BaseModel {
   declare id: number
 
   @column()
-  declare type: string
+  declare type: IncidentType
 
   @column()
   declare vehicles: string
 
   @column()
-  declare severity: string
+  declare severity: IncidentSeverity
 
   @column()
-  declare sector: string
+  declare sector: IncidentSector
 
   @column()
   declare description: string

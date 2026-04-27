@@ -2,7 +2,7 @@ import { router } from '@inertiajs/react'
 import { AlertTriangle } from 'lucide-react'
 import { useState } from 'react'
 import type { InertiaProps } from '@/types'
-import type { Incident, IncidentSeverity, IncidentType } from '@/types/incidents'
+import type { Incident, IncidentSector, IncidentSeverity, IncidentType } from '@/types/incidents.types'
 import '@/css/incidents.css'
 
 const INCIDENT_TYPE_OPTIONS: { value: IncidentType; label: string }[] = [
@@ -21,22 +21,34 @@ const SEVERITY_OPTIONS: { value: IncidentSeverity; label: string }[] = [
   { value: 'critique', label: 'Critique' },
 ]
 
-const SECTOR_OPTIONS = ['S1', 'S2', 'S3']
+const SECTOR_OPTIONS: IncidentSector[] = ['S1', 'S2', 'S3']
 
-const SEVERITY_LABELS: Record<string, string> = {
+const SEVERITY_LABELS: Record<IncidentSeverity, string> = {
   leger: 'Léger',
   moyen: 'Moyen',
   grave: 'Grave',
   critique: 'Critique',
 }
 
-const TYPE_LABELS: Record<string, string> = {
+const TYPE_LABELS: Record<IncidentType, string> = {
   contact: 'Contact',
   sortie_piste: 'Sortie de piste',
   panne_mecanique: 'Panne mécanique',
   incendie: 'Incendie',
   debris: 'Débris',
   autre: 'Autre',
+}
+
+const isIncidentType = (value: string): value is IncidentType => {
+  return INCIDENT_TYPE_OPTIONS.some((option) => option.value === value)
+}
+
+const isIncidentSeverity = (value: string): value is IncidentSeverity => {
+  return SEVERITY_OPTIONS.some((option) => option.value === value)
+}
+
+const isIncidentSector = (value: string): value is IncidentSector => {
+  return SECTOR_OPTIONS.includes(value as IncidentSector)
 }
 
 type IncidentsPageProps = {
@@ -56,7 +68,7 @@ const IncidentsPage = ({ incidents }: InertiaProps<IncidentsPageProps>) => {
   const [type, setType] = useState<IncidentType | ''>('')
   const [vehicles, setVehicles] = useState('')
   const [severity, setSeverity] = useState<IncidentSeverity>('leger')
-  const [sector, setSector] = useState('')
+  const [sector, setSector] = useState<IncidentSector | ''>('')
   const [description, setDescription] = useState('')
 
   const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
@@ -102,7 +114,10 @@ const IncidentsPage = ({ incidents }: InertiaProps<IncidentsPageProps>) => {
                 id="incident-type"
                 className="incidents-create__select"
                 value={type}
-                onChange={(e) => setType(e.target.value as IncidentType)}
+                onChange={(e) => {
+                  const value = e.target.value
+                  setType(isIncidentType(value) ? value : '')
+                }}
               >
                 <option value="" disabled>Sélectionner...</option>
                 {INCIDENT_TYPE_OPTIONS.map((opt) => (
@@ -133,7 +148,12 @@ const IncidentsPage = ({ incidents }: InertiaProps<IncidentsPageProps>) => {
                 id="incident-severity"
                 className="incidents-create__select"
                 value={severity}
-                onChange={(e) => setSeverity(e.target.value as IncidentSeverity)}
+                onChange={(e) => {
+                  const value = e.target.value
+                  if (isIncidentSeverity(value)) {
+                    setSeverity(value)
+                  }
+                }}
               >
                 {SEVERITY_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -149,7 +169,10 @@ const IncidentsPage = ({ incidents }: InertiaProps<IncidentsPageProps>) => {
                 id="incident-sector"
                 className="incidents-create__select"
                 value={sector}
-                onChange={(e) => setSector(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value
+                  setSector(isIncidentSector(value) ? value : '')
+                }}
               >
                 <option value="" disabled>Sélectionner...</option>
                 {SECTOR_OPTIONS.map((s) => (
@@ -195,13 +218,13 @@ const IncidentsPage = ({ incidents }: InertiaProps<IncidentsPageProps>) => {
                   <div className="incident-card__meta">
                     <span className="incident-card__time">{formatTime(incident.createdAt)}</span>
                     <span className={`incident-card__badge incident-card__badge--${incident.severity}`}>
-                      {SEVERITY_LABELS[incident.severity] || incident.severity}
+                      {SEVERITY_LABELS[incident.severity]}
                     </span>
                   </div>
                   <span className="incident-card__sector">{formatSector(incident.sector)}</span>
                 </div>
 
-                <p className="incident-card__type">{TYPE_LABELS[incident.type] || incident.type}</p>
+                <p className="incident-card__type">{TYPE_LABELS[incident.type]}</p>
                 <p className="incident-card__vehicles">Véhicules: {incident.vehicles}</p>
 
                 <div className="incident-card__description">{incident.description}</div>
