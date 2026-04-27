@@ -127,7 +127,7 @@
 }
 
 .sf-shell__nav-link.is-active {
-  background: color-mix(in srgb, var(--shell-accent) 84%, #fff 16%);
+  background: color-mix(in srgb, var(--shell-accent) 84%, var(--racing-white) 16%);
   color: var(--racing-white);
   box-shadow: 0 10px 24px color-mix(in srgb, var(--shell-accent) 42%, transparent);
 }

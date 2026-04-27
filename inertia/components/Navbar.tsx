@@ -17,8 +17,7 @@ import '../css/components/Navbar.css'
 type NavItem = {
   label: string
   icon: React.ComponentType<{ className?: string }>
-  route?: 'home' | 'profile.edit'
-  href?: string
+  route?: 'home' | 'profile.edit' | 'incidents' | 'objets'
 }
 
 const navItems: NavItem[] = [
@@ -27,9 +26,9 @@ const navItems: NavItem[] = [
   { label: 'Live Timing', icon: Clock3 },
   { label: 'Dashboard Événement', icon: BarChart3 },
   { label: 'Gestion Drapeaux', icon: Flag },
-  { label: 'Gestion Incidents', icon: AlertTriangle },
+  { label: 'Gestion Incidents', icon: AlertTriangle, route: 'incidents' },
   { label: 'Communication', icon: MessageSquare },
-  { label: 'Objets', icon: BarChart3, href: '/objets' },
+  { label: 'Objets', icon: BarChart3, route: 'objets' },
 ]
 
 type NavbarProps = {
@@ -55,8 +54,12 @@ const Navbar = ({ isMobileOpen, onMobileClose }: NavbarProps) => {
         return currentPathname.startsWith('/mon-profil')
       }
 
-      if (item.href) {
-        return currentPathname === item.href || currentPathname.startsWith(`${item.href}/`)
+      if (item.route === 'incidents') {
+        return currentPathname === '/incidents' || currentPathname.startsWith('/incidents/')
+      }
+
+      if (item.route === 'objets') {
+        return currentPathname === '/objets' || currentPathname.startsWith('/objets/')
       }
 
       return false
@@ -82,20 +85,6 @@ const Navbar = ({ isMobileOpen, onMobileClose }: NavbarProps) => {
           {navItems.map((item) => {
             const Icon = item.icon
             const isActive = item.label === activeItem
-
-            if (item.href) {
-              return (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className={`sf-shell__nav-link ${isActive ? 'is-active' : ''}`}
-                  onClick={onMobileClose}
-                >
-                  <Icon className="sf-shell__nav-icon" />
-                  <span>{item.label}</span>
-                </Link>
-              )
-            }
 
             if (!item.route) {
               return (

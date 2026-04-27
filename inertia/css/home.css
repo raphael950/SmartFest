@@ -4,7 +4,7 @@
   background:
     radial-gradient(circle at top right, color-mix(in srgb, var(--racing-red) 16%, transparent), transparent 28%),
     radial-gradient(circle at bottom left, color-mix(in srgb, var(--racing-yellow) 8%, transparent), transparent 24%),
-    linear-gradient(180deg, #131313 0%, #101010 100%);
+    linear-gradient(180deg, var(--racing-black) 0%, var(--racing-darker) 100%);
 }
 
 .home-page__inner {
@@ -22,12 +22,17 @@
   border-radius: 30px;
   overflow: hidden;
   background:
-    linear-gradient(120deg, rgba(14, 19, 23, 0.2) 0%, rgba(23, 30, 37, 0.12) 50%, rgba(43, 29, 21, 0.24) 100%),
+    linear-gradient(
+      120deg,
+      color-mix(in srgb, var(--racing-black) 20%, transparent) 0%,
+      color-mix(in srgb, var(--racing-dark) 12%, transparent) 50%,
+      color-mix(in srgb, var(--shell-accent) 24%, transparent) 100%
+    ),
     url('../images/home/hero-track.jpg');
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
-  box-shadow: 0 26px 54px rgba(0, 0, 0, 0.36);
+  box-shadow: 0 26px 54px color-mix(in srgb, var(--racing-black) 36%, transparent);
 }
 
 .home-hero::before {
@@ -35,7 +40,13 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: linear-gradient(90deg, rgba(11, 14, 18, 0.95) 0%, rgba(11, 14, 18, 0.85) 34%, rgba(11, 14, 18, 0.38) 58%, rgba(11, 14, 18, 0.08) 100%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--racing-black) 95%, transparent) 0%,
+    color-mix(in srgb, var(--racing-black) 85%, transparent) 34%,
+    color-mix(in srgb, var(--racing-black) 38%, transparent) 58%,
+    color-mix(in srgb, var(--racing-black) 8%, transparent) 100%
+  );
 }
 
 .home-hero__content {
@@ -97,7 +108,7 @@
 .home-hero__copy p {
   margin: 0;
   max-width: 34rem;
-  color: rgba(255, 255, 255, 0.88);
+  color: color-mix(in srgb, var(--racing-white) 88%, transparent);
   font-size: clamp(1rem, 1.45vw, 1.35rem);
   line-height: 1.55;
 }
@@ -216,8 +227,8 @@
   border: 1px solid color-mix(in srgb, var(--border) 90%, transparent);
   border-radius: 24px;
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--card) 96%, transparent) 0%, color-mix(in srgb, #1b1b1b 96%, transparent) 100%);
-  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.24);
+    linear-gradient(180deg, color-mix(in srgb, var(--card) 96%, transparent) 0%, color-mix(in srgb, var(--racing-dark) 96%, transparent) 100%);
+  box-shadow: 0 18px 34px color-mix(in srgb, var(--racing-black) 24%, transparent);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -225,7 +236,7 @@
 .home-team-card:hover {
   transform: translateY(-3px);
   border-color: color-mix(in srgb, var(--racing-red) 30%, var(--border));
-  box-shadow: 0 22px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 22px 40px color-mix(in srgb, var(--racing-black) 30%, transparent);
 }
 
 .home-event-card {
@@ -276,12 +287,12 @@
 
 .home-status-pill[data-tone='live'] {
   background: color-mix(in srgb, var(--racing-green) 18%, transparent);
-  color: #7dffb3;
+  color: var(--racing-green-light);
 }
 
 .home-status-pill[data-tone='upcoming'] {
   background: color-mix(in srgb, var(--racing-white) 10%, transparent);
-  color: #cfd4dd;
+  color: var(--shell-muted);
 }
 
 .home-team-card {
@@ -310,7 +321,7 @@
   inset: 0;
   background:
     radial-gradient(circle at top center, color-mix(in srgb, var(--team-accent) 16%, transparent), transparent 38%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, transparent 26%);
+    linear-gradient(180deg, color-mix(in srgb, var(--racing-white) 3%, transparent) 0%, transparent 26%);
   pointer-events: none;
 }
 
@@ -330,7 +341,7 @@
   position: relative;
   z-index: 1;
   margin-top: 4px;
-  color: color-mix(in srgb, var(--team-accent) 72%, white);
+  color: color-mix(in srgb, var(--team-accent) 72%, var(--racing-white));
   font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 0.03em;
@@ -364,7 +375,7 @@
   border-radius: 24px;
   background:
     radial-gradient(circle at top right, color-mix(in srgb, var(--racing-red) 12%, transparent), transparent 28%),
-    linear-gradient(180deg, color-mix(in srgb, var(--card) 98%, transparent) 0%, color-mix(in srgb, #171717 98%, transparent) 100%);
+    linear-gradient(180deg, color-mix(in srgb, var(--card) 98%, transparent) 0%, color-mix(in srgb, var(--racing-dark) 98%, transparent) 100%);
   color: var(--foreground);
   padding: 28px;
 }
@@ -431,7 +442,7 @@
 
 .home-team-dialog__text {
   margin: 0;
-  color: rgba(255, 255, 255, 0.88);
+  color: color-mix(in srgb, var(--racing-white) 88%, transparent);
   font-size: 1rem;
   line-height: 1.65;
 }
@@ -474,7 +485,12 @@
   }
 
   .home-hero::before {
-    background: linear-gradient(180deg, rgba(11, 14, 18, 0.84) 0%, rgba(11, 14, 18, 0.76) 44%, rgba(11, 14, 18, 0.2) 100%);
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--racing-black) 84%, transparent) 0%,
+      color-mix(in srgb, var(--racing-black) 76%, transparent) 44%,
+      color-mix(in srgb, var(--racing-black) 20%, transparent) 100%
+    );
   }
 
   .home-hero__content {

@@ -19,6 +19,30 @@ export interface Registry {
       errorResponse: unknown
     }
   }
+  'incidents': {
+    methods: ["GET","HEAD"]
+    pattern: '/incidents'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'incidents.store': {
+    methods: ["POST"]
+    pattern: '/incidents'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
   'objets': {
     methods: ["GET","HEAD"]
     pattern: '/objets'

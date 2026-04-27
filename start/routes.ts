@@ -9,12 +9,15 @@
 
 import { middleware } from '#start/kernel'
 import HomeController from '#controllers/home_controller'
+import IncidentsController from '#controllers/incidents_controller'
 import ProfileController from '#controllers/profile_controller'
 import { controllers } from '#generated/controllers'
 import User from '#models/user'
 import router from '@adonisjs/core/services/router'
 
 router.get('/', [HomeController, 'index']).as('home')
+router.get('/incidents', [IncidentsController, 'index']).as('incidents')
+router.post('/incidents', [IncidentsController, 'store']).as('incidents.store')
 router.get('/objets', [controllers.ConnectedObjects, 'index']).as('objets')
 router.post('/objets', [controllers.ConnectedObjects, 'store']).as('objets.store')
 router.put('/objets/:identifier', [controllers.ConnectedObjects, 'update']).as('objets.update')

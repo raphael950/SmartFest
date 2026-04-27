@@ -105,19 +105,19 @@
 }
 
 .auth-page.signup-page .strength-segment.level-1 {
-  background: #ef4444;
+  background: var(--severity-high);
 }
 
 .auth-page.signup-page .strength-segment.level-2 {
-  background: #f59e0b;
+  background: var(--racing-yellow-dark);
 }
 
 .auth-page.signup-page .strength-segment.level-3 {
-  background: #3b82f6;
+  background: var(--racing-blue);
 }
 
 .auth-page.signup-page .strength-segment.level-4 {
-  background: #22c55e;
+  background: var(--racing-green);
 }
 
 .auth-page.signup-page .strength-label {

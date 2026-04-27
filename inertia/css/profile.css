@@ -21,7 +21,7 @@
     inset 0 1px 0 color-mix(in srgb, var(--racing-white) 8%, transparent);
   padding: 28px;
   /* Safari/WebKit fix: force clipping of blurred children within rounded corners */
-  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  -webkit-mask-image: -webkit-radial-gradient(var(--racing-white), var(--racing-black));
 }
 
 .profile-hero-card--public {

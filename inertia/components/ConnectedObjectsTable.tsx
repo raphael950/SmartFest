@@ -23,6 +23,16 @@ type ConnectedObjectsTableProps = {
 
 type DeviceFilter = 'all' | 'online' | 'warning' | 'offline' | 'maintenance'
 
+const OBJECTS_BASE_PATH = '/objets'
+
+const getObjectPath = (identifier?: string) => {
+  if (!identifier) {
+    return OBJECTS_BASE_PATH
+  }
+
+  return `${OBJECTS_BASE_PATH}/${identifier}`
+}
+
 const filterOptions: Array<{ key: DeviceFilter; label: string }> = [
   { key: 'all', label: 'TOUT' },
   { key: 'online', label: 'ONLINE' },
@@ -111,7 +121,7 @@ const ConnectedObjectsTable = ({ devices: initialDevices }: ConnectedObjectsTabl
   }
 
   const handleCreate = (values: ConnectedObjectEditableFields) => {
-    router.post('/objets', values, {
+    router.post(getObjectPath(), values, {
       preserveScroll: true,
       onSuccess: () => {
         setActiveFilter('all')
@@ -125,7 +135,7 @@ const ConnectedObjectsTable = ({ devices: initialDevices }: ConnectedObjectsTabl
       return
     }
 
-    router.put(`/objets/${identifier}`, updates, {
+    router.put(getObjectPath(identifier), updates, {
       preserveScroll: true,
       onSuccess: () => {
         closeEditModal()
@@ -138,7 +148,7 @@ const ConnectedObjectsTable = ({ devices: initialDevices }: ConnectedObjectsTabl
       return
     }
 
-    router.delete(`/objets/${identifier}`, {
+    router.delete(getObjectPath(identifier), {
       preserveScroll: true,
       onSuccess: () => {
         closeEditModal()
