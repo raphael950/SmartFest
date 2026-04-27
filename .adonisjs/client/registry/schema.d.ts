@@ -19,6 +19,30 @@ export interface Registry {
       errorResponse: unknown
     }
   }
+  'incidents': {
+    methods: ["GET","HEAD"]
+    pattern: '/incidents'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'incidents.store': {
+    methods: ["POST"]
+    pattern: '/incidents'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
   'flags': {
     methods: ["GET","HEAD"]
     pattern: '/drapeaux'
@@ -41,30 +65,6 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/flags_controller').default['store']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/flags_controller').default['store']>>>
-    }
-  }
-  'incidents': {
-    methods: ["GET","HEAD"]
-    pattern: '/incidents'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/incidents_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/incidents_controller').default['index']>>>
-    }
-  }
-  'incidents.store': {
-    methods: ["POST"]
-    pattern: '/incidents'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/incidents_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/incidents_controller').default['store']>>>
     }
   }
   'objets': {

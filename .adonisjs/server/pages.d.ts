@@ -12,6 +12,7 @@ type ExtractProps<T> =
 
 declare module '@adonisjs/inertia/types' {
   export interface InertiaPages {
+    'admin/users': ExtractProps<(typeof import('../../inertia/pages/admin/users.tsx'))['default']>
     'auth/login': ExtractProps<(typeof import('../../inertia/pages/auth/login.tsx'))['default']>
     'auth/signup': ExtractProps<(typeof import('../../inertia/pages/auth/signup.tsx'))['default']>
     'errors/not_found': ExtractProps<(typeof import('../../inertia/pages/errors/not_found.tsx'))['default']>
@@ -19,11 +20,9 @@ declare module '@adonisjs/inertia/types' {
     'flags': ExtractProps<(typeof import('../../inertia/pages/flags.tsx'))['default']>
     'home': ExtractProps<(typeof import('../../inertia/pages/home.tsx'))['default']>
     'incidents': ExtractProps<(typeof import('../../inertia/pages/incidents.tsx'))['default']>
+    'networking': ExtractProps<(typeof import('../../inertia/pages/networking.tsx'))['default']>
     'objets': ExtractProps<(typeof import('../../inertia/pages/objets.tsx'))['default']>
     'profile/edit': ExtractProps<(typeof import('../../inertia/pages/profile/edit.tsx'))['default']>
     'profile/show': ExtractProps<(typeof import('../../inertia/pages/profile/show.tsx'))['default']>
-    'incidents': ExtractProps<(typeof import('../../inertia/pages/incidents.tsx'))['default']>
-    'networking': ExtractProps<(typeof import('../../inertia/pages/networking.tsx'))['default']>
-    'admin/users': ExtractProps<(typeof import('../../inertia/pages/admin/users.tsx'))['default']>
   }
 }
