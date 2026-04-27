@@ -12,10 +12,8 @@ import {
   LogOut,
   UserRound,
 } from 'lucide-react'
-import type { NavItem, NavbarProps } from '@/types/navbar.types'
+import type { NavItem, NavbarProps, RoleNavItem, UserRole } from '@/types/navbar.types'
 import '../css/components/Navbar.css'
-
-type UserRole = 'simple' | 'complexe' | 'admin'
 
 const roleRank: Record<UserRole, number> = {
   simple: 0,
@@ -30,10 +28,6 @@ const normalizeRole = (value: unknown): UserRole => {
 
 const hasMinimumRole = (role: UserRole, minimumRole: UserRole) => {
   return roleRank[role] >= roleRank[minimumRole]
-}
-
-type RoleNavItem = NavItem & {
-  minRole?: UserRole
 }
 
 const NAV_ITEMS: RoleNavItem[] = [

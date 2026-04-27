@@ -2,23 +2,8 @@ import { router } from '@inertiajs/react'
 import { CheckCircle2, KeyRound, Mail, Shield, Trash2, UserRound } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import type { InertiaProps } from '@/types'
+import type { AdminUsersPageProps, UserRole } from '@/types/admin-users.types'
 import '@/css/admin-users.css'
-
-type UserRole = 'simple' | 'complexe' | 'admin'
-
-type AdminUser = {
-  id: number
-  email: string
-  fullName: string | null
-  pseudo: string | null
-  isVerified: boolean
-  role: UserRole
-  createdAt: string
-}
-
-type AdminUsersPageProps = {
-  users: AdminUser[]
-}
 
 const formatDate = (value: string) => {
   return new Date(value).toLocaleDateString('fr-FR', {
