@@ -212,6 +212,18 @@
   border-color: color-mix(in srgb, var(--role-admin) 35%, transparent);
 }
 
+.admin-user-card__badge.is-simple {
+  background: color-mix(in srgb, var(--muted) 18%, transparent);
+  color: var(--foreground);
+  border-color: color-mix(in srgb, var(--muted) 35%, transparent);
+}
+
+.admin-user-card__badge.is-complexe {
+  background: color-mix(in srgb, var(--racing-yellow) 18%, transparent);
+  color: var(--racing-yellow);
+  border-color: color-mix(in srgb, var(--racing-yellow) 35%, transparent);
+}
+
 .admin-user-card__badge.is-verified {
   background: var(--status-active-bg);
   color: var(--status-active);

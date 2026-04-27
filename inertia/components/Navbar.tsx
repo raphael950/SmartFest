@@ -10,28 +10,71 @@ import {
   Flag,
   Home,
   LogOut,
-  MessageSquare,
-  Users,
   UserRound,
 } from 'lucide-react'
 import type { NavItem, NavbarProps } from '@/types/navbar.types'
 import '../css/components/Navbar.css'
 
-const baseNavItems: NavItem[] = [
+type UserRole = 'simple' | 'complexe' | 'admin'
+
+const roleRank: Record<UserRole, number> = {
+  simple: 0,
+  complexe: 1,
+  admin: 2,
+}
+
+const normalizeRole = (value: unknown): UserRole => {
+  const normalized = String(typeof value === 'string' ? value : '').trim().toLowerCase()
+  return normalized === 'complexe' || normalized === 'admin' ? normalized : 'simple'
+}
+
+const hasMinimumRole = (role: UserRole, minimumRole: UserRole) => {
+  return roleRank[role] >= roleRank[minimumRole]
+}
+
+type RoleNavItem = NavItem & {
+  minRole?: UserRole
+}
+
+const NAV_ITEMS: RoleNavItem[] = [
   { label: 'Accueil', icon: Home, route: 'home' },
-  { label: 'Networking', icon: Users, href: '/networking' },
-  { label: 'Live Timing', icon: Clock3 },
-  { label: 'Gestion Drapeaux', icon: Flag },
-  { label: 'Gestion Incidents', icon: AlertTriangle, route: 'incidents' },
-  { label: 'Communication', icon: MessageSquare },
-  { label: 'Objets', icon: BarChart3, route: 'objets' },
+  { label: 'Live Timing', icon: Clock3, minRole: 'simple' },
+  { label: 'Networking', icon: UserRound, href: '/networking', minRole: 'simple' },
+  { label: 'Gestion Drapeaux', icon: Flag, href: '/drapeaux', minRole: 'complexe' },
+  { label: 'Gestion Incidents', icon: AlertTriangle, route: 'incidents', minRole: 'complexe' },
+  { label: 'Objets', icon: BarChart3, route: 'objets', minRole: 'complexe' },
+  { label: 'Admin', icon: Shield, href: '/admin/users', minRole: 'admin' },
+]
+
+const PATH_MATCHERS: Array<{
+  test: (pathname: string) => boolean
+  label: string
+}> = [
+  { label: 'Accueil', test: (pathname) => pathname === '/' },
+  {
+    label: 'Networking',
+    test: (pathname) => pathname === '/networking' || pathname.startsWith('/networking/'),
+  },
+  {
+    label: 'Gestion Drapeaux',
+    test: (pathname) => pathname === '/drapeaux' || pathname.startsWith('/drapeaux/'),
+  },
+  {
+    label: 'Gestion Incidents',
+    test: (pathname) => pathname === '/incidents' || pathname.startsWith('/incidents/'),
+  },
+  { label: 'Objets', test: (pathname) => pathname === '/objets' || pathname.startsWith('/objets/') },
+  {
+    label: 'Admin',
+    test: (pathname) => pathname === '/admin/users' || pathname.startsWith('/admin/users/'),
+  },
 ]
 
 const Navbar = ({ isMobileOpen, onMobileClose }: NavbarProps) => {
   const page = usePage<Data.SharedProps>()
   const user = page.props.user
   const currentPath = page.url
-  const isAdmin = Boolean((user as { isAdmin?: boolean } | undefined)?.isAdmin)
+  const userRole = normalizeRole((user as { role?: string } | undefined)?.role)
   const [isAvatarBroken, setIsAvatarBroken] = useState(false)
 
   useEffect(() => {
@@ -39,44 +82,24 @@ const Navbar = ({ isMobileOpen, onMobileClose }: NavbarProps) => {
   }, [user?.avatarPath])
 
   const navItems = useMemo<NavItem[]>(() => {
-    if (!isAdmin) {
-      return baseNavItems
-    }
+    return NAV_ITEMS.filter((item) => {
+      if (!item.minRole) {
+        return true
+      }
 
-    return [...baseNavItems, { label: 'Admin', icon: Shield, href: '/admin/users' } satisfies NavItem]
-  }, [isAdmin])
+      return Boolean(user) && hasMinimumRole(userRole, item.minRole)
+    })
+  }, [user, userRole])
 
   const currentPathname = useMemo(() => {
     return currentPath.split('?')[0].split('#')[0]
   }, [currentPath])
 
   const activeItem = useMemo(() => {
-    const activeMatch = navItems.find((item) => {
-      if (item.route === 'home') {
-        return currentPathname === '/'
-      }
-
-      if (item.href === '/networking') {
-        return currentPathname === '/networking' || currentPathname.startsWith('/networking/')
-      }
-
-      if (item.route === 'incidents') {
-        return currentPathname === '/incidents' || currentPathname.startsWith('/incidents/')
-      }
-
-      if (item.route === 'objets') {
-        return currentPathname === '/objets' || currentPathname.startsWith('/objets/')
-      }
-
-      if (item.href === '/admin/users') {
-        return currentPathname === '/admin/users' || currentPathname.startsWith('/admin/users/')
-      }
-
-      return false
-    })
+    const activeMatch = PATH_MATCHERS.find((matcher) => matcher.test(currentPathname) && navItems.some((item) => item.label === matcher.label))
 
     return activeMatch?.label ?? ''
-  }, [currentPathname])
+  }, [currentPathname, navItems])
 
   return (
     <>

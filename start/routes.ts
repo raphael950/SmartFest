@@ -19,14 +19,6 @@ import userLevelService from '#services/user_level_service'
 import router from '@adonisjs/core/services/router'
 
 router.get('/', [HomeController, 'index']).as('home')
-router.get('/incidents', [IncidentsController, 'index']).as('incidents')
-router.post('/incidents', [IncidentsController, 'store']).as('incidents.store')
-router.get('/drapeaux', [controllers.Flags, 'index']).as('flags')
-router.post('/drapeaux', [controllers.Flags, 'store']).as('flags.store')
-router.get('/objets', [controllers.ConnectedObjects, 'index']).as('objets')
-router.post('/objets', [controllers.ConnectedObjects, 'store']).as('objets.store')
-router.put('/objets/:identifier', [controllers.ConnectedObjects, 'update']).as('objets.update')
-router.delete('/objets/:identifier', [controllers.ConnectedObjects, 'destroy']).as('objets.destroy')
 router
   .get('/profil/:pseudo', async ({ params, inertia, auth }) => {
     const user = await User.query().where('pseudo', params.pseudo).firstOrFail()
@@ -51,6 +43,7 @@ router
     })
   })
   .as('profile.show')
+  .use(middleware.role({ minimumRole: 'simple' }))
 
 router
   .group(() => {
@@ -80,15 +73,27 @@ router
 
     router.post('logout', [controllers.Session, 'destroy']).as('session.destroy')
   })
-  .use(middleware.auth())
+  .use(middleware.role({ minimumRole: 'simple' }))
 
 router
   .group(() => {
     router.get('admin/users', [AdminUsersController, 'index']).as('admin.users.index')
     router.put('admin/users/:id/password', [AdminUsersController, 'updatePassword']).as('admin.users.password')
     router.post('admin/users/:id/verify', [AdminUsersController, 'verify']).as('admin.users.verify')
-    router.post('admin/users/:id/grant-admin', [AdminUsersController, 'grantAdmin']).as('admin.users.grant_admin')
+    router.post('admin/users/:id/role', [AdminUsersController, 'updateRole']).as('admin.users.role')
     router.delete('admin/users/:id', [AdminUsersController, 'destroy']).as('admin.users.destroy')
   })
-  .use(middleware.auth())
-  .use(middleware.admin())
+  .use(middleware.role({ minimumRole: 'admin' }))
+
+router
+  .group(() => {
+    router.get('/incidents', [IncidentsController, 'index']).as('incidents')
+    router.post('/incidents', [IncidentsController, 'store']).as('incidents.store')
+    router.get('/drapeaux', [controllers.Flags, 'index']).as('flags')
+    router.post('/drapeaux', [controllers.Flags, 'store']).as('flags.store')
+    router.get('/objets', [controllers.ConnectedObjects, 'index']).as('objets')
+    router.post('/objets', [controllers.ConnectedObjects, 'store']).as('objets.store')
+    router.put('/objets/:identifier', [controllers.ConnectedObjects, 'update']).as('objets.update')
+    router.delete('/objets/:identifier', [controllers.ConnectedObjects, 'destroy']).as('objets.destroy')
+  })
+  .use(middleware.role({ minimumRole: 'complexe' }))
