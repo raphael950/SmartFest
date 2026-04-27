@@ -13,7 +13,7 @@ export default class AdminUsersController {
         pseudo: user.pseudo,
         isVerified: user.isVerified,
         isAdmin: user.isAdmin,
-        createdAt: user.createdAt.toISO(),
+        createdAt: user.createdAt.toISO() ?? user.createdAt.toJSDate().toISOString(),
       })),
     })
   }
@@ -43,6 +43,19 @@ export default class AdminUsersController {
     }
 
     session.flash('success', `Compte valide pour ${user.email}.`)
+    return response.redirect().back()
+  }
+
+  async grantAdmin({ response, session, params }: HttpContext) {
+    const user = await User.findOrFail(params.id)
+
+    if (!user.isAdmin) {
+      user.isAdmin = true
+      user.isVerified = true
+      await user.save()
+    }
+
+    session.flash('success', `Droits admin accordes a ${user.email}.`)
     return response.redirect().back()
   }
 

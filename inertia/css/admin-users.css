@@ -267,6 +267,7 @@
 
 .admin-user-card__action,
 .admin-user-card__validate,
+.admin-user-card__promote,
 .admin-user-card__delete {
   border: none;
   border-radius: 0.55rem;
@@ -283,6 +284,7 @@
 
 .admin-user-card__action:hover,
 .admin-user-card__validate:hover,
+.admin-user-card__promote:hover,
 .admin-user-card__delete:hover {
   transform: translateY(-1px);
   filter: brightness(1.06);
@@ -314,10 +316,23 @@
   color: #092012;
 }
 
+.admin-user-card__promote {
+  background: color-mix(in srgb, var(--racing-blue) 22%, transparent);
+  color: color-mix(in srgb, var(--racing-blue) 78%, var(--racing-white));
+  border: 1px solid color-mix(in srgb, var(--racing-blue) 40%, transparent);
+}
+
 .admin-user-card__validated-text {
   color: var(--status-active);
   font-size: 0.78rem;
   font-weight: 700;
+}
+
+.admin-user-card__footer-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
 }
 
 .admin-user-card__delete {
@@ -348,7 +363,12 @@
 
   .admin-user-card__action,
   .admin-user-card__validate,
+  .admin-user-card__promote,
   .admin-user-card__delete {
+    width: 100%;
+  }
+
+  .admin-user-card__footer-actions {
     width: 100%;
   }
 }

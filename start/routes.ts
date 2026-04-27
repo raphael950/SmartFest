@@ -78,6 +78,7 @@ router
     router.get('admin/users', [AdminUsersController, 'index']).as('admin.users.index')
     router.put('admin/users/:id/password', [AdminUsersController, 'updatePassword']).as('admin.users.password')
     router.post('admin/users/:id/verify', [AdminUsersController, 'verify']).as('admin.users.verify')
+    router.post('admin/users/:id/grant-admin', [AdminUsersController, 'grantAdmin']).as('admin.users.grant_admin')
     router.delete('admin/users/:id', [AdminUsersController, 'destroy']).as('admin.users.destroy')
   })
   .use(middleware.auth())

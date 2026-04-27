@@ -126,6 +126,12 @@ const routes = {
     tokens: [{"old":"/admin/users/:id/verify","type":0,"val":"admin","end":""},{"old":"/admin/users/:id/verify","type":0,"val":"users","end":""},{"old":"/admin/users/:id/verify","type":1,"val":"id","end":""},{"old":"/admin/users/:id/verify","type":0,"val":"verify","end":""}],
     types: placeholder as Registry['admin.users.verify']['types'],
   },
+  'admin.users.grant_admin': {
+    methods: ["POST"],
+    pattern: '/admin/users/:id/grant-admin',
+    tokens: [{"old":"/admin/users/:id/grant-admin","type":0,"val":"admin","end":""},{"old":"/admin/users/:id/grant-admin","type":0,"val":"users","end":""},{"old":"/admin/users/:id/grant-admin","type":1,"val":"id","end":""},{"old":"/admin/users/:id/grant-admin","type":0,"val":"grant-admin","end":""}],
+    types: placeholder as Registry['admin.users.grant_admin']['types'],
+  },
   'admin.users.destroy': {
     methods: ["DELETE"],
     pattern: '/admin/users/:id',

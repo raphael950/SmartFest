@@ -34,6 +34,7 @@ export interface ApiDefinition {
       index: typeof routes['admin.users.index']
       password: typeof routes['admin.users.password']
       verify: typeof routes['admin.users.verify']
+      grantAdmin: typeof routes['admin.users.grant_admin']
       destroy: typeof routes['admin.users.destroy']
     }
   }

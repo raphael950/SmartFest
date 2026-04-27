@@ -80,6 +80,10 @@ const AdminUsersPage = ({ users }: InertiaProps<AdminUsersPageProps>) => {
     router.post(`/admin/users/${userId}/verify`, {}, { preserveScroll: true })
   }
 
+  const grantAdmin = (userId: number) => {
+    router.post(`/admin/users/${userId}/grant-admin`, {}, { preserveScroll: true })
+  }
+
   const deleteUser = (userId: number, email: string) => {
     const confirmed = window.confirm(`Supprimer le compte ${email} ? Cette action est irreversible.`)
 
@@ -194,13 +198,21 @@ const AdminUsersPage = ({ users }: InertiaProps<AdminUsersPageProps>) => {
               </div>
 
               <div className="admin-user-card__footer">
-                {!user.isVerified ? (
-                  <button type="button" className="admin-user-card__validate" onClick={() => verifyUser(user.id)}>
-                    Valider le compte
-                  </button>
-                ) : (
-                  <span className="admin-user-card__validated-text">Compte deja verifie</span>
-                )}
+                <div className="admin-user-card__footer-actions">
+                  {!user.isVerified ? (
+                    <button type="button" className="admin-user-card__validate" onClick={() => verifyUser(user.id)}>
+                      Valider le compte
+                    </button>
+                  ) : (
+                    <span className="admin-user-card__validated-text">Compte deja verifie</span>
+                  )}
+
+                  {!user.isAdmin && user.isVerified ? (
+                    <button type="button" className="admin-user-card__promote" onClick={() => grantAdmin(user.id)}>
+                      Ajouter admin
+                    </button>
+                  ) : null}
+                </div>
 
                 <button
                   type="button"

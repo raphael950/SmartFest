@@ -24,6 +24,7 @@ export type ScannedRoutes = {
     'admin.users.index': { paramsTuple?: []; params?: {} }
     'admin.users.password': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.users.verify': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.users.grant_admin': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.users.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   GET: {
@@ -58,6 +59,7 @@ export type ScannedRoutes = {
     'profile.update': { paramsTuple?: []; params?: {} }
     'session.destroy': { paramsTuple?: []; params?: {} }
     'admin.users.verify': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.users.grant_admin': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   PUT: {
     'objets.update': { paramsTuple: [ParamValue]; params: {'identifier': ParamValue} }

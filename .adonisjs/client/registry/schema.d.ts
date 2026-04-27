@@ -247,6 +247,18 @@ export interface Registry {
       errorResponse: unknown
     }
   }
+  'admin.users.grant_admin': {
+    methods: ["POST"]
+    pattern: '/admin/users/:id/grant-admin'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
   'admin.users.destroy': {
     methods: ["DELETE"]
     pattern: '/admin/users/:id'
