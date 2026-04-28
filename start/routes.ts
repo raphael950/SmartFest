@@ -24,7 +24,6 @@ router
   .get('/profil/:pseudo', async ({ params, inertia, auth }) => {
     const user = await User.query().where('pseudo', params.pseudo).firstOrFail()
     const teams = await Team.query().orderBy('display_order', 'asc').orderBy('name', 'asc')
-    const followedTeam = user.followedTeamId ? await Team.find(user.followedTeamId) : null
     const levelProgress = userLevelService.getProgress(user.points)
 
     return inertia.render('profile/show', {
@@ -37,7 +36,6 @@ router
         birthDate: user.birthDate ? user.birthDate.toISODate() : null,
         jobTitle: user.jobTitle,
         followedTeamId: user.followedTeamId,
-        followedTeam: followedTeam?.name ?? null,
         points: user.points,
         level: levelProgress.level,
         levelLabel: levelProgress.levelLabel,

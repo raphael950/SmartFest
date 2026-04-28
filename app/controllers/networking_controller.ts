@@ -11,7 +11,7 @@ export default class NetworkingController {
       .where('is_verified', true)
       .orderBy('created_at', 'desc')
 
-    const followedTeamIds = [...new Set(users.map((user) => user.followedTeamId).filter((id) => id !== null))]
+    const followedTeamIds = [...new Set(users.map((user) => user.followedTeamId).filter((id) => id != null))]
     const teams = followedTeamIds.length ? await Team.query().whereIn('id', followedTeamIds) : []
     const teamsById = new Map(teams.map((team) => [team.id, team.name]))
 
@@ -24,10 +24,11 @@ export default class NetworkingController {
         fullName: user.fullName,
         email: user.email,
         avatarUrl: user.avatarPath ? `/${user.avatarPath}` : null,
-        followedTeam: user.followedTeamId ? (teamsById.get(user.followedTeamId) ?? null) : null,
+        followedTeamId: user.followedTeamId,
         jobTitle: user.jobTitle,
         isCurrentUser: user.id === currentUserId,
       })),
+      teams: teams.map((team) => ({ id: team.id, name: team.name })),
     })
   }
 }

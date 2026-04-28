@@ -6,13 +6,14 @@ export default class extends BaseSchema {
   async up() {
     this.schema.alterTable(this.tableName, (table) => {
       table.integer('followed_team_id').unsigned().nullable().references('id').inTable('teams').onDelete('SET NULL')
-      table.dropColumn('followed_team')
+      // NOTE: keep existing `followed_team` column for compatibility with other branches.
+      // We'll remove it once all branches have migrated to `followed_team_id`.
     })
   }
 
   async down() {
     this.schema.alterTable(this.tableName, (table) => {
-      table.string('followed_team', 120).nullable()
+      // Reverse of up: only drop the added foreign key column.
       table.dropColumn('followed_team_id')
     })
   }

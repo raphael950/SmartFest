@@ -10,16 +10,19 @@ type NetworkingUser = {
   fullName: string | null
   email: string
   avatarUrl: string | null
-  followedTeam: string | null
+  followedTeamId: number | null
   jobTitle: string | null
   isCurrentUser: boolean
 }
 
+type TeamOption = { id: number; name: string }
+
 type NetworkingPageProps = {
   users: NetworkingUser[]
+  teams: TeamOption[]
 }
 
-const NetworkingPage = ({ users }: InertiaProps<NetworkingPageProps>) => {
+const NetworkingPage = ({ users, teams }: InertiaProps<NetworkingPageProps>) => {
   const [searchTerm, setSearchTerm] = useState('')
 
   const filteredUsers = useMemo(() => {
@@ -29,8 +32,11 @@ const NetworkingPage = ({ users }: InertiaProps<NetworkingPageProps>) => {
       return users
     }
 
+    const teamById = new Map(teams.map((t) => [t.id, t.name]))
+
     return users.filter((user) => {
-      const haystack = [user.pseudo, user.email, user.fullName ?? '', user.jobTitle ?? '', user.followedTeam ?? '']
+      const teamName = user.followedTeamId ? teamById.get(user.followedTeamId) ?? '' : ''
+      const haystack = [user.pseudo, user.email, user.fullName ?? '', user.jobTitle ?? '', teamName]
         .join(' ')
         .toLowerCase()
 
@@ -117,7 +123,7 @@ const NetworkingPage = ({ users }: InertiaProps<NetworkingPageProps>) => {
                 </p>
                 <p>
                   <Trophy size={14} />
-                  <span>{user.followedTeam || 'Equipe non renseignee'}</span>
+                  <span>{user.followedTeamId ? (new Map(teams.map((t) => [t.id, t.name])).get(user.followedTeamId) ?? 'Equipe non renseignee') : 'Equipe non renseignee'}</span>
                 </p>
               </div>
 

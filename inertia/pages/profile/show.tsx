@@ -16,7 +16,6 @@ type PublicProfile = {
   birthDate: string | null
   jobTitle: string | null
   followedTeamId: number | null
-  followedTeam: string | null
   points: number
   level: 'debutant' | 'intermediaire' | 'avance' | 'expert'
   levelLabel: string
@@ -90,6 +89,9 @@ export default function ProfileShow({ profile, teams, canEdit }: InertiaProps<Pr
   const [isEditOpen, setIsEditOpen] = useState(false)
   const age = computeAge(profile.birthDate)
   const identity = splitIdentity(profile.fullName, profile.pseudo)
+  const followedTeamName = profile.followedTeamId
+    ? teams.find((t) => t.id === profile.followedTeamId)?.name ?? null
+    : null
 
   useEffect(() => {
     setIsAvatarBroken(false)
@@ -211,15 +213,17 @@ export default function ProfileShow({ profile, teams, canEdit }: InertiaProps<Pr
             </div>
           </article>
 
-          <article className="profile-item">
-            <span className="profile-item-icon">
-              <Trophy size={16} />
-            </span>
-            <div>
-              <p className="profile-item-label">Equipe suivie</p>
-              <p className="profile-item-value">{profile.followedTeam || 'Non renseignee'}</p>
-            </div>
-          </article>
+          {followedTeamName ? (
+            <article className="profile-item">
+              <span className="profile-item-icon">
+                <Trophy size={16} />
+              </span>
+              <div>
+                <p className="profile-item-label">Equipe suivie</p>
+                <p className="profile-item-value">{followedTeamName}</p>
+              </div>
+            </article>
+          ) : null}
         </div>
 
         <div className="profile-actions">
@@ -246,7 +250,7 @@ export default function ProfileShow({ profile, teams, canEdit }: InertiaProps<Pr
             birthDate: profile.birthDate,
             jobTitle: profile.jobTitle,
             followedTeamId: profile.followedTeamId,
-            followedTeamName: profile.followedTeam,
+            followedTeamName: followedTeamName,
             avatarUrl: profile.avatarUrl,
           }}
           teams={teams}
