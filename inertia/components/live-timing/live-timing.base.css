@@ -2,11 +2,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 :root {
-  --lt-bg-base:        #0a0b0f;
-  --lt-bg-panel:       rgba(16, 18, 26, 0.85);
-  --lt-bg-panel-hover: rgba(22, 25, 36, 0.92);
-  --lt-bg-row:         rgba(255, 255, 255, 0.03);
-  --lt-bg-row-active:  rgba(255, 75, 55, 0.07);
+  --lt-bg-base:        var(--background);
+  --lt-bg-panel:       color-mix(in srgb, var(--card) 92%, transparent);
+  --lt-bg-panel-hover: color-mix(in srgb, var(--secondary) 96%, transparent);
+  --lt-bg-row:         color-mix(in srgb, var(--secondary) 36%, transparent);
+  --lt-bg-row-active:  color-mix(in srgb, var(--primary) 14%, var(--card));
   --lt-red:            #e8352a;
   --lt-red-dim:        rgba(232, 53, 42, 0.18);
   --lt-red-glow:       rgba(232, 53, 42, 0.45);
@@ -27,5 +27,5 @@
 .lt-scroll::-webkit-scrollbar-track { background: transparent; }
 .lt-scroll::-webkit-scrollbar-thumb { background: var(--lt-red-border); border-radius: 2px; }
 
-.lt-glass { background: var(--lt-bg-panel); backdrop-filter: var(--lt-glass-blur); -webkit-backdrop-filter: var(--lt-glass-blur); border: 1px solid var(--lt-border); border-radius: 12px; }
+.lt-glass { background: var(--lt-bg-panel); backdrop-filter: var(--lt-glass-blur); -webkit-backdrop-filter: var(--lt-glass-blur); border: 1px solid var(--lt-border);}
 .lt-glass--bright { border-color: var(--lt-border-bright); }

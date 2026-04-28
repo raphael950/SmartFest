@@ -1,59 +1,75 @@
-import "./live-timing.base.css";
-import "./TrackDisplay.css";
-
-
+import { useEffect, useRef, useState } from 'react'
+import './TrackDisplay.css'
 
 interface TrackDisplayProps {
-  circuitPath: string;
+  circuitPath: string
 }
 
 export default function TrackDisplay({ circuitPath }: TrackDisplayProps) {
+  const pathRef = useRef<SVGPathElement>(null)
+  const [totalLength, setTotalLength] = useState(0)
+  const [viewBox, setViewBox] = useState('0 0 500 300')
+
+  useEffect(() => {
+    if (!pathRef.current) return
+
+    const path = pathRef.current
+    const { x, y, width, height } = path.getBBox()
+    const padding = 24
+
+    setTotalLength(path.getTotalLength())
+
+    if (width > 0 && height > 0) {
+      setViewBox(`${x - padding} ${y - padding} ${width + padding * 2} ${height + padding * 2}`)
+    }
+  }, [circuitPath])
+
   return (
-    /*
-     * lt-glass       → glassmorphism de base
-     * lt-track-container → layout interne + overflow:visible
-     *                      pour que le SVG ne soit JAMAIS rogné
-     */
-    <div className="lt-glass lt-track-container">
-
-      <div />
-
+    <div className="lt-glass lt-track-container lt-panel-section">
+      <div className="lt-track-flag">Vert</div>
       <div className="lt-track-svg-wrapper">
-        <svg
-          viewBox="0 0 500 300"
-          className="lt-track-svg"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-label="Circuit Bugatti — Le Mans"
-        >
-          <defs>
-            {/* Dégradé rouge — illusion de profondeur sur le tracé */}
-            <linearGradient id="trackGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%"   stopColor="#ff5544" />
-              <stop offset="35%"  stopColor="#e8352a" />
-              <stop offset="75%"  stopColor="#b82018" />
-              <stop offset="100%" stopColor="#ff5544" />
-            </linearGradient>
-
-
-          </defs>
-
-          {/* ── 1. Ombre portée décalée → effet sol / profondeur 3D ── */}
+        <svg className="lt-track-svg" preserveAspectRatio="xMidYMid meet" viewBox={viewBox}>
+          {/* Secteur 1 */}
           <path
             d={circuitPath}
             fill="none"
-            stroke="rgba(0,0,0,0.55)"
-            strokeWidth="12"
+            stroke="#ff0033df"
+            strokeWidth="9"
             strokeLinejoin="round"
             strokeLinecap="round"
-            transform="translate(4,6)"
+            strokeDasharray={`${totalLength / 3} ${totalLength}`}
+            strokeDashoffset={0}
           />
 
-          {/* ── 3. Tracé principal coloré (sans glow) ── */}
+          {/* Secteur 2 */}
           <path
-            id="circuit"
             d={circuitPath}
             fill="none"
-            stroke="url(#trackGrad)"
+            stroke="#ffd900da"
+            strokeWidth="9"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            strokeDasharray={`${totalLength / 3} ${totalLength}`}
+            strokeDashoffset={-totalLength / 3}
+          />
+
+          {/* Secteur 3 */}
+          <path
+            d={circuitPath}
+            fill="none"
+            stroke="#1500ffc1"
+            strokeWidth="9"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            strokeDasharray={`${totalLength / 3} ${totalLength}`}
+            strokeDashoffset={-(totalLength * 2) / 3}
+          />
+
+          <path
+            ref={pathRef}
+            d={circuitPath}
+            fill="none"
+            stroke="black"
             strokeWidth="7"
             strokeLinejoin="round"
             strokeLinecap="round"
@@ -61,5 +77,5 @@ export default function TrackDisplay({ circuitPath }: TrackDisplayProps) {
         </svg>
       </div>
     </div>
-  );
+  )
 }
