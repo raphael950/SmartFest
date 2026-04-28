@@ -3,7 +3,7 @@ import { toast, Toaster } from 'sonner'
 import { usePage } from '@inertiajs/react'
 import { Menu } from 'lucide-react'
 import { ReactElement, useEffect, useState } from 'react'
-import Navbar from '@/components/Navbar'
+import Navbar from '@/components/layout/Navbar'
 
 export default function Layout({ children }: { children: ReactElement<Data.SharedProps> }) {
   const page = usePage<Data.SharedProps>()

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import type { DeviceStatus } from '../types/connected-objects.types.ts'
 import type { ConnectedObjectEditableFields } from '@/types/connected-object-edit-modal.types'
+import type { DeviceStatus } from '@/types/connected-objects.types'
 import {
   CONNECTED_OBJECT_SECTOR_OPTIONS,
   CONNECTED_OBJECT_STATUS_OPTIONS,
@@ -17,7 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import '@/css/components/ConnectedObjectEditModal.css'
+import '@/css/components/objets/ConnectedObjectEditModal.css'
 
 type ConnectedObjectFormModalProps = {
   open: boolean

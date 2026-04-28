@@ -13,7 +13,7 @@ import {
   UserRound,
 } from 'lucide-react'
 import type { NavItem, NavbarProps, RoleNavItem, UserRole } from '@/types/navbar.types'
-import '../css/components/Navbar.css'
+import '@/css/components/layout/Navbar.css'
 
 const roleRank: Record<UserRole, number> = {
   simple: 0,

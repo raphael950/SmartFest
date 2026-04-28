@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react'
-import '@/css/components/DataPanelTable.css'
+import '@/css/components/ui/DataPanelTable.css'
 import { cn } from '@/lib/utils'
 
 export interface DataPanelTableColumn {

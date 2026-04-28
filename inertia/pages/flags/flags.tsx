@@ -2,8 +2,8 @@ import { router } from '@inertiajs/react'
 import { Clock } from 'lucide-react'
 import { useState } from 'react'
 import type { InertiaProps } from '@/types'
-import type { Flag as FlagType, FlagColor } from '../types/flag.types.ts'
-import '@/css/flags.css'
+import '@/css/pages/flags/flags.css'
+import { Flag, FlagColor } from '@/types/flag.types.js'
 
 const SECTOR_OPTIONS = ['S1', 'S2', 'S3']
 
@@ -14,7 +14,7 @@ const COLOR_LABELS: Record<FlagColor, string> = {
 }
 
 type FlagsPageProps = {
-  flags: FlagType[]
+  flags: Flag[]
 }
 
 const formatTime = (dateString: string) => {

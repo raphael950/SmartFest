@@ -1,4 +1,4 @@
-import ConnectedObjectFormModal from '@/components/ConnectedObjectFormModal'
+import ConnectedObjectFormModal from '@/components/object/ConnectedObjectFormModal'
 import type { ConnectedObjectEditableFields } from '@/types/connected-object-edit-modal.types'
 import type { ConnectedObjectCreateModalProps } from '@/types/connected-object-create-modal.types'
 

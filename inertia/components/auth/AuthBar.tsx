@@ -1,5 +1,5 @@
 import { ArrowLeft, Zap } from "lucide-react";
-import "../css/components/AuthBar.css";
+import "@/css/components/auth/AuthBar.css";
 
 const AuthBar = () => {
   const goBack = () => {

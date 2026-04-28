@@ -1,5 +1,4 @@
 import { Link } from "@adonisjs/inertia/react";
-import "../css/components/Footer.css";
 
 const AuthFooter = () => {
   return (

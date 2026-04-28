@@ -3,7 +3,7 @@ import { AlertTriangle } from 'lucide-react'
 import { useState } from 'react'
 import type { InertiaProps } from '@/types'
 import type { Incident, IncidentSector, IncidentSeverity, IncidentType } from '@/types/incidents.types'
-import '@/css/incidents.css'
+import '@/css/pages/incidents/incidents.css'
 
 const INCIDENT_TYPE_OPTIONS: { value: IncidentType; label: string }[] = [
   { value: 'contact', label: 'Contact' },

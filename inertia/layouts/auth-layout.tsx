@@ -2,8 +2,8 @@ import { Data } from '@generated/data'
 import { toast, Toaster } from 'sonner'
 import { usePage } from '@inertiajs/react'
 import { ReactElement, useEffect } from 'react'
-import AuthBar from '@/components/AuthBar'
-import AuthFooter from '@/components/AuthFooter'
+import AuthBar from '@/components/auth/AuthBar'
+import AuthFooter from '@/components/auth/AuthFooter'
 
 export default function Layout({ children }: { children: ReactElement<Data.SharedProps> }) {
   useEffect(() => {

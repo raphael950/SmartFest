@@ -1,10 +1,9 @@
 import { router } from '@inertiajs/react'
 import { Plus, Power, RefreshCw, Search, Trash2, Wifi } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import '@/css/components/ConnectedObjectsTable.css'
-import type { ConnectedObject, DeviceStatus } from '../types/connected-objects.types.ts'
-import ConnectedObjectEditModal from '@/components/ConnectedObjectEditModal'
-import ConnectedObjectCreateModal from '@/components/ConnectedObjectCreateModal'
+import '@/css/components/objets/ConnectedObjectsTable.css'
+import ConnectedObjectEditModal from '@/components/object/ConnectedObjectEditModal'
+import ConnectedObjectCreateModal from '@/components/object/ConnectedObjectCreateModal'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,6 +15,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import type { ConnectedObjectEditableFields } from '@/types/connected-object-edit-modal.types'
+import { ConnectedObject, DeviceStatus } from '@/types/connected-objects.types'
 
 type ConnectedObjectsTableProps = {
   devices: ConnectedObject[]

@@ -2,7 +2,7 @@ import { Link } from '@adonisjs/inertia/react'
 import { useMemo, useState } from 'react'
 import { Mail, Search, Sparkles, Trophy, UserRound, Users } from 'lucide-react'
 import type { InertiaProps } from '@/types'
-import '@/css/networking.css'
+import '@/css/pages/networking/networking.css'
 import { NetworkingPageProps } from '@/types/networking.types'
 
 const NetworkingPage = ({ users }: InertiaProps<NetworkingPageProps>) => {

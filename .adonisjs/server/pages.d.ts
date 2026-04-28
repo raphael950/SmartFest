@@ -12,18 +12,18 @@ type ExtractProps<T> =
 
 declare module '@adonisjs/inertia/types' {
   export interface InertiaPages {
-    'admin/users': ExtractProps<(typeof import('../../inertia/pages/admin/users.tsx'))['default']>
-    'auth/login': ExtractProps<(typeof import('../../inertia/pages/auth/login.tsx'))['default']>
-    'auth/signup': ExtractProps<(typeof import('../../inertia/pages/auth/signup.tsx'))['default']>
-    'errors/not_found': ExtractProps<(typeof import('../../inertia/pages/errors/not_found.tsx'))['default']>
-    'errors/server_error': ExtractProps<(typeof import('../../inertia/pages/errors/server_error.tsx'))['default']>
-    'flags': ExtractProps<(typeof import('../../inertia/pages/flags.tsx'))['default']>
-    'home': ExtractProps<(typeof import('../../inertia/pages/home.tsx'))['default']>
-    'incidents': ExtractProps<(typeof import('../../inertia/pages/incidents.tsx'))['default']>
-    'live-timing': ExtractProps<(typeof import('../../inertia/pages/live-timing.tsx'))['default']>
-    'networking': ExtractProps<(typeof import('../../inertia/pages/networking.tsx'))['default']>
-    'objets': ExtractProps<(typeof import('../../inertia/pages/objets.tsx'))['default']>
-    'profile/edit': ExtractProps<(typeof import('../../inertia/pages/profile/edit.tsx'))['default']>
-    'profile/show': ExtractProps<(typeof import('../../inertia/pages/profile/show.tsx'))['default']>
+    'admin/users': ExtractProps<(typeof import('@/pages/admin/users.tsx'))['default']>
+    'auth/login': ExtractProps<(typeof import('@/pages/auth/login.tsx'))['default']>
+    'auth/signup': ExtractProps<(typeof import('@/pages/auth/signup.tsx'))['default']>
+    'errors/not_found': ExtractProps<(typeof import('@/pages/errors/not_found.tsx'))['default']>
+    'errors/server_error': ExtractProps<(typeof import('@/pages/errors/server_error.tsx'))['default']>
+    'flags': ExtractProps<(typeof import('@/pages/flags/flags.tsx'))['default']>
+    'home': ExtractProps<(typeof import('@/pages/home.tsx'))['default']>
+    'incidents': ExtractProps<(typeof import('@/pages/incidents/incidents.tsx'))['default']>
+    'live-timing': ExtractProps<(typeof import('@/pages/live-timing/live-timing.tsx'))['default']>
+    'networking': ExtractProps<(typeof import('@/pages/networking/networking.tsx'))['default']>
+    'objets': ExtractProps<(typeof import('@/pages/objets/objets.tsx'))['default']>
+    'profile/edit': ExtractProps<(typeof import('@/pages/profile/edit.tsx'))['default']>
+    'profile/show': ExtractProps<(typeof import('@/pages/profile/show.tsx'))['default']>
   }
 }

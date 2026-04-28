@@ -2,7 +2,7 @@ import type {
   ConnectedObjectEditableFields,
   ConnectedObjectEditModalProps,
 } from '@/types/connected-object-edit-modal.types'
-import ConnectedObjectFormModal from '@/components/ConnectedObjectFormModal'
+import ConnectedObjectFormModal from '@/components/object/ConnectedObjectFormModal'
 
 const emptyFormState: ConnectedObjectEditableFields = {
   name: '',
