@@ -1,0 +1,13 @@
+/* ═══════════════════════════════════════════════════
+   Leaderboard
+   ═══════════════════════════════════════════════════ */
+
+.lt-th {
+  font-family: var(--lt-font-display);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--lt-muted);
+  padding: 8px 12px;
+}

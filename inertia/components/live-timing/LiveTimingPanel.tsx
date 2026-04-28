@@ -1,50 +1,21 @@
 import TrackDisplay from "./TrackDisplay";
 import TrackConditions from "./TrackConditions";
 import Leaderboard from "./Leaderboard";
-import "./live-timing.css";
+import "./live-timing.base.css";
+import "./LiveTimingPanel.css";
 import type { LiveTimingPageProps } from "~/types/live-timing.types";
 
 interface LiveTimingPanelProps extends LiveTimingPageProps {}
 
 export default function LiveTimingPanel({ drivers, circuitPath }: LiveTimingPanelProps) {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 16,
-        padding: "20px 20px 20px 16px",
-        height: "100%",
-        minHeight: "100vh",
-        background: "var(--lt-bg-base)",
-        fontFamily: "var(--lt-font-display)",
-        color: "var(--lt-white)",
-        boxSizing: "border-box",
-      }}
-    >
+    <div className="lt-panel-root">
       {/* ── Page title ── */}
       <div>
-        <h1
-          style={{
-            margin: 0,
-            fontFamily: "var(--lt-font-display)",
-            fontSize: "1.35rem",
-            fontWeight: 700,
-            color: "var(--lt-white)",
-            letterSpacing: "0.04em",
-          }}
-        >
+        <h1 className="lt-panel-title">
           Bugatti Circuit — Le Mans
         </h1>
-        <p
-          style={{
-            margin: "2px 0 0",
-            fontFamily: "var(--lt-font-display)",
-            fontSize: "0.78rem",
-            color: "var(--lt-muted)",
-            letterSpacing: "0.04em",
-          }}
-        >
+        <p className="lt-panel-subtitle">
           Circuit automobile Le Mans Bugatti
         </p>
       </div>

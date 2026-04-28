@@ -30,8 +30,9 @@ export default class LiveTimingController {
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error)
       console.error(`[live-timing] GPX load failed for ${gpxPath}: ${message}`, error)
+      // Mock realistic Le Mans Bugatti circuit path with proper proportions for 500x300 viewBox
       circuitPath =
-        'M 100 150 Q 120 80 180 60 Q 280 40 320 100 Q 340 180 320 240 Q 280 280 180 260 Q 100 250 100 150'
+        'M 50 150 L 80 120 L 120 100 L 160 90 L 200 85 L 240 80 L 280 85 L 320 100 L 340 130 L 350 160 L 340 190 L 320 210 L 280 220 L 240 225 L 200 228 L 160 225 L 120 220 L 80 210 L 50 180 L 40 150 Z'
     }
 
     return inertia.render('live-timing', {

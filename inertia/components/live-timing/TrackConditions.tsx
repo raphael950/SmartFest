@@ -1,4 +1,5 @@
-import "../css/live-timing.css";
+import "./live-timing.base.css";
+import "./TrackConditions.css";
 
 interface TrackConditionData {
   circuit: string;

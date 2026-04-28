@@ -1,5 +1,6 @@
 import DriverRow from "./DriverRow";
-import "../css/live-timing.css";
+import "./live-timing.base.css";
+import "./Leaderboard.css";
 import type { Driver } from "~/types/live-timing.types";
 
 interface LeaderboardProps {
