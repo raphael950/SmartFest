@@ -1,10 +1,18 @@
 import User from '#models/user'
+import Team from '#models/team'
 import { signupValidator } from '#validators/user'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class NewAccountController {
   async create({ inertia }: HttpContext) {
-    return inertia.render('auth/signup', {})
+    const teams = await Team.query().orderBy('display_order', 'asc').orderBy('name', 'asc')
+
+    return inertia.render('auth/signup', {
+      teams: teams.map((team) => ({
+        id: team.id,
+        name: team.name,
+      })),
+    })
   }
 
   async store({ request, response, session, auth }: HttpContext) {

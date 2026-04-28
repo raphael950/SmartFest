@@ -9,16 +9,23 @@ export type EditableProfile = {
   gender: string | null
   birthDate: string | null
   jobTitle: string | null
-  followedTeam: string | null
+  followedTeamId: number | null
+  followedTeamName: string | null
   avatarUrl: string | null
+}
+
+export type TeamOption = {
+  id: number
+  name: string
 }
 
 type ProfileEditFormProps = {
   profile: EditableProfile
+  teams: TeamOption[]
   hasPublicProfile: boolean
 }
 
-const ProfileEditForm = ({ profile, hasPublicProfile }: ProfileEditFormProps) => {
+const ProfileEditForm = ({ profile, teams, hasPublicProfile }: ProfileEditFormProps) => {
   const [avatarPreview, setAvatarPreview] = useState(profile.avatarUrl)
   const [isAvatarBroken, setIsAvatarBroken] = useState(false)
 
@@ -109,17 +116,21 @@ const ProfileEditForm = ({ profile, hasPublicProfile }: ProfileEditFormProps) =>
             </div>
 
             <div className="field">
-              <label htmlFor="gender">Sexe / Genre</label>
+              <label htmlFor="gender">Sexe</label>
               <div className="input-wrap">
                 <VenusAndMars size={18} className="field-icon" />
-                <input
+                <select
                   id="gender"
                   name="gender"
-                  type="text"
                   defaultValue={profile.gender || ''}
-                  placeholder="Homme, Femme, Non-binaire..."
                   data-invalid={errors.gender ? 'true' : undefined}
-                />
+                >
+                  <option value="" disabled>
+                    Selectionner
+                  </option>
+                  <option value="Homme">Homme</option>
+                  <option value="Femme">Femme</option>
+                </select>
               </div>
               {errors.gender ? <div className="field-error">{errors.gender}</div> : null}
             </div>
@@ -156,19 +167,26 @@ const ProfileEditForm = ({ profile, hasPublicProfile }: ProfileEditFormProps) =>
             </div>
 
             <div className="field field-full-row">
-              <label htmlFor="followedTeam">Equipe suivie</label>
+              <label htmlFor="followedTeamId">Equipe suivie</label>
               <div className="input-wrap">
                 <Trophy size={18} className="field-icon" />
-                <input
-                  id="followedTeam"
-                  name="followedTeam"
-                  type="text"
-                  defaultValue={profile.followedTeam || ''}
-                  placeholder="Ferrari AF Corse"
-                  data-invalid={errors.followedTeam ? 'true' : undefined}
-                />
+                <select
+                  id="followedTeamId"
+                  name="followedTeamId"
+                  defaultValue={profile.followedTeamId?.toString() || ''}
+                  data-invalid={errors.followedTeamId ? 'true' : undefined}
+                >
+                  <option value="" disabled>
+                    Selectionner une equipe
+                  </option>
+                  {teams.map((team) => (
+                    <option key={team.id} value={team.id}>
+                      {team.name}
+                    </option>
+                  ))}
+                </select>
               </div>
-              {errors.followedTeam ? <div className="field-error">{errors.followedTeam}</div> : null}
+              {errors.followedTeamId ? <div className="field-error">{errors.followedTeamId}</div> : null}
             </div>
           </div>
 

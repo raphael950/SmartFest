@@ -10,7 +10,7 @@ const password = () => vine.string().minLength(8).maxLength(32)
  * Validator to use when performing self-signup
  */
 export const signupValidator = vine.create({
-  fullName: vine.string().trim().maxLength(140).nullable(),
+  fullName: vine.string().trim().minLength(2).maxLength(140),
   pseudo: vine
     .string()
     .trim()
@@ -18,10 +18,10 @@ export const signupValidator = vine.create({
     .maxLength(30)
     .alphaNumeric({ allowDashes: true, allowUnderscores: true })
     .unique({ table: 'users', column: 'pseudo' }),
-  gender: vine.string().trim().minLength(2).maxLength(50),
+  gender: vine.enum(['Homme', 'Femme'] as const),
   birthDate: vine.date(),
   jobTitle: vine.string().trim().minLength(2).maxLength(120),
-  followedTeam: vine.string().trim().minLength(2).maxLength(120),
+  followedTeamId: vine.number().withoutDecimals().positive().exists({ table: 'teams', column: 'id' }),
   email: email().unique({ table: 'users', column: 'email' }),
   password: password().confirmed({
     confirmationField: 'passwordConfirmation',
@@ -39,8 +39,8 @@ export const updateProfileValidator = vine.create({
     .minLength(3)
     .maxLength(30)
     .alphaNumeric({ allowDashes: true, allowUnderscores: true }),
-  gender: vine.string().trim().minLength(2).maxLength(50),
+  gender: vine.enum(['Homme', 'Femme'] as const),
   birthDate: vine.date(),
   jobTitle: vine.string().trim().minLength(2).maxLength(120),
-  followedTeam: vine.string().trim().minLength(2).maxLength(120),
+  followedTeamId: vine.number().withoutDecimals().positive().exists({ table: 'teams', column: 'id' }),
 })

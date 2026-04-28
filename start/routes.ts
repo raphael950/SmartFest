@@ -15,6 +15,7 @@ import AdminUsersController from '#controllers/admin_users_controller'
 import NetworkingController from '#controllers/networking_controller'
 import { controllers } from '#generated/controllers'
 import User from '#models/user'
+import Team from '#models/team'
 import userLevelService from '#services/user_level_service'
 import router from '@adonisjs/core/services/router'
 
@@ -22,6 +23,8 @@ router.get('/', [HomeController, 'index']).as('home')
 router
   .get('/profil/:pseudo', async ({ params, inertia, auth }) => {
     const user = await User.query().where('pseudo', params.pseudo).firstOrFail()
+    const teams = await Team.query().orderBy('display_order', 'asc').orderBy('name', 'asc')
+    const followedTeam = user.followedTeamId ? await Team.find(user.followedTeamId) : null
     const levelProgress = userLevelService.getProgress(user.points)
 
     return inertia.render('profile/show', {
@@ -33,12 +36,14 @@ router
         gender: user.gender,
         birthDate: user.birthDate ? user.birthDate.toISODate() : null,
         jobTitle: user.jobTitle,
-        followedTeam: user.followedTeam,
+        followedTeamId: user.followedTeamId,
+        followedTeam: followedTeam?.name ?? null,
         points: user.points,
         level: levelProgress.level,
         levelLabel: levelProgress.levelLabel,
         levelProgress,
       },
+      teams: teams.map((team) => ({ id: team.id, name: team.name })),
       canEdit: auth.user?.id === user.id,
     })
   })

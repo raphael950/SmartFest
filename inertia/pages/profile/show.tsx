@@ -4,6 +4,7 @@ import { Briefcase, Cake, Sparkles, Trophy, UserRound, VenusAndMars } from 'luci
 import { useEffect, useState } from 'react'
 import profileBg from '~/images/profile/profile-bg.jpg'
 import ProfileEditModal from '@/components/profile/ProfileEditModal'
+import type { TeamOption } from '@/components/profile/ProfileEditForm'
 import '~/css/profile.css'
 
 type PublicProfile = {
@@ -14,6 +15,7 @@ type PublicProfile = {
   gender: string | null
   birthDate: string | null
   jobTitle: string | null
+  followedTeamId: number | null
   followedTeam: string | null
   points: number
   level: 'debutant' | 'intermediaire' | 'avance' | 'expert'
@@ -31,6 +33,7 @@ type PublicProfile = {
 
 type ProfilePageProps = {
   profile: PublicProfile
+  teams: TeamOption[]
   canEdit: boolean
 }
 
@@ -82,7 +85,7 @@ const splitIdentity = (fullName: string | null, pseudo: string | null) => {
   return { firstName, lastName }
 }
 
-export default function ProfileShow({ profile, canEdit }: InertiaProps<ProfilePageProps>) {
+export default function ProfileShow({ profile, teams, canEdit }: InertiaProps<ProfilePageProps>) {
   const [isAvatarBroken, setIsAvatarBroken] = useState(false)
   const [isEditOpen, setIsEditOpen] = useState(false)
   const age = computeAge(profile.birthDate)
@@ -153,7 +156,7 @@ export default function ProfileShow({ profile, canEdit }: InertiaProps<ProfilePa
               <VenusAndMars size={16} />
             </span>
             <div>
-              <p className="profile-item-label">Sexe / Genre</p>
+              <p className="profile-item-label">Sexe</p>
               <p className="profile-item-value">{profile.gender || 'Non renseigne'}</p>
             </div>
           </article>
@@ -242,9 +245,11 @@ export default function ProfileShow({ profile, canEdit }: InertiaProps<ProfilePa
             gender: profile.gender,
             birthDate: profile.birthDate,
             jobTitle: profile.jobTitle,
-            followedTeam: profile.followedTeam,
+            followedTeamId: profile.followedTeamId,
+            followedTeamName: profile.followedTeam,
             avatarUrl: profile.avatarUrl,
           }}
+          teams={teams}
           hasPublicProfile={Boolean(profile.pseudo)}
         />
       ) : null}

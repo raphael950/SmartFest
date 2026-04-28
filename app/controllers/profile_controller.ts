@@ -1,4 +1,5 @@
 import User from '#models/user'
+import Team from '#models/team'
 import userLevelService from '#services/user_level_service'
 import { updateProfileValidator } from '#validators/user'
 import app from '@adonisjs/core/services/app'
@@ -13,6 +14,8 @@ export default class ProfileController {
 
   async edit({ auth, inertia }: HttpContext) {
     const user = auth.user!
+    const teams = await Team.query().orderBy('display_order', 'asc').orderBy('name', 'asc')
+    const selectedTeam = user.followedTeamId ? await Team.find(user.followedTeamId) : null
     const levelProgress = userLevelService.getProgress(user.points)
 
     return inertia.render('profile/edit', {
@@ -22,13 +25,15 @@ export default class ProfileController {
         gender: user.gender,
         birthDate: user.birthDate ? user.birthDate.toISODate() : null,
         jobTitle: user.jobTitle,
-        followedTeam: user.followedTeam,
+        followedTeamId: user.followedTeamId,
+        followedTeamName: selectedTeam?.name ?? null,
         points: user.points,
         level: levelProgress.level,
         levelLabel: levelProgress.levelLabel,
         levelProgress,
         avatarUrl: this.avatarUrl(user.avatarPath),
       },
+      teams: teams.map((team) => ({ id: team.id, name: team.name })),
       hasPublicProfile: Boolean(user.pseudo),
     })
   }

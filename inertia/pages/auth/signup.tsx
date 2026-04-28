@@ -1,9 +1,19 @@
 import { Form, Link } from '@adonisjs/inertia/react'
 import { useMemo, useState } from 'react'
-import { Briefcase, CalendarDays, Eye, EyeOff, Lock, Mail, Trophy, User, UserRound } from 'lucide-react'
+import { Briefcase, CalendarDays, Eye, EyeOff, Lock, Mail, Trophy, User, UserRound, VenusAndMars } from 'lucide-react'
+import type { InertiaProps } from '~/types'
 import '~/css/signup.css'
 
-export default function Signup() {
+type TeamOption = {
+  id: number
+  name: string
+}
+
+type SignupProps = {
+  teams: TeamOption[]
+}
+
+export default function Signup({ teams }: InertiaProps<SignupProps>) {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
   const [password, setPassword] = useState('')
@@ -72,7 +82,7 @@ export default function Signup() {
                     </div>
 
                     <div className="field">
-                      <label htmlFor="fullName">Nom complet (optionnel)</label>
+                      <label htmlFor="fullName">Nom complet</label>
                       <div className="input-wrap">
                         <User size={18} className="field-icon" />
                         <input
@@ -92,16 +102,21 @@ export default function Signup() {
 
                     <div className="signup-grid-two">
                       <div className="field">
-                        <label htmlFor="gender">Sexe / Genre</label>
+                        <label htmlFor="gender">Sexe</label>
                         <div className="input-wrap">
-                          <UserRound size={18} className="field-icon" />
-                          <input
+                          <VenusAndMars size={18} className="field-icon" />
+                          <select
                             id="gender"
                             name="gender"
-                            type="text"
-                            placeholder="Homme, Femme, Non-binaire..."
+                            defaultValue=""
                             data-invalid={errors.gender ? 'true' : undefined}
-                          />
+                          >
+                            <option value="" disabled>
+                              Selectionner
+                            </option>
+                            <option value="Homme">Homme</option>
+                            <option value="Femme">Femme</option>
+                          </select>
                         </div>
                         {errors.gender ? <div className="field-error">{errors.gender}</div> : null}
                       </div>
@@ -137,18 +152,26 @@ export default function Signup() {
                     </div>
 
                     <div className="field">
-                      <label htmlFor="followedTeam">Equipe suivie</label>
+                      <label htmlFor="followedTeamId">Equipe suivie</label>
                       <div className="input-wrap">
                         <Trophy size={18} className="field-icon" />
-                        <input
-                          id="followedTeam"
-                          name="followedTeam"
-                          type="text"
-                          placeholder="Ferrari AF Corse"
-                          data-invalid={errors.followedTeam ? 'true' : undefined}
-                        />
+                        <select
+                          id="followedTeamId"
+                          name="followedTeamId"
+                          defaultValue=""
+                          data-invalid={errors.followedTeamId ? 'true' : undefined}
+                        >
+                          <option value="" disabled>
+                            Selectionner une equipe
+                          </option>
+                          {teams.map((team) => (
+                            <option key={team.id} value={team.id}>
+                              {team.name}
+                            </option>
+                          ))}
+                        </select>
                       </div>
-                      {errors.followedTeam ? <div className="field-error">{errors.followedTeam}</div> : null}
+                      {errors.followedTeamId ? <div className="field-error">{errors.followedTeamId}</div> : null}
                     </div>
                   </section>
 
