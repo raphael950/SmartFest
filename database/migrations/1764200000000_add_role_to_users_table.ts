@@ -11,12 +11,20 @@ export default class extends BaseSchema {
     this.defer(async (db) => {
       await db.from(this.tableName).where('is_admin', true).update({ role: 'admin' })
       await db.from(this.tableName).where('is_admin', false).update({ role: 'simple' })
+      await db.schema.alterTable(this.tableName, (table) => {
+        table.dropColumn('is_admin')
+      })
     })
   }
 
   async down() {
     this.schema.alterTable(this.tableName, (table) => {
       table.dropColumn('role')
+    })
+    this .defer(async (db) => {
+      await db.schema.alterTable(this.tableName, (table) => {
+        table.boolean('is_admin').notNullable().defaultTo(false)
+      })
     })
   }
 }

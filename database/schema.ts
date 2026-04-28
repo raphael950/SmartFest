@@ -5,7 +5,6 @@
  */
 
 import { BaseModel, column } from '@adonisjs/lucid/orm'
-import type { UserRole } from '#models/user_role'
 import { DateTime } from 'luxon'
 
 export class ConnectedObjectSchema extends BaseModel {
@@ -55,7 +54,7 @@ export class EventSchema extends BaseModel {
 }
 
 export class FlagSchema extends BaseModel {
-  static $columns = ['color', 'createdAt', 'id', 'incidentId', 'sector', 'updatedAt'] as const
+  static $columns = ['color', 'createdAt', 'id', 'sector', 'updatedAt'] as const
   $columns = FlagSchema.$columns
   @column()
   declare color: string
@@ -63,8 +62,6 @@ export class FlagSchema extends BaseModel {
   declare createdAt: DateTime
   @column({ isPrimary: true })
   declare id: number
-  @column()
-  declare incidentId: number | null
   @column()
   declare sector: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
@@ -120,7 +117,7 @@ export class TeamSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = ['avatarPath', 'birthDate', 'createdAt', 'email', 'followedTeam', 'fullName', 'gender', 'id', 'isVerified', 'jobTitle', 'password', 'pseudo', 'role', 'updatedAt'] as const
+  static $columns = ['avatarPath', 'birthDate', 'createdAt', 'email', 'followedTeam', 'fullName', 'gender', 'id', 'isVerified', 'jobTitle', 'level', 'password', 'points', 'pseudo', 'role', 'updatedAt'] as const
   $columns = UserSchema.$columns
   @column()
   declare avatarPath: string | null
@@ -151,7 +148,7 @@ export class UserSchema extends BaseModel {
   @column()
   declare pseudo: string | null
   @column()
-  declare role: UserRole
+  declare role: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
 }
