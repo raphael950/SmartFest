@@ -1,7 +1,8 @@
 import { Form, Link } from '@adonisjs/inertia/react'
 import { ChangeEvent, useState } from 'react'
 import { Briefcase, Cake, Camera, Save, Trophy, User, UserRound, VenusAndMars } from 'lucide-react'
-import '~/css/profile.css'
+import '@/css/pages/auth/profile.css'
+import { UserLevelProgress } from '#services/user_level_service'
 
 export type EditableProfile = {
   fullName: string | null
@@ -11,6 +12,10 @@ export type EditableProfile = {
   jobTitle: string | null
   followedTeam: string | null
   avatarUrl: string | null
+  points: number
+  level: string
+  levelLabel: string
+  levelProgress: UserLevelProgress
 }
 
 type ProfileEditFormProps = {

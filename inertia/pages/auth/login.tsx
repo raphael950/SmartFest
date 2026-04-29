@@ -2,7 +2,7 @@ import { Form, Link } from '@adonisjs/inertia/react'
 import { useState } from 'react'
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react'
 import { usePage } from '@inertiajs/react'
-import '~/css/login.css'
+import '~/css/pages/auth/login.css'
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false)

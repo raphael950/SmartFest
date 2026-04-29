@@ -4,7 +4,8 @@ import { Briefcase, Cake, Sparkles, Trophy, UserRound, VenusAndMars } from 'luci
 import { useEffect, useState } from 'react'
 import profileBg from '~/images/profile/profile-bg.jpg'
 import ProfileEditModal from '@/components/profile/ProfileEditModal'
-import '~/css/profile.css'
+import '~/css/pages/auth/profile.css'
+import { UserLevelProgress } from '#services/user_level_service'
 
 type PublicProfile = {
   id: number
@@ -18,15 +19,7 @@ type PublicProfile = {
   points: number
   level: 'debutant' | 'intermediaire' | 'avance' | 'expert'
   levelLabel: string
-  levelProgress: {
-    nextLevel: 'debutant' | 'intermediaire' | 'avance' | 'expert' | null
-    nextLevelLabel: string | null
-    currentLevelMinPoints: number
-    nextLevelThreshold: number | null
-    progressPercent: number
-    pointsToNextLevel: number
-    isMaxLevel: boolean
-  }
+  levelProgress: UserLevelProgress
 }
 
 type ProfilePageProps = {
@@ -244,6 +237,10 @@ export default function ProfileShow({ profile, canEdit }: InertiaProps<ProfilePa
             jobTitle: profile.jobTitle,
             followedTeam: profile.followedTeam,
             avatarUrl: profile.avatarUrl,
+            points: profile.points,
+            level: profile.level,
+            levelLabel: profile.levelLabel,
+            levelProgress: profile.levelProgress
           }}
           hasPublicProfile={Boolean(profile.pseudo)}
         />

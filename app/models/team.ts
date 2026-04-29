@@ -29,6 +29,9 @@ export default class Team extends BaseModel {
   declare teamPrincipal: string
 
   @column()
+  declare pilote: string
+
+  @column()
   declare displayOrder: number
 
   @column.dateTime({ autoCreate: true })

@@ -8,7 +8,7 @@ export default class FlagsController {
   async index({ inertia }: HttpContext) {
     const flags = await Flag.query().orderBy('created_at', 'desc')
 
-    return inertia.render('flags', {
+    return inertia.render('flags/flags', {
       flags: flags.map((flag) => ({
         id: flag.id,
         color: this.sanitize(flag.color, ALLOWED_COLORS, 'vert'),

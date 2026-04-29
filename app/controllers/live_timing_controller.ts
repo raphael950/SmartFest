@@ -6,7 +6,9 @@ import Team from '#models/team'
 
 export default class LiveTimingController {
   async index({ inertia }: HttpContext) {
-    const gpxPath = fileURLToPath(new URL('../../resources/circuits/circuit-du-mans.gpx', import.meta.url))
+    const gpxPath = fileURLToPath(
+      new URL('../../resources/circuits/circuit-du-mans.gpx', import.meta.url)
+    )
 
     // One entry per team: use the Team model and do not include any timing or session data
     const teams = await Team.query().orderBy('display_order', 'asc').orderBy('id', 'asc')
@@ -14,6 +16,7 @@ export default class LiveTimingController {
     const drivers = teams.map((team, idx) => ({
       id: team.id,
       team: team.name,
+      pilote: team.pilote || undefined,
       position: idx + 1,
     }))
 
@@ -35,7 +38,7 @@ export default class LiveTimingController {
         'M 50 150 L 80 120 L 120 100 L 160 90 L 200 85 L 240 80 L 280 85 L 320 100 L 340 130 L 350 160 L 340 190 L 320 210 L 280 220 L 240 225 L 200 228 L 160 225 L 120 220 L 80 210 L 50 180 L 40 150 Z'
     }
 
-    return inertia.render('live-timing', {
+    return inertia.render('live-timing/live-timing', {
       drivers,
       circuitPath,
     })

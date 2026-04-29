@@ -112,6 +112,7 @@ export default function Leaderboard({ drivers }: LeaderboardProps) {
       ...driver,
       id: driver.id,
       team: driver.team || mockDriver.team,
+      name: driver.pilote || mockDriver.name,
     }
   })
 
