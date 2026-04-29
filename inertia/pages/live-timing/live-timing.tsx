@@ -16,7 +16,7 @@ export default function LiveTimingPage({
       ? driver.pilote.split(' ').map((w) => w[0]).join('').slice(0, 3).toUpperCase()
       : '???',
     accentColor: driver.accentColor ?? '#888',
-    speed: 0.0001 + Math.random() * 0.0002,
+    speed: 0.00008 + Math.random() * 0.0001,
     startProgression: i * (1 / Math.max(drivers.length, 1)),
   }))
   return (

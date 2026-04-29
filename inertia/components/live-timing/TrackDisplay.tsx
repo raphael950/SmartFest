@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import type { Driver } from '@/types/live-timing.types'
-import { SECTOR_THRESHOLDS } from '@/hooks/use-race-simulation'
 import './TrackDisplay.css'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -10,17 +9,9 @@ interface TrackDisplayProps {
   drivers: Driver[]
 }
 
-// ─── Marqueurs de seuil (S1, S2, ligne d'arrivée) ────────────────────────────
-
-const SECTOR_MARKERS = [
-  { progression: SECTOR_THRESHOLDS.s1,     label: 'S2', color: '#ffd900' },
-  { progression: SECTOR_THRESHOLDS.s2,     label: 'S3', color: '#1500ff' },
-  { progression: SECTOR_THRESHOLDS.finish, label: 'FL', color: '#ffffff' },
-] as const
-
 // ─── Couleurs des arcs de secteur ─────────────────────────────────────────────
 
-const SECTOR_COLORS = ['#ff0033df', '#ffd900da', '#1500ffc1'] as const
+const SECTOR_COLORS = ['#ff0033df', '#ffd900da', '#1500ffc1']
 
 // ─── Composant ────────────────────────────────────────────────────────────────
 
@@ -81,43 +72,6 @@ export default function TrackDisplay({ circuitPath, drivers }: TrackDisplayProps
             strokeLinejoin="round"
             strokeLinecap="round"
           />
-
-          {/* ── Marqueurs S2 / S3 / Finish Line ── */}
-          {SECTOR_MARKERS.map(({ progression, label, color }) => {
-            const point = getPointAt(progression)
-            if (!point) return null
-            return (
-              <g key={label}>
-                {/* Croix de marqueur */}
-                <line
-                  x1={point.x - 6} y1={point.y - 6}
-                  x2={point.x + 6} y2={point.y + 6}
-                  stroke={color} strokeWidth="2.5" strokeLinecap="round"
-                />
-                <line
-                  x1={point.x + 6} y1={point.y - 6}
-                  x2={point.x - 6} y2={point.y + 6}
-                  stroke={color} strokeWidth="2.5" strokeLinecap="round"
-                />
-                {/* Halo blanc pour la lisibilité */}
-                <circle cx={point.x} cy={point.y} r={8} fill="none" stroke="black" strokeWidth="3" opacity="0.4" />
-                {/* Label */}
-                <text
-                  x={point.x}
-                  y={point.y - 12}
-                  textAnchor="middle"
-                  fontSize="6"
-                  fontWeight="700"
-                  fill={color}
-                  stroke="black"
-                  strokeWidth="2"
-                  paintOrder="stroke"
-                >
-                  {label}
-                </text>
-              </g>
-            )
-          })}
 
           {/* ── Voitures ── */}
           {drivers.map((driver) => {
