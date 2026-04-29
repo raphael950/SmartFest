@@ -139,6 +139,18 @@ export interface Registry {
       errorResponse: unknown
     }
   }
+  'api.live-timing': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/live-timing'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
   'session.destroy': {
     methods: ["POST"]
     pattern: '/logout'

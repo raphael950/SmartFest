@@ -15,7 +15,7 @@ export interface Driver {
   shortName: string;
   number: string;
   team: string;
-  teamColor: string;
+  accentColor: string;
   carImage: string;
   position: number;
   lapsCompleted: number;

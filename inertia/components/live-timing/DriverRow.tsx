@@ -3,13 +3,13 @@ import type { CSSProperties } from 'react'
 import { useState } from 'react'
 import './live-timing.base.css'
 import './DriverRow.css'
-import type { Driver } from '~/types/live-timing.types'
+import type { Driver } from '@/types/live-timing.types'
 
 export type LeaderboardDriver = Driver & {
   name: string
   shortName: string
   number: string
-  teamColor: string
+  carModel?: string
   lapsCompleted: number
   gap: string
   lastLap: string
@@ -35,7 +35,7 @@ export default function DriverRow({ driver, rank, columnCount }: DriverRowProps)
           : 'lt-pos-badge lt-pos-badge--n'
 
   const teamStyle = {
-    '--team-color': driver.teamColor,
+    '--team-color': driver.accentColor,
   } as CSSProperties
 
   return (
@@ -62,7 +62,7 @@ export default function DriverRow({ driver, rank, columnCount }: DriverRowProps)
             <div className="lt-driver-team-bar" aria-hidden="true" />
             <div className="lt-driver-team-meta">
               <span className="lt-driver-team-name">{driver.team}</span>
-              <span className="lt-driver-team-code">{driver.number}</span>
+              <span className="lt-driver-team-code">{driver.carModel}</span>
             </div>
             <ChevronRight className={`lt-driver-chevron${expanded ? ' is-open' : ''}`} />
           </div>
@@ -108,7 +108,7 @@ export default function DriverRow({ driver, rank, columnCount }: DriverRowProps)
                   <div key={sector.sector} className="lt-driver-sector-item">
                     <span className="lt-driver-sector-label">Sector {sector.sector}</span>
                     <span className={pillClass}>{sector.time}</span>
-                    {sector.delta ? (
+{false ? (
                       <span
                         className={`lt-driver-sector-delta${sector.delta.startsWith('-') ? ' is-gain' : ' is-loss'}`}
                       >

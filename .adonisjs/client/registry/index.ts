@@ -72,6 +72,12 @@ const routes = {
     tokens: [{"old":"/live-timing","type":0,"val":"live-timing","end":""}],
     types: placeholder as Registry['live-timing']['types'],
   },
+  'api.live-timing': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/live-timing',
+    tokens: [{"old":"/api/live-timing","type":0,"val":"api","end":""},{"old":"/api/live-timing","type":0,"val":"live-timing","end":""}],
+    types: placeholder as Registry['api.live-timing']['types'],
+  },
   'session.destroy': {
     methods: ["POST"],
     pattern: '/logout',

@@ -71,9 +71,8 @@ router
     router.get('mon-profil/edition', [ProfileController, 'edit']).as('profile.edit')
     router.post('mon-profil/edition', [ProfileController, 'update']).as('profile.update')
     router.get('networking', [NetworkingController, 'index']).as('networking.index')
-    
-      router.get('live-timing', [LiveTimingController, 'index']).as('live-timing')
-
+    router.get('live-timing', [LiveTimingController, 'index']).as('live-timing')
+    router.get('api/live-timing', [LiveTimingController, 'apiIndex']).as('api.live-timing')
     router.post('logout', [controllers.Session, 'destroy']).as('session.destroy')
   })
   .use(middleware.role({ minimumRole: 'simple' }))
