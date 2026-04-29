@@ -4,18 +4,12 @@ import TrackDisplay from './TrackDisplay'
 import Leaderboard from './Leaderboard'
 import './live-timing.base.css'
 import './LiveTimingPanel.css'
-import type { LiveTimingPageProps } from '@/types/live-timing.types'
-import { DriverSeed, useRaceSimulation } from '@/hooks/use-race-simulation'
+import { useRaceWebSocket } from '@/hooks/use-race-websocket'
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
-/**
- * On étend LiveTimingPageProps pour recevoir les seeds depuis Inertia.
- * Le champ `drivers` de la page (snapshot statique) n'est plus utilisé
- * pour la simulation — seuls les `driverSeeds` pilotent le hook.
- */
-interface LiveTimingPanelProps extends LiveTimingPageProps {
-  driverSeeds: DriverSeed[]
+interface LiveTimingPanelProps {
+  circuitPath: string
 }
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
@@ -24,12 +18,11 @@ const STACKED_BREAKPOINT = 1100
 
 // ─── Composant ────────────────────────────────────────────────────────────────
 
-export default function LiveTimingPanel({ driverSeeds, circuitPath }: LiveTimingPanelProps) {
+export default function LiveTimingPanel({ circuitPath }: LiveTimingPanelProps) {
   const [isStacked, setIsStacked] = useState(false)
 
-  // Tout le timing et les positions sont gérés ici, côté front uniquement.
-  // Aucun polling, aucune requête réseau — requestAnimationFrame à ~60fps.
-  const drivers = useRaceSimulation(driverSeeds)
+  // Connexion WebSocket au serveur pour recevoir les données en temps réel
+  const { drivers, isConnected, error } = useRaceWebSocket()
 
   useEffect(() => {
     const mq = window.matchMedia(`(max-width: ${STACKED_BREAKPOINT}px)`)
@@ -44,6 +37,16 @@ export default function LiveTimingPanel({ driverSeeds, circuitPath }: LiveTiming
       <div className="lt-panel-header">
         <h1 className="lt-panel-title">Bugatti Circuit Le Mans</h1>
         <p className="lt-panel-subtitle">Circuit automobile Le Mans Bugatti</p>
+        {error && (
+          <p className="lt-panel-error" style={{ color: '#f87171', fontSize: '0.8rem', marginTop: 4 }}>
+            ⚠️ {error}
+          </p>
+        )}
+        {!isConnected && !error && (
+          <p className="lt-panel-connecting" style={{ color: '#fbbf24', fontSize: '0.8rem', marginTop: 4 }}>
+            🔌 Connexion en cours...
+          </p>
+        )}
       </div>
 
       <div className="lt-panel-sections">

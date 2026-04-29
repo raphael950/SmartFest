@@ -108,13 +108,11 @@ export default function DriverRow({ driver, rank, columnCount }: DriverRowProps)
                   <div key={sector.sector} className="lt-driver-sector-item">
                     <span className="lt-driver-sector-label">Sector {sector.sector}</span>
                     <span className={pillClass}>{sector.time}</span>
-{false ? (
-                      <span
-                        className={`lt-driver-sector-delta${sector.delta.startsWith('-') ? ' is-gain' : ' is-loss'}`}
-                      >
-                        {sector.delta}
-                      </span>
-                    ) : null}
+                    <span
+                      className={`lt-driver-sector-delta${sector.delta.startsWith('-') ? ' is-gain' : ' is-loss'}`}
+                    >
+                      {sector.delta}
+                    </span>
                   </div>
                 )
               })}

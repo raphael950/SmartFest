@@ -228,9 +228,9 @@ export function useRaceSimulation(seeds: DriverSeed[]): Driver[] {
         // ── Détection finish line (prog wrap autour de 1.0 → 0.0) ────────
         if (crossedThreshold(prev, next, SECTOR_THRESHOLDS.finish) && prev > 0.5) {
           const lapMs = now - lap.lapStartedAt
-          const s3Ms = lap.s2EnteredAt !== null ? now - lap.s2EnteredAt : 0
           
           // No previous sector storage needed
+
           
           lap.lastLapMs = lapMs
           lap.bestLapMs = lap.bestLapMs === null ? lapMs : Math.min(lap.bestLapMs, lapMs)
