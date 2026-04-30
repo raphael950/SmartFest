@@ -46,7 +46,9 @@ export default function TrackDisplay({ circuitPath, drivers, flag }: TrackDispla
   }
 
   const flagLabel =
-    flag.color === 'rouge' || flag.sectors.length === 0 
+  flag.color === 'jaune' && flag.sectors.length === 3
+    ? 'FULL COURSE YELLOW'
+    : flag.color === 'rouge' || flag.sectors.length === 0
       ? FLAG_LABELS[flag.color]
       : `${FLAG_LABELS[flag.color]} — ${flag.sectors.join(', ')}`
   return (

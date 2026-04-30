@@ -29,40 +29,35 @@ const DEFAULT_FLAG: FlagState = { color: 'vert', sectors: [] }
  * rouge              | vert []       | jaune [+sector]              | rouge []
  */
 function mergeFlag(current: FlagState, incomingColor: FlagColor, incomingSector: string): FlagState {
-  switch (current.color) {
+  // Normalise pour éviter les comparaisons ratées 'S1' vs 's1'
+  const sector = incomingSector.toUpperCase()
 
-    // ── Pas de drapeau / vert ──────────────────────────────────────────
+  switch (current.color) {
     case 'vert': {
-      if (incomingColor === 'vert')  return { color: 'vert',  sectors: [] }
-      if (incomingColor === 'jaune') return { color: 'jaune', sectors: [incomingSector] }
+      if (incomingColor === 'vert') return { color: 'vert', sectors: [] }
+      if (incomingColor === 'jaune') return { color: 'jaune', sectors: [sector] }
       if (incomingColor === 'rouge') return { color: 'rouge', sectors: [] }
       break
     }
 
-    // ── Jaune en cours ─────────────────────────────────────────────────
     case 'jaune': {
       if (incomingColor === 'vert') {
-        // Retire le secteur si présent ; si plus aucun secteur → repasse vert
-        const next = current.sectors.filter((s) => s !== incomingSector)
+        const next = current.sectors.filter((s) => s !== sector)
         return next.length > 0
           ? { color: 'jaune', sectors: next }
-          : { color: 'vert',  sectors: [] }
+          : { color: 'vert', sectors: [] }
       }
-
       if (incomingColor === 'jaune') {
-        // Ajoute le secteur s'il n'est pas déjà dans la liste
-        if (current.sectors.includes(incomingSector)) return current
-        return { color: 'jaune', sectors: [...current.sectors, incomingSector] }
+        if (current.sectors.includes(sector)) return current
+        return { color: 'jaune', sectors: [...current.sectors, sector] }
       }
-
       if (incomingColor === 'rouge') return { color: 'rouge', sectors: [] }
       break
     }
 
-    // ── Rouge en cours ─────────────────────────────────────────────────
     case 'rouge': {
-      if (incomingColor === 'vert')  return { color: 'vert',  sectors: [] }
-      if (incomingColor === 'jaune') return { color: 'jaune', sectors: [incomingSector] }
+      if (incomingColor === 'vert') return { color: 'vert', sectors: [] }
+      if (incomingColor === 'jaune') return { color: 'jaune', sectors: [sector] }
       if (incomingColor === 'rouge') return { color: 'rouge', sectors: [] }
       break
     }
@@ -98,16 +93,13 @@ class SocketService {
 
       // Reconstruit l'état drapeau depuis le dernier enregistrement BDD
       // au cas où le serveur a redémarré sans FlagState en mémoire
+      // APRÈS
       if (this.flagState.color === 'vert' && this.flagState.sectors.length === 0) {
-        const latestFlag = await Flag.query().orderBy('created_at', 'desc').first()
-        if (latestFlag) {
-          this.flagState = {
-            color: latestFlag.color as FlagColor,
-            sectors: latestFlag.sector && latestFlag.sector !== 'tous'
-              ? [latestFlag.sector]
-              : [],
-          }
-        }
+        const allFlags = await Flag.query().orderBy('created_at', 'asc')
+        this.flagState = allFlags.reduce<FlagState>(
+          (state, flag) => mergeFlag(state, flag.color as FlagColor, flag.sector ?? ''),
+          { ...DEFAULT_FLAG }
+        )
       }
 
       // Envoie l'état courant au nouveau connecté
@@ -125,6 +117,7 @@ class SocketService {
    */
   public updateFlag(incomingColor: FlagColor, incomingSector: string): FlagState {
     this.flagState = mergeFlag(this.flagState, incomingColor, incomingSector)
+    RaceEngineService.setFlag(this.flagState)
     this.io?.emit('flag_update', this.flagState)
     return this.flagState
   }

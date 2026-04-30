@@ -21,7 +21,7 @@ const Home = ({ events, teams }: InertiaProps<HomePageProps>) => {
   return (
     <section className="home-page">
       <div className="home-page__inner">
-        <HomeHero anchorId={calendarSectionId} />
+        <HomeHero />
 
         <HomeEventsSection
           sectionId={calendarSectionId}
