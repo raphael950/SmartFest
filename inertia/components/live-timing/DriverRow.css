@@ -177,13 +177,13 @@
 }
 
 .lt-sector-drawer--open {
-  max-height: 220px;
+  max-height: 260px;
   opacity: 1;
 }
 
 .lt-driver-detail-summary {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
   padding: 14px 14px 0 68px;
 }
@@ -240,31 +240,6 @@
   color: var(--lt-muted);
 }
 
-.lt-driver-sector-delta {
-  font-family: var(--lt-font-mono);
-  font-size: 0.62rem;
-}
-
-.lt-driver-sector-delta.is-gain {
-  color: #4ade80;
-}
-
-.lt-driver-sector-delta.is-loss {
-  color: #f87171;
-}
-
-@media (max-width: 900px) {
-  .lt-driver-detail-summary {
-    grid-template-columns: 1fr;
-  }
-
-  .lt-driver-detail-summary,
-  .lt-driver-sector-list {
-    padding-left: 14px;
-  }
-}
-
-/* — Pills secteur — */
 .lt-sector-pill {
   font-family: var(--lt-font-mono);
   font-size: 0.72rem;
@@ -285,43 +260,19 @@
   color: var(--lt-muted);
 }
 
-/* Personnel best — vert */
 .lt-sector-pill--pb {
   background: rgba(74, 222, 128, 0.15);
   color: #4ade80;
 }
 
-/* Meilleur absolu — violet */
 .lt-sector-pill--best-overall {
   background: rgba(167, 139, 250, 0.18);
   color: #a78bfa;
 }
 
-/* Moins bon — rouge */
 .lt-sector-pill--slow {
   background: rgba(248, 113, 113, 0.15);
   color: #f87171;
-}
-
-/* Phase delta — affiché pendant 1s après franchissement */
-.lt-sector-pill--delta {
-  background: rgba(251, 191, 36, 0.15);
-  color: #fbbf24;
-}
-
-/* Layout secteurs — 3 colonnes fixes */
-.lt-driver-sector-list {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-  padding: 12px 14px 14px 68px;
-}
-
-.lt-driver-detail-summary {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-  padding: 14px 14px 0 68px;
 }
 
 @media (max-width: 900px) {

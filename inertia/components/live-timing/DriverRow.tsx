@@ -35,17 +35,19 @@ export default function DriverRow({ driver, rank, columnCount }: DriverRowProps)
           ? 'lt-pos-badge lt-pos-badge--3'
           : 'lt-pos-badge lt-pos-badge--n'
 
-  const teamStyle = { '--team-color': driver.accentColor } as CSSProperties
+  const teamStyle = {
+    '--team-color': driver.accentColor,
+  } as CSSProperties
 
   return (
     <>
       <tr
         className={`lt-driver-row${expanded ? ' lt-driver-row--active' : ''}`}
-        onClick={() => setExpanded((v) => !v)}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault()
-            setExpanded((v) => !v)
+        onClick={() => setExpanded((value) => !value)}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault()
+            setExpanded((value) => !value)
           }
         }}
         tabIndex={0}
@@ -107,15 +109,13 @@ export default function DriverRow({ driver, rank, columnCount }: DriverRowProps)
                       ? 'lt-sector-pill lt-sector-pill--pb'
                       : sector.status === 'slow'
                         ? 'lt-sector-pill lt-sector-pill--slow'
-                        : sector.status === 'showing_delta'
-                          ? 'lt-sector-pill lt-sector-pill--delta'
-                          : sector.status === 'in_progress'
-                            ? 'lt-sector-pill lt-sector-pill--in-progress'
-                            : 'lt-sector-pill lt-sector-pill--normal'
+                        : sector.status === 'in_progress'
+                          ? 'lt-sector-pill lt-sector-pill--in-progress'
+                          : 'lt-sector-pill lt-sector-pill--normal'
 
                 return (
                   <div key={sector.sector} className="lt-driver-sector-item">
-                    <span className="lt-driver-sector-label">S{sector.sector}</span>
+                    <span className="lt-driver-sector-label">Sector {sector.sector}</span>
                     <span className={pillClass}>{sector.time}</span>
                   </div>
                 )

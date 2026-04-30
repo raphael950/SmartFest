@@ -299,13 +299,16 @@ export default class RaceEngineService {
         d.bestLap = formatLapTime(d._bestLapMs!)
       }
 
-      d._isFirstLap = false
+       d._isFirstLap = false
       d._lapStartedAt = now
       d._s1EnteredAt = null
       d._s2EnteredAt = null
       d._s1Crossed = false
       d._s2Crossed = false
+      // Remplacer juste la ligne existante par les 3
       d._sectorDisplays[0] = makeSectorDisplay()
+      d._sectorDisplays[1] = makeSectorDisplay()
+      d._sectorDisplays[2] = makeSectorDisplay()
 
       next = next % 1
     }
