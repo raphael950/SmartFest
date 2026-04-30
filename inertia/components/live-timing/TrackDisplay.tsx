@@ -1,21 +1,29 @@
 import { useEffect, useRef, useState } from 'react'
-import type { Driver } from '@/types/live-timing.types'
+import type { Driver, FlagState } from '@/types/live-timing.types'
 import './TrackDisplay.css'
-
-// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface TrackDisplayProps {
   circuitPath: string
   drivers: Driver[]
+  flag: FlagState
 }
-
-// ─── Couleurs des arcs de secteur ─────────────────────────────────────────────
 
 const SECTOR_COLORS = ['#ff0033df', '#ffd900da', '#1500ffc1']
 
-// ─── Composant ────────────────────────────────────────────────────────────────
 
-export default function TrackDisplay({ circuitPath, drivers }: TrackDisplayProps) {
+const FLAG_LABELS: Record<string, string> = {
+  vert: 'Vert',
+  jaune: 'Jaune',
+  rouge: 'Rouge',
+}
+
+const FLAG_CSS_CLASSES: Record<string, string> = {
+  vert: 'lt-track-flag lt-track-flag--vert',
+  jaune: 'lt-track-flag lt-track-flag--jaune',
+  rouge: 'lt-track-flag lt-track-flag--rouge',
+}
+
+export default function TrackDisplay({ circuitPath, drivers, flag }: TrackDisplayProps) {
   const pathRef = useRef<SVGPathElement>(null)
   const [totalLength, setTotalLength] = useState(0)
   const [viewBox, setViewBox] = useState('0 0 500 300')
@@ -31,23 +39,25 @@ export default function TrackDisplay({ circuitPath, drivers }: TrackDisplayProps
     }
   }, [circuitPath])
 
-  /**
-   * Retourne le point SVG correspondant à une progression (0.0→1.0) sur le chemin.
-   */
   const getPointAt = (progression: number): DOMPoint | null => {
     if (!pathRef.current || totalLength === 0) return null
     const clamped = Math.max(0, Math.min(1, progression))
     return pathRef.current.getPointAtLength(totalLength * clamped)
   }
 
+  const flagLabel =
+    flag.color === 'rouge' || flag.sectors.length === 0 
+      ? FLAG_LABELS[flag.color]
+      : `${FLAG_LABELS[flag.color]} — ${flag.sectors.join(', ')}`
   return (
     <div className="lt-glass lt-track-container lt-panel-section">
-      <div className="lt-track-flag">Vert</div>
+      <div className={FLAG_CSS_CLASSES[flag.color] ?? 'lt-track-flag lt-track-flag--vert'}>
+        {flagLabel}
+      </div>
 
       <div className="lt-track-svg-wrapper">
         <svg className="lt-track-svg" preserveAspectRatio="xMidYMid meet" viewBox={viewBox}>
 
-          {/* ── Arcs de secteur (S1, S2, S3) ── */}
           {SECTOR_COLORS.map((color, i) => (
             <path
               key={i}
@@ -62,7 +72,6 @@ export default function TrackDisplay({ circuitPath, drivers }: TrackDisplayProps
             />
           ))}
 
-          {/* ── Tracé principal (par-dessus les arcs) ── */}
           <path
             ref={pathRef}
             d={circuitPath}
@@ -73,18 +82,14 @@ export default function TrackDisplay({ circuitPath, drivers }: TrackDisplayProps
             strokeLinecap="round"
           />
 
-          {/* ── Voitures ── */}
           {drivers.map((driver) => {
             const point = getPointAt(driver.trackProgression ?? 0)
             if (!point) return null
             return (
               <g key={driver.id}>
-                {/* Halo d'équipe (légère aura colorée) */}
                 <circle cx={point.x} cy={point.y} r={12} fill={driver.accentColor ?? '#888'} opacity={0.25} />
-                {/* Corps */}
                 <circle cx={point.x} cy={point.y} r={9} fill="white" />
                 <circle cx={point.x} cy={point.y} r={7} fill={driver.accentColor ?? '#888'} />
-                {/* Nom court */}
                 <text
                   x={point.x}
                   y={point.y - 14}

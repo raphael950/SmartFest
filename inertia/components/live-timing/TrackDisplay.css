@@ -50,3 +50,18 @@
 
   padding: 4px 0;
 }
+
+.lt-track-flag--vert {
+  background: #16a34a;
+  color: #fff;
+}
+
+.lt-track-flag--jaune {
+  background: #ebdc00;
+  color: #fff;
+}
+
+.lt-track-flag--rouge {
+  background: #dc2626;
+  color: #fff;
+}

@@ -5,6 +5,7 @@ import Leaderboard from './Leaderboard'
 import './live-timing.base.css'
 import './LiveTimingPanel.css'
 import { useRaceWebSocket } from '@/hooks/use-race-websocket'
+import { FlagState } from '@/types/live-timing.types'
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -15,6 +16,7 @@ interface LiveTimingPanelProps {
 // ─── Constantes ───────────────────────────────────────────────────────────────
 
 const STACKED_BREAKPOINT = 1100
+const DEFAULT_FLAG: FlagState = { color: 'vert', sectors: [] }
 
 // ─── Composant ────────────────────────────────────────────────────────────────
 
@@ -22,7 +24,8 @@ export default function LiveTimingPanel({ circuitPath }: LiveTimingPanelProps) {
   const [isStacked, setIsStacked] = useState(false)
 
   // Connexion WebSocket au serveur pour recevoir les données en temps réel
-  const { drivers, isConnected, error } = useRaceWebSocket()
+  const { drivers, flag: wsFlag, isConnected, error } = useRaceWebSocket()
+  const flag: FlagState = wsFlag ?? DEFAULT_FLAG
 
   useEffect(() => {
     const mq = window.matchMedia(`(max-width: ${STACKED_BREAKPOINT}px)`)
@@ -59,7 +62,7 @@ export default function LiveTimingPanel({ circuitPath }: LiveTimingPanelProps) {
             defaultSize={isStacked ? 42 : 52}
             minSize={isStacked ? 28 : 30}
           >
-            <TrackDisplay circuitPath={circuitPath} drivers={drivers} />
+            <TrackDisplay circuitPath={circuitPath} drivers={drivers} flag={flag} />
           </ResizablePanel>
 
           <ResizableHandle
