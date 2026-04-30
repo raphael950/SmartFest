@@ -1,12 +1,16 @@
 import type { CSSProperties } from 'react'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import type { TeamCard } from '../../types/home.types.ts'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import type { TeamCardWithMedia } from '../../types/home.types.ts'
 import '@/css/components/home/HomeDialog.css'
 
-const teamEmoji = '\u{1F3CE}\uFE0F'
-
 type HomeTeamDialogProps = {
-  team: TeamCard | null
+  team: TeamCardWithMedia | null
   onClose: () => void
 }
 
@@ -18,11 +22,18 @@ const HomeTeamDialog = ({ team, onClose }: HomeTeamDialogProps) => {
           <>
             <DialogHeader className="home-team-dialog__header">
               <div
-                className="home-team-dialog__badge"
+                className="home-team-dialog__logo-box"
                 style={{ '--team-accent': team.accent } as CSSProperties}
-                aria-hidden="true"
               >
-                {teamEmoji}
+                {team.logoImageSrc ? (
+                  <img
+                    src={team.logoImageSrc}
+                    alt={team.logoImageAlt}
+                    className="home-team-dialog__logo"
+                  />
+                ) : (
+                  <span className="home-team-dialog__logo-fallback">{team.name}</span>
+                )}
               </div>
               <div>
                 <DialogTitle className="home-team-dialog__title">{team.name}</DialogTitle>

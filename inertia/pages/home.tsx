@@ -4,19 +4,24 @@ import HomeEventsSection from '@/components/home/HomeEventsSection'
 import HomeHero from '@/components/home/HomeHero'
 import HomeTeamDialog from '@/components/home/HomeTeamDialog'
 import HomeTeamsSection from '@/components/home/HomeTeamsSection'
-import type { EventCard, HomePageProps, TeamCard } from '../types/home.types.ts'
+import { attachTeamMedia } from '@/lib/home_team_media'
+import type { EventCard, HomePageProps, TeamCardWithMedia } from '../types/home.types.ts'
 import type { InertiaProps } from '~/types'
 import '~/css/pages/home.css'
 
 const Home = ({ events, teams }: InertiaProps<HomePageProps>) => {
   const [teamStart, setTeamStart] = useState(0)
   const [selectedEvent, setSelectedEvent] = useState<EventCard | null>(null)
-  const [selectedTeam, setSelectedTeam] = useState<TeamCard | null>(null)
+  const [selectedTeam, setSelectedTeam] = useState<TeamCardWithMedia | null>(null)
   const calendarSectionId = 'home-calendar'
-  const canSlideTeams = teams.length > 3
+  const teamsWithMedia = teams.map(attachTeamMedia)
+  const canSlideTeams = teamsWithMedia.length > 3
   const visibleTeams = canSlideTeams
-    ? Array.from({ length: 3 }, (_, offset) => teams[(teamStart + offset) % teams.length])
-    : teams
+    ? Array.from(
+        { length: 3 },
+        (_, offset) => teamsWithMedia[(teamStart + offset) % teamsWithMedia.length]
+      )
+    : teamsWithMedia
 
   return (
     <section className="home-page">
@@ -33,9 +38,12 @@ const Home = ({ events, teams }: InertiaProps<HomePageProps>) => {
           visibleTeams={visibleTeams}
           canSlideTeams={canSlideTeams}
           onPrevious={() =>
-            canSlideTeams && setTeamStart((current) => (current - 1 + teams.length) % teams.length)
+            canSlideTeams &&
+            setTeamStart((current) => (current - 1 + teamsWithMedia.length) % teamsWithMedia.length)
           }
-          onNext={() => canSlideTeams && setTeamStart((current) => (current + 1) % teams.length)}
+          onNext={() =>
+            canSlideTeams && setTeamStart((current) => (current + 1) % teamsWithMedia.length)
+          }
           onSelectTeam={(team) => setSelectedTeam(team)}
         />
       </div>

@@ -1,17 +1,17 @@
 import type { CSSProperties } from 'react'
 import { ChevronLeft, ChevronRight, Flag } from 'lucide-react'
-import type { TeamCard } from '../../types/home.types.ts'
+import type { TeamCardWithMedia } from '../../types/home.types.ts'
 import '@/css/components/home/HomeSections.css'
 import '@/css/components/home/HomeTeamSection.css'
 
 const teamEmoji = '\u{1F3CE}\uFE0F'
 
 type HomeTeamsSectionProps = {
-  visibleTeams: TeamCard[]
+  visibleTeams: TeamCardWithMedia[]
   canSlideTeams: boolean
   onPrevious: () => void
   onNext: () => void
-  onSelectTeam: (team: TeamCard) => void
+  onSelectTeam: (team: TeamCardWithMedia) => void
 }
 
 const HomeTeamsSection = ({
@@ -61,8 +61,19 @@ const HomeTeamsSection = ({
               style={{ '--team-accent': team.accent } as CSSProperties}
               onClick={() => onSelectTeam(team)}
             >
-              <span className="home-team-card__emoji" aria-hidden="true">
-                {teamEmoji}
+              <span className="home-team-card__media">
+                {team.carImageSrc ? (
+                  <img
+                    src={team.carImageSrc}
+                    alt={team.carImageAlt}
+                    className="home-team-card__car-image"
+                    loading="lazy"
+                  />
+                ) : (
+                  <span className="home-team-card__emoji" aria-hidden="true">
+                    {teamEmoji}
+                  </span>
+                )}
               </span>
               <h4>{team.name}</h4>
               <p>{team.country}</p>
