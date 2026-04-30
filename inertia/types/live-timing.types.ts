@@ -8,6 +8,7 @@ export type Driver = {
   lapsCompleted?: number
   gap?: string
   lastLap?: string
+  bestLap?: string
   sectors?: { sector: number; time: string; delta: string; status: string }[]
   // Position sur le circuit (0.0 → 1.0)
   trackProgression?: number

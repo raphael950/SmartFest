@@ -1,17 +1,12 @@
-// app/services/race_engine_service.ts
 import socketService from '#services/socket_service'
 import Team from '#models/team'
 import { Driver } from '../types/driver.js'
-
-// ─── Configuration ────────────────────────────────────────────────────────────
 
 const SECTOR_THRESHOLDS = {
   s1: 1 / 3,
   s2: 2 / 3,
   finish: 1.0,
 }
-
-// ─── Utilitaires ──────────────────────────────────────────────────────────────
 
 function formatLapTime(ms: number): string {
   const minutes = Math.floor(ms / 60_000)
@@ -21,14 +16,29 @@ function formatLapTime(ms: number): string {
 }
 
 function crossedThreshold(prev: number, next: number, threshold: number): boolean {
-  if (prev <= next) {
-    return prev < threshold && next >= threshold
-  }
-  // wrap : prev était proche de 1.0, next est proche de 0.0
+  if (prev <= next) return prev < threshold && next >= threshold
   return prev < threshold || next >= threshold
 }
 
-// ─── Types internes ───────────────────────────────────────────────────────────
+function formatDelta(sectorMs: number, bestSectorMs: number): string {
+  const deltaMs = sectorMs - bestSectorMs
+  const sign = deltaMs > 0 ? '+' : '-'
+  return `${sign}${formatLapTime(Math.abs(deltaMs))}`
+}
+
+// Phase d'affichage du secteur après franchissement
+type SectorPhase = 'idle' | 'showing_delta' | 'showing_time'
+
+interface SectorDisplay {
+  phase: SectorPhase
+  time: string
+  delta: string
+  status: string
+  phaseStartedAt: number | null
+  finalTime: string
+  finalDelta: string
+  finalStatus: string
+}
 
 interface DriverState extends Driver {
   _prevProgression: number
@@ -42,31 +52,39 @@ interface DriverState extends Driver {
   _bestSector1Ms: number | null
   _bestSector2Ms: number | null
   _bestSector3Ms: number | null
-  _sector1UpdatedAt: number | null
-  _sector2UpdatedAt: number | null
-  _sector3UpdatedAt: number | null
+  _sectorDisplays: [SectorDisplay, SectorDisplay, SectorDisplay]
+  _isFirstLap: boolean
 }
 
-// ─── Service ──────────────────────────────────────────────────────────────────
+function makeSectorDisplay(): SectorDisplay {
+  return {
+    phase: 'idle',
+    time: '--',
+    delta: '--',
+    status: 'normal',
+    phaseStartedAt: null,
+    finalTime: '--',
+    finalDelta: '--',
+    finalStatus: 'normal',
+  }
+}
 
 export default class RaceEngineService {
   private static drivers: DriverState[] = []
+  private static bestOverallSector1Ms: number | null = null
+  private static bestOverallSector2Ms: number | null = null
+  private static bestOverallSector3Ms: number | null = null
 
   public static async start() {
     await this.initializeDrivers()
-
     setInterval(() => {
       this.updatePhysics()
       this.broadcast()
     }, 100)
   }
 
-  /**
-   * Charge les équipes depuis la BDD et initialise l'état de course.
-   */
   private static async initializeDrivers() {
     const teams = await Team.query().orderBy('display_order', 'asc').orderBy('id', 'asc')
-
     const now = performance.now()
 
     this.drivers = teams.map((team, idx) => ({
@@ -76,12 +94,7 @@ export default class RaceEngineService {
       carModel: team.carModel,
       accentColor: team.accentColor || '#888',
       shortName: team.pilote
-        ? team.pilote
-            .split(' ')
-            .map((w) => w[0])
-            .join('')
-            .slice(0, 3)
-            .toUpperCase()
+        ? team.pilote.split(' ').map((w) => w[0]).join('').slice(0, 3).toUpperCase()
         : '???',
       speed: 0.0006 + Math.random() * 0.0007,
       trackProgression: idx * (1 / Math.max(teams.length, 1)),
@@ -89,12 +102,12 @@ export default class RaceEngineService {
       lapsCompleted: 0,
       gap: idx === 0 ? 'LEADER' : '--',
       lastLap: '--:--.---',
+      bestLap: '--:--.---',
       sectors: [
         { sector: 1, time: '--', delta: '--', status: 'normal' },
         { sector: 2, time: '--', delta: '--', status: 'normal' },
         { sector: 3, time: '--', delta: '--', status: 'normal' },
       ],
-      // État interne (non exposé aux clients)
       _prevProgression: idx * (1 / Math.max(teams.length, 1)),
       _lapStartedAt: now,
       _s1EnteredAt: null,
@@ -106,206 +119,229 @@ export default class RaceEngineService {
       _bestSector1Ms: null,
       _bestSector2Ms: null,
       _bestSector3Ms: null,
-      _sector1UpdatedAt: null,
-      _sector2UpdatedAt: null,
-      _sector3UpdatedAt: null,
+      _sectorDisplays: [makeSectorDisplay(), makeSectorDisplay(), makeSectorDisplay()],
+      _isFirstLap: true,
     }))
   }
 
-  /**
-   * Met à jour la physique de chaque pilote (progression, secteurs, tours).
-   */
-  private static updatePhysics() {
-    const now = performance.now()
+ private static updatePhysics() {
+  const now = performance.now()
 
-    this.drivers.forEach((d) => {
-      const prev = d._prevProgression
-      const speed = d.speed ?? 0.0001
-      let next = prev + speed
+  this.drivers.forEach((d) => {
+    const prev = d._prevProgression
+    const speed = d.speed ?? 0.0001
+    let next = prev + speed
 
-      // Vérifier si 1 seconde est écoulée depuis la mise à jour de chaque secteur
-      const nowTime = performance.now()
+    // ── Mise à jour des phases d'affichage secteur ──────────────────
+    d._sectorDisplays.forEach((sd, i) => {
+      if (sd.phase === 'showing_delta' && sd.phaseStartedAt !== null) {
+        if (now - sd.phaseStartedAt >= 1000) {
+          sd.phase = 'showing_time'
+          sd.time = sd.finalTime
+          sd.delta = sd.finalDelta
+          sd.status = sd.finalStatus
+          sd.phaseStartedAt = null
+        }
+      }
+
       if (d.sectors) {
-        if (d._sector1UpdatedAt !== null && nowTime - d._sector1UpdatedAt >= 1000) {
-          d.sectors[0].status = 'normal'
-          d._sector1UpdatedAt = null
-        }
-        if (d._sector2UpdatedAt !== null && nowTime - d._sector2UpdatedAt >= 1000) {
-          d.sectors[1].status = 'normal'
-          d._sector2UpdatedAt = null
-        }
-        if (d._sector3UpdatedAt !== null && nowTime - d._sector3UpdatedAt >= 1000) {
-          d.sectors[2].status = 'normal'
-          d._sector3UpdatedAt = null
+        d.sectors[i] = {
+          sector: i + 1,
+          time: sd.time,
+          delta: sd.delta,
+          status: sd.status,
         }
       }
+    })
 
-      // ── Détection secteur 1 ─────────────────────────────────────────
-      if (crossedThreshold(prev, next, SECTOR_THRESHOLDS.s1) && !d._s1Crossed) {
-        d._s1EnteredAt = now
-        d._s1Crossed = true
+    // ── Chronos en cours (défilent) ─────────────────────────────────
+    if (!d._s1Crossed && d._sectorDisplays[0].phase === 'idle' && !d._isFirstLap) {
+      const s1InProgress = now - d._lapStartedAt
+      d._sectorDisplays[0].time = formatLapTime(s1InProgress)
+      d._sectorDisplays[0].status = 'in_progress'
+      if (d.sectors) {
+        d.sectors[0] = { sector: 1, time: formatLapTime(s1InProgress), delta: '--', status: 'in_progress' }
+      }
+    }
 
-        // Mettre à jour le temps du secteur 1 immédiatement
-        if (d.sectors) {
-          const sector1Ms = now - d._lapStartedAt
+    if (d._s1Crossed && !d._s2Crossed && d._s1EnteredAt !== null && d._sectorDisplays[1].phase === 'idle') {
+      const s2InProgress = now - d._s1EnteredAt
+      d._sectorDisplays[1].time = formatLapTime(s2InProgress)
+      d._sectorDisplays[1].status = 'in_progress'
+      if (d.sectors) {
+        d.sectors[1] = { sector: 2, time: formatLapTime(s2InProgress), delta: '--', status: 'in_progress' }
+      }
+    }
 
-          // Déterminer le statut basé sur la comparaison avec le meilleur temps (AVANT mise à jour)
-          let status: 'normal' | 'fast' | 'slow' = 'normal'
-          if (d._bestSector1Ms !== null) {
-            if (sector1Ms < d._bestSector1Ms) {
-              status = 'fast' // vert
-            } else if (sector1Ms > d._bestSector1Ms) {
-              status = 'slow' // rouge
-            } else {
-              status = 'normal' // blanc
-            }
-          }
+    if (d._s2Crossed && d._s2EnteredAt !== null && d._sectorDisplays[2].phase === 'idle') {
+      const s3InProgress = now - d._s2EnteredAt
+      d._sectorDisplays[2].time = formatLapTime(s3InProgress)
+      d._sectorDisplays[2].status = 'in_progress'
+      if (d.sectors) {
+        d.sectors[2] = { sector: 3, time: formatLapTime(s3InProgress), delta: '--', status: 'in_progress' }
+      }
+    }
 
-          // Mettre à jour le meilleur temps du secteur 1 (APRES détermination du statut)
-          if (d._bestSector1Ms === null || sector1Ms < d._bestSector1Ms) {
-            d._bestSector1Ms = sector1Ms
-          }
+    // ── Détection franchissement S1 ─────────────────────────────────
+    if (crossedThreshold(prev, next, SECTOR_THRESHOLDS.s1) && !d._s1Crossed) {
+      d._s1EnteredAt = now
+      d._s1Crossed = true
 
-          d.sectors[0] = {
-            sector: 1,
-            time: formatLapTime(sector1Ms),
-            delta: '--',
-            status: status,
-          }
+      if (!d._isFirstLap) {
+        const sector1Ms = now - d._lapStartedAt
 
-          // Enregistrer le moment de la mise à jour pour le reset après 1 seconde
-          d._sector1UpdatedAt = nowTime
-        }
+        const isBestOverall =
+          RaceEngineService.bestOverallSector1Ms === null ||
+          sector1Ms < RaceEngineService.bestOverallSector1Ms
+        const isPersonalBest = d._bestSector1Ms === null || sector1Ms < d._bestSector1Ms
+
+        const status = isBestOverall
+          ? 'best-overall'
+          : isPersonalBest
+            ? 'personal-best'
+            : 'slow'
+
+        const delta = d._bestSector1Ms !== null ? formatDelta(sector1Ms, d._bestSector1Ms) : '--'
+
+        if (isPersonalBest) d._bestSector1Ms = sector1Ms
+        if (isBestOverall) RaceEngineService.bestOverallSector1Ms = sector1Ms
+
+        const sd = d._sectorDisplays[0]
+        sd.phase = 'showing_delta'
+        sd.phaseStartedAt = now
+        sd.time = delta
+        sd.delta = delta
+        sd.status = status
+        sd.finalTime = formatLapTime(sector1Ms)
+        sd.finalDelta = delta
+        sd.finalStatus = status
       }
 
-      // ── Détection secteur 2 ─────────────────────────────────────────
-      if (crossedThreshold(prev, next, SECTOR_THRESHOLDS.s2) && !d._s2Crossed) {
-        d._s2EnteredAt = now
-        d._s2Crossed = true
+      d._sectorDisplays[1] = makeSectorDisplay()
+    }
 
-        // Mettre à jour le temps du secteur 2 immédiatement
-        if (d.sectors && d._s1EnteredAt !== null) {
-          const sector2Ms = now - d._s1EnteredAt
+    // ── Détection franchissement S2 ─────────────────────────────────
+    if (crossedThreshold(prev, next, SECTOR_THRESHOLDS.s2) && !d._s2Crossed && d._s1EnteredAt !== null) {
+      d._s2EnteredAt = now
+      d._s2Crossed = true
 
-          // Déterminer le statut basé sur la comparaison avec le meilleur temps (AVANT mise à jour)
-          let status: 'normal' | 'fast' | 'slow' = 'normal'
-          if (d._bestSector2Ms !== null) {
-            if (sector2Ms < d._bestSector2Ms) {
-              status = 'fast' // vert
-            } else if (sector2Ms > d._bestSector2Ms) {
-              status = 'slow' // rouge
-            } else {
-              status = 'normal' // blanc
-            }
-          }
+      if (!d._isFirstLap) {
+        const sector2Ms = now - d._s1EnteredAt
 
-          // Mettre à jour le meilleur temps du secteur 2 (APRES détermination du statut)
-          if (d._bestSector2Ms === null || sector2Ms < d._bestSector2Ms) {
-            d._bestSector2Ms = sector2Ms
-          }
+        const isBestOverall =
+          RaceEngineService.bestOverallSector2Ms === null ||
+          sector2Ms < RaceEngineService.bestOverallSector2Ms
+        const isPersonalBest = d._bestSector2Ms === null || sector2Ms < d._bestSector2Ms
 
-          d.sectors[1] = {
-            sector: 2,
-            time: formatLapTime(sector2Ms),
-            delta: '--',
-            status: status,
-          }
+        const status = isBestOverall
+          ? 'best-overall'
+          : isPersonalBest
+            ? 'personal-best'
+            : 'slow'
 
-          // Enregistrer le moment de la mise à jour pour le reset après 1 seconde
-          d._sector2UpdatedAt = nowTime
-        }
+        const delta = d._bestSector2Ms !== null ? formatDelta(sector2Ms, d._bestSector2Ms) : '--'
+
+        if (isPersonalBest) d._bestSector2Ms = sector2Ms
+        if (isBestOverall) RaceEngineService.bestOverallSector2Ms = sector2Ms
+
+        const sd = d._sectorDisplays[1]
+        sd.phase = 'showing_delta'
+        sd.phaseStartedAt = now
+        sd.time = delta
+        sd.delta = delta
+        sd.status = status
+        sd.finalTime = formatLapTime(sector2Ms)
+        sd.finalDelta = delta
+        sd.finalStatus = status
       }
 
-      // ── Détection finish line (wrap autour de 1.0) ──────────────────
-      if (crossedThreshold(prev, next, SECTOR_THRESHOLDS.finish) && prev > 0.5) {
-        const lapMs = now - d._lapStartedAt
-        const s3Ms = d._s2EnteredAt !== null ? now - d._s2EnteredAt : 0
+      d._sectorDisplays[2] = makeSectorDisplay()
+    }
+
+    // ── Détection finish line ───────────────────────────────────────
+    if (crossedThreshold(prev, next, SECTOR_THRESHOLDS.finish) && prev > 0.5) {
+      const lapMs = now - d._lapStartedAt
+
+      if (!d._isFirstLap && d._s2EnteredAt !== null) {
+        const sector3Ms = now - d._s2EnteredAt
+
+        const isBestOverall =
+          RaceEngineService.bestOverallSector3Ms === null ||
+          sector3Ms < RaceEngineService.bestOverallSector3Ms
+        const isPersonalBest = d._bestSector3Ms === null || sector3Ms < d._bestSector3Ms
+
+        const status = isBestOverall
+          ? 'best-overall'
+          : isPersonalBest
+            ? 'personal-best'
+            : 'slow'
+
+        const delta = d._bestSector3Ms !== null ? formatDelta(sector3Ms, d._bestSector3Ms) : '--'
+
+        if (isPersonalBest) d._bestSector3Ms = sector3Ms
+        if (isBestOverall) RaceEngineService.bestOverallSector3Ms = sector3Ms
+
+        const sd = d._sectorDisplays[2]
+        sd.phase = 'showing_delta'
+        sd.phaseStartedAt = now
+        sd.time = delta
+        sd.delta = delta
+        sd.status = status
+        sd.finalTime = formatLapTime(sector3Ms)
+        sd.finalDelta = delta
+        sd.finalStatus = status
 
         d._lastLapMs = lapMs
-        d._bestLapMs = d._bestLapMs === null ? lapMs : Math.min(d._bestLapMs, lapMs)
+        const isBestLap = d._bestLapMs === null || lapMs < d._bestLapMs
+        if (isBestLap) d._bestLapMs = lapMs
         d.lapsCompleted = (d.lapsCompleted ?? 0) + 1
         d.lastLap = formatLapTime(lapMs)
-
-        // Mise à jour du secteur 3 uniquement
-        if (d.sectors) {
-          const sector3Ms = d._s2EnteredAt !== null ? now - d._s2EnteredAt : 0
-
-          // Déterminer le statut basé sur la comparaison avec le meilleur temps (AVANT mise à jour)
-          let status: 'normal' | 'fast' | 'slow' = 'normal'
-          if (d._bestSector3Ms !== null) {
-            if (sector3Ms < d._bestSector3Ms) {
-              status = 'fast' // vert
-            } else if (sector3Ms > d._bestSector3Ms) {
-              status = 'slow' // rouge
-            } else {
-              status = 'normal' // blanc
-            }
-          }
-
-          // Mettre à jour le meilleur temps du secteur 3 (APRES détermination du statut)
-          if (d._bestSector3Ms === null || sector3Ms < d._bestSector3Ms) {
-            d._bestSector3Ms = sector3Ms
-          }
-
-          d.sectors[2] = {
-            sector: 3,
-            time: formatLapTime(sector3Ms),
-            delta: '--',
-            status: status,
-          }
-
-          // Enregistrer le moment de la mise à jour pour le reset après 1 seconde
-          d._sector3UpdatedAt = nowTime
-        }
-
-        // Reset pour le nouveau tour
-        d._lapStartedAt = now
-        d._s1EnteredAt = null
-        d._s2EnteredAt = null
-        d._s1Crossed = false
-        d._s2Crossed = false
-
-        // Wrap la progression
-        next = next % 1
+        d.bestLap = formatLapTime(d._bestLapMs!)
       }
 
-      d.trackProgression = next
-      d._prevProgression = next
-    })
+      d._isFirstLap = false
+      d._lapStartedAt = now
+      d._s1EnteredAt = null
+      d._s2EnteredAt = null
+      d._s1Crossed = false
+      d._s2Crossed = false
+      d._sectorDisplays[0] = makeSectorDisplay()
 
-    // ── Classement : tours desc, puis progression desc ──────────────
-    this.drivers.sort((a, b) => {
-      if ((b.lapsCompleted ?? 0) !== (a.lapsCompleted ?? 0)) {
-        return (b.lapsCompleted ?? 0) - (a.lapsCompleted ?? 0)
-      }
-      return b.trackProgression - a.trackProgression
-    })
+      next = next % 1
+    }
 
-    // ── Calcul des écarts ───────────────────────────────────────────
-    const leader = this.drivers[0]
-    const leaderLapMs = leader._lastLapMs ?? leader._bestLapMs ?? 90_000
+    d.trackProgression = next
+    d._prevProgression = next
+  })
 
-    this.drivers.forEach((d, idx) => {
-      d.position = idx + 1
+  // ── Classement ──────────────────────────────────────────────────
+  this.drivers.sort((a, b) => {
+    if ((b.lapsCompleted ?? 0) !== (a.lapsCompleted ?? 0)) {
+      return (b.lapsCompleted ?? 0) - (a.lapsCompleted ?? 0)
+    }
+    return b.trackProgression - a.trackProgression
+  })
 
-      if (idx === 0) {
-        d.gap = 'LEADER'
+  const leader = this.drivers[0]
+  const leaderLapMs = leader._lastLapMs ?? leader._bestLapMs ?? 90_000
+
+  this.drivers.forEach((d, idx) => {
+    d.position = idx + 1
+    if (idx === 0) {
+      d.gap = 'LEADER'
+    } else {
+      const lapDiff = (leader.lapsCompleted ?? 0) - (d.lapsCompleted ?? 0)
+      if (lapDiff > 0) {
+        d.gap = `+${lapDiff} tour${lapDiff > 1 ? 's' : ''}`
       } else {
-        const lapDiff = (leader.lapsCompleted ?? 0) - (d.lapsCompleted ?? 0)
-        if (lapDiff > 0) {
-          d.gap = `+${lapDiff} tour${lapDiff > 1 ? 's' : ''}`
-        } else {
-          const progDiff = leader.trackProgression - d.trackProgression
-          const gapMs = Math.abs(progDiff) * leaderLapMs
-          d.gap = `+${formatLapTime(gapMs)}`
-        }
+        const progDiff = leader.trackProgression - d.trackProgression
+        const gapMs = Math.abs(progDiff) * leaderLapMs
+        d.gap = `+${formatLapTime(gapMs)}`
       }
-    })
-  }
+    }
+  })
+}
 
-  /**
-   * Diffuse l'état actuel à tous les clients connectés.
-   */
   private static broadcast() {
     const publicDrivers: Driver[] = this.drivers.map((d) => ({
       id: d.id,
@@ -318,6 +354,7 @@ export default class RaceEngineService {
       lapsCompleted: d.lapsCompleted,
       gap: d.gap,
       lastLap: d.lastLap,
+      bestLap: d.bestLap,
       sectors: d.sectors,
       trackProgression: d.trackProgression,
     }))
@@ -328,9 +365,6 @@ export default class RaceEngineService {
     })
   }
 
-  /**
-   * Retourne l'état public actuel (pour les nouveaux connections via initial_state).
-   */
   public static getCurrentState(): Driver[] {
     return this.drivers.map((d) => ({
       id: d.id,
@@ -343,6 +377,7 @@ export default class RaceEngineService {
       lapsCompleted: d.lapsCompleted,
       gap: d.gap,
       lastLap: d.lastLap,
+      bestLap: d.bestLap,
       sectors: d.sectors,
       trackProgression: d.trackProgression,
     }))

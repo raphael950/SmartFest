@@ -25,6 +25,7 @@ export default function Leaderboard({ drivers }: LeaderboardProps) {
     carModel: driver.carModel,
     accentColor: driver.accentColor ?? '#888',
     position: driver.position ?? index + 1,
+    bestLap: driver.bestLap ?? '--:--.---',
     lapsCompleted: driver.lapsCompleted ?? 0,
     gap: driver.gap ?? '--',
     lastLap: driver.lastLap ?? '--:--.---',
