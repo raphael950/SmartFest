@@ -1,6 +1,6 @@
 import { ChevronRight } from 'lucide-react'
 import type { CSSProperties } from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './live-timing.base.css'
 import './DriverRow.css'
 import type { Driver } from '@/types/live-timing.types'
@@ -21,10 +21,26 @@ interface DriverRowProps {
   driver: LeaderboardDriver
   rank: number
   columnCount: number
+  isSelected: boolean
+  onSelect: () => void
 }
 
-export default function DriverRow({ driver, rank, columnCount }: DriverRowProps) {
+export default function DriverRow({ driver, rank, columnCount, isSelected, onSelect }: DriverRowProps) {
   const [expanded, setExpanded] = useState(false)
+
+  // Ouvre automatiquement si sélectionné depuis le TrackDisplay
+  useEffect(() => {
+    if (isSelected) setExpanded(true)
+  }, [isSelected])
+
+  const handleClick = () => {
+    const next = !expanded
+    setExpanded(next)
+    // Si on ferme manuellement, on désélectionne aussi
+    if (!next && isSelected) onSelect()
+    // Si on ouvre, on sélectionne
+    if (next) onSelect()
+  }
 
   const posBadgeClass =
     rank === 1
@@ -35,19 +51,17 @@ export default function DriverRow({ driver, rank, columnCount }: DriverRowProps)
           ? 'lt-pos-badge lt-pos-badge--3'
           : 'lt-pos-badge lt-pos-badge--n'
 
-  const teamStyle = {
-    '--team-color': driver.accentColor,
-  } as CSSProperties
+  const teamStyle = { '--team-color': driver.accentColor } as CSSProperties
 
   return (
     <>
       <tr
-        className={`lt-driver-row${expanded ? ' lt-driver-row--active' : ''}`}
-        onClick={() => setExpanded((value) => !value)}
+        className={`lt-driver-row${expanded ? ' lt-driver-row--active' : ''}${isSelected ? ' lt-driver-row--selected' : ''}`}
+        onClick={handleClick}
         onKeyDown={(event) => {
           if (event.key === 'Enter' || event.key === ' ') {
             event.preventDefault()
-            setExpanded((value) => !value)
+            handleClick()
           }
         }}
         tabIndex={0}

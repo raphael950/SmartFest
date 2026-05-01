@@ -7,23 +7,17 @@ import './LiveTimingPanel.css'
 import { useRaceWebSocket } from '@/hooks/use-race-websocket'
 import { FlagState } from '@/types/live-timing.types'
 
-// ─── Props ────────────────────────────────────────────────────────────────────
-
 interface LiveTimingPanelProps {
   circuitPath: string
 }
 
-// ─── Constantes ───────────────────────────────────────────────────────────────
-
 const STACKED_BREAKPOINT = 1100
 const DEFAULT_FLAG: FlagState = { color: 'vert', sectors: [] }
 
-// ─── Composant ────────────────────────────────────────────────────────────────
-
 export default function LiveTimingPanel({ circuitPath }: LiveTimingPanelProps) {
   const [isStacked, setIsStacked] = useState(false)
+  const [selectedDriverId, setSelectedDriverId] = useState<number | null>(null)
 
-  // Connexion WebSocket au serveur pour recevoir les données en temps réel
   const { drivers, flag: wsFlag, isConnected, error } = useRaceWebSocket()
   const flag: FlagState = wsFlag ?? DEFAULT_FLAG
 
@@ -62,7 +56,13 @@ export default function LiveTimingPanel({ circuitPath }: LiveTimingPanelProps) {
             defaultSize={isStacked ? 42 : 52}
             minSize={isStacked ? 28 : 30}
           >
-            <TrackDisplay circuitPath={circuitPath} drivers={drivers} flag={flag} />
+            <TrackDisplay
+              circuitPath={circuitPath}
+              drivers={drivers}
+              flag={flag}
+              selectedDriverId={selectedDriverId}
+              onDriverClick={(id) => setSelectedDriverId((prev) => prev === id ? null : id)}
+            />
           </ResizablePanel>
 
           <ResizableHandle
@@ -76,7 +76,11 @@ export default function LiveTimingPanel({ circuitPath }: LiveTimingPanelProps) {
             defaultSize={isStacked ? 58 : 48}
             minSize={30}
           >
-            <Leaderboard drivers={drivers} />
+            <Leaderboard
+              drivers={drivers}
+              selectedDriverId={selectedDriverId}
+              onDriverSelect={(id) => setSelectedDriverId((prev) => prev === id ? null : id)}
+            />
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>

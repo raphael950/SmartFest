@@ -6,6 +6,8 @@ import type { Driver } from '@/types/live-timing.types'
 
 interface LeaderboardProps {
   drivers: Driver[]
+  selectedDriverId: number | null
+  onDriverSelect: (id: number) => void
 }
 
 const LEADERBOARD_COLUMNS: DataPanelTableColumn[] = [
@@ -15,7 +17,7 @@ const LEADERBOARD_COLUMNS: DataPanelTableColumn[] = [
   { key: 'gap', label: 'ECART', className: 'lt-leaderboard__col--gap' },
 ]
 
-export default function Leaderboard({ drivers }: LeaderboardProps) {
+export default function Leaderboard({ drivers, selectedDriverId, onDriverSelect }: LeaderboardProps) {
   const enrichedDrivers: LeaderboardDriver[] = drivers.map((driver, index) => ({
     id: driver.id,
     name: driver.pilote ?? '',
@@ -59,6 +61,8 @@ export default function Leaderboard({ drivers }: LeaderboardProps) {
             columnCount={LEADERBOARD_COLUMNS.length}
             driver={driver}
             rank={index + 1}
+            isSelected={driver.id === selectedDriverId}
+            onSelect={() => onDriverSelect(driver.id)}
           />
         ))
       )}

@@ -65,3 +65,30 @@
   background: #dc2626;
   color: #fff;
 }
+
+  .lt-track-svg--panning {
+  cursor: grab;
+}
+
+.lt-track-svg--panning:active {
+  cursor: grabbing;
+}
+
+.lt-track-zoom-reset {
+  position: absolute;
+  top: 40px;
+  right: 10px;
+  z-index: 10;
+  font-size: 0.7rem;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--lt-border);
+  background: rgba(0, 0, 0, 0.5);
+  color: var(--lt-muted);
+  cursor: pointer;
+}
+
+.lt-track-zoom-reset:hover {
+  color: var(--lt-white);
+  border-color: var(--lt-white);
+}
