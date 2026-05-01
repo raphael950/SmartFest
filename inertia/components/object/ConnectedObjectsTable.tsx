@@ -1,5 +1,5 @@
 import { router } from '@inertiajs/react'
-import { Plus, Power, RefreshCw, Search, Trash2, Wifi } from 'lucide-react'
+import { CaseLower, Plus, Power, RefreshCw, Search, Trash2, Wifi } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import '@/css/components/objets/ConnectedObjectsTable.css'
 import ConnectedObjectEditModal from '@/components/object/ConnectedObjectEditModal'
@@ -324,7 +324,7 @@ const ConnectedObjectsTable = ({ devices: initialDevices }: ConnectedObjectsTabl
                 >
                   <td className="iot-table__id">{device.name}</td>
                   <td>
-                    <span className={`iot-pill iot-pill--type ${device.type === 'LED' ? 'is-led' : 'is-cam'}`}>
+                    <span className={`iot-pill iot-pill--type ${device.type.toLowerCase()}`}>
                       {device.type}
                     </span>
                   </td>

@@ -3,7 +3,7 @@ import pointsService from '#services/points_service'
 import type { HttpContext } from '@adonisjs/core/http'
 
 const ALLOWED_STATUSES = new Set(['online', 'alert', 'maintenance', 'offline'])
-const ALLOWED_TYPES = new Set(['CAM', 'LED'])
+const ALLOWED_TYPES = new Set(['CAM', 'LED', 'GPS'])
 const ALLOWED_SECTORS = new Set(['S1', 'S2', 'S3'])
 
 type SerializedConnectedDevice = {
