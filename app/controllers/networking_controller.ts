@@ -12,7 +12,7 @@ export default class NetworkingController {
 
     const usersWithPseudo = users.filter((user): user is User & { pseudo: string } => user.pseudo !== null)
 
-    return inertia.render('networking', {
+    return inertia.render('networking/networking', {
       users: usersWithPseudo.map((user) => ({
         id: user.id,
         pseudo: user.pseudo,

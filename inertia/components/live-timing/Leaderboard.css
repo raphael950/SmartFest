@@ -1,0 +1,61 @@
+.lt-leaderboard {
+  --data-panel-title-color: var(--lt-white);
+  --data-panel-title-font: var(--lt-font-display);
+  --data-panel-accent: var(--lt-red);
+  --data-panel-accent-glow: var(--lt-red-glow);
+  --data-panel-muted: var(--lt-muted);
+  --data-panel-divider: var(--lt-border-bright);
+  --data-panel-header-bg: color-mix(in srgb, var(--lt-bg-panel-hover) 72%, transparent);
+  --data-panel-cell-color: var(--lt-white);
+}
+
+.lt-leaderboard__badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 2px 8px;
+  border: 1px solid var(--lt-red-border);
+  border-radius: 4px;
+  background: var(--lt-red-dim);
+  color: var(--lt-red);
+  font-family: var(--lt-font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+}
+
+.lt-leaderboard__scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--lt-red-border) transparent;
+}
+
+.lt-leaderboard__table {
+  table-layout: auto;
+}
+
+.lt-leaderboard__table thead th {
+  font-family: var(--lt-font-display);
+  text-transform: uppercase;
+}
+
+.lt-leaderboard__col--pos {
+  width: 56px;
+  text-align: center;
+}
+
+.lt-leaderboard__col--team {
+  width: 220px;
+  min-width: 220px;
+}
+
+.lt-leaderboard__col--laps,
+.lt-leaderboard__col--gap {
+  width: 96px;
+  text-align: center;
+}
+
+.lt-leaderboard__empty {
+  padding: 22px 12px;
+  text-align: center;
+  color: var(--lt-muted);
+  letter-spacing: 0.05em;
+}

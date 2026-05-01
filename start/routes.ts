@@ -13,6 +13,7 @@ import IncidentsController from '#controllers/incidents_controller'
 import ProfileController from '#controllers/profile_controller'
 import AdminUsersController from '#controllers/admin_users_controller'
 import NetworkingController from '#controllers/networking_controller'
+import LiveTimingController from '#controllers/live_timing_controller'
 import { controllers } from '#generated/controllers'
 import User from '#models/user'
 import userLevelService from '#services/user_level_service'
@@ -70,7 +71,8 @@ router
     router.get('mon-profil/edition', [ProfileController, 'edit']).as('profile.edit')
     router.post('mon-profil/edition', [ProfileController, 'update']).as('profile.update')
     router.get('networking', [NetworkingController, 'index']).as('networking.index')
-
+    router.get('live-timing', [LiveTimingController, 'index']).as('live-timing')
+    router.get('api/live-timing', [LiveTimingController, 'apiIndex']).as('api.live-timing')
     router.post('logout', [controllers.Session, 'destroy']).as('session.destroy')
   })
   .use(middleware.role({ minimumRole: 'simple' }))

@@ -9,6 +9,7 @@ export const controllers = {
   Flags: () => import('#controllers/flags_controller'),
   Home: () => import('#controllers/home_controller'),
   Incidents: () => import('#controllers/incidents_controller'),
+  LiveTiming: () => import('#controllers/live_timing_controller'),
   Networking: () => import('#controllers/networking_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
   Profile: () => import('#controllers/profile_controller'),

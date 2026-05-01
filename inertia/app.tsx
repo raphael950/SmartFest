@@ -1,4 +1,4 @@
-import './css/app.css'
+import '@/css/app.css'
 import { ReactElement } from 'react'
 import { client } from './client'
 import DefaultLayout from '~/layouts/default'
@@ -10,6 +10,23 @@ import { TuyauProvider } from '@adonisjs/inertia/react'
 import { resolvePageComponent } from '@adonisjs/inertia/helpers'
 
 const appName = import.meta.env.VITE_APP_NAME || 'AdonisJS'
+const pages = import.meta.glob('./pages/**/*.tsx')
+
+const resolvePagePath = (name: string) => {
+  const directPath = `./pages/${name}.tsx`
+  if (pages[directPath]) {
+    return directPath
+  }
+
+  const pageName = name.split('/').pop()
+  const nestedPath = pageName ? `./pages/${name}/${pageName}.tsx` : directPath
+  if (pages[nestedPath]) {
+    return nestedPath
+  }
+
+  const indexPath = `./pages/${name}/index.tsx`
+  return pages[indexPath] ? indexPath : directPath
+}
 
 createInertiaApp({
   title: (title) => (title ? `${title} - ${appName}` : appName),
@@ -17,8 +34,8 @@ createInertiaApp({
     const Layout = name.startsWith('auth/') ? AuthLayout : DefaultLayout
 
     return resolvePageComponent(
-      `./pages/${name}.tsx`,
-      import.meta.glob('./pages/**/*.tsx'),
+      resolvePagePath(name),
+      pages,
       (page: ReactElement<Data.SharedProps>) => <Layout children={page} />
     )
   },

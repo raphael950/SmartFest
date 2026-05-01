@@ -1,6 +1,6 @@
 import ProfileEditForm, { type EditableProfile } from '@/components/profile/ProfileEditForm'
 import { InertiaProps } from '~/types'
-import '~/css/profile.css'
+import '~/css/pages/auth/profile.css'
 
 type ProfileEditPageProps = {
   profile: EditableProfile

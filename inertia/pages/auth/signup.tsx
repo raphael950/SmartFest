@@ -1,7 +1,7 @@
 import { Form, Link } from '@adonisjs/inertia/react'
 import { useMemo, useState } from 'react'
 import { Briefcase, CalendarDays, Eye, EyeOff, Lock, Mail, Trophy, User, UserRound } from 'lucide-react'
-import '~/css/signup.css'
+import '~/css/pages/auth/signup.css'
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false)

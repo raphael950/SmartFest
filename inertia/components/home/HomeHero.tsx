@@ -1,11 +1,7 @@
 import { ArrowRight } from 'lucide-react'
 import '@/css/components/home/HomeHero.css'
 
-type HomeHeroProps = {
-  anchorId: string
-}
-
-const HomeHero = ({ anchorId }: HomeHeroProps) => {
+const HomeHero = () => {
   return (
     <section className="home-hero">
       <div className="home-hero__content">
@@ -25,7 +21,7 @@ const HomeHero = ({ anchorId }: HomeHeroProps) => {
           </p>
         </div>
 
-        <a href={`#${anchorId}`} className="home-hero__cta">
+        <a href="/live-timing" className="home-hero__cta">
           <span>Suivre l&apos;evenement en direct</span>
           <ArrowRight className="home-hero__cta-icon" />
         </a>

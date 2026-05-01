@@ -1,0 +1,115 @@
+.data-panel-table {
+  --data-panel-title-color: var(--foreground);
+  --data-panel-title-font: inherit;
+  --data-panel-accent: var(--primary);
+  --data-panel-accent-glow: color-mix(in srgb, var(--primary) 45%, transparent);
+  --data-panel-muted: var(--muted-foreground);
+  --data-panel-divider: var(--border);
+  --data-panel-header-bg: color-mix(in srgb, var(--card) 92%, transparent);
+  --data-panel-cell-color: var(--foreground);
+
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+}
+
+.data-panel-table__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 14px 0;
+}
+
+.data-panel-table__title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.data-panel-table__accent {
+  width: 4px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--data-panel-accent);
+  box-shadow: 0 0 8px var(--data-panel-accent-glow);
+  flex-shrink: 0;
+}
+
+.data-panel-table__title {
+  margin: 0;
+  min-width: 0;
+  color: var(--data-panel-title-color);
+  font-family: var(--data-panel-title-font);
+  font-size: 1.05rem;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.data-panel-table__badge {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.data-panel-table__toolbar {
+  padding: 0 14px 12px;
+}
+
+.data-panel-table__scroll {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+}
+
+.data-panel-table__table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--data-panel-cell-color);
+}
+
+.data-panel-table__table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  text-align: left;
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--data-panel-muted);
+  padding: 12px;
+  border-bottom: 1px solid var(--data-panel-divider);
+  background: var(--data-panel-header-bg);
+  white-space: nowrap;
+}
+
+.data-panel-table__table tbody td {
+  padding: 11px 12px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .data-panel-table__header {
+    padding: 12px 12px 0;
+  }
+
+  .data-panel-table__title {
+    font-size: 0.94rem;
+  }
+
+  .data-panel-table__toolbar {
+    padding: 0 12px 10px;
+  }
+
+  .data-panel-table__table thead th,
+  .data-panel-table__table tbody td {
+    padding: 10px 8px;
+  }
+}

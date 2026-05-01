@@ -14,6 +14,8 @@ export type ScannedRoutes = {
     'profile.edit': { paramsTuple?: []; params?: {} }
     'profile.update': { paramsTuple?: []; params?: {} }
     'networking.index': { paramsTuple?: []; params?: {} }
+    'live-timing': { paramsTuple?: []; params?: {} }
+    'api.live-timing': { paramsTuple?: []; params?: {} }
     'session.destroy': { paramsTuple?: []; params?: {} }
     'admin.users.index': { paramsTuple?: []; params?: {} }
     'admin.users.password': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -37,6 +39,8 @@ export type ScannedRoutes = {
     'profile.me': { paramsTuple?: []; params?: {} }
     'profile.edit': { paramsTuple?: []; params?: {} }
     'networking.index': { paramsTuple?: []; params?: {} }
+    'live-timing': { paramsTuple?: []; params?: {} }
+    'api.live-timing': { paramsTuple?: []; params?: {} }
     'admin.users.index': { paramsTuple?: []; params?: {} }
     'incidents': { paramsTuple?: []; params?: {} }
     'flags': { paramsTuple?: []; params?: {} }
@@ -50,6 +54,8 @@ export type ScannedRoutes = {
     'profile.me': { paramsTuple?: []; params?: {} }
     'profile.edit': { paramsTuple?: []; params?: {} }
     'networking.index': { paramsTuple?: []; params?: {} }
+    'live-timing': { paramsTuple?: []; params?: {} }
+    'api.live-timing': { paramsTuple?: []; params?: {} }
     'admin.users.index': { paramsTuple?: []; params?: {} }
     'incidents': { paramsTuple?: []; params?: {} }
     'flags': { paramsTuple?: []; params?: {} }

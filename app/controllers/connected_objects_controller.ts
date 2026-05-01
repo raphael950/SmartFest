@@ -41,7 +41,7 @@ export default class ConnectedObjectsController {
       }
     })
 
-    return inertia.render('objets', { devices })
+    return inertia.render('objets/objets', { devices })
   }
 
   async store({ request, response, session }: HttpContext) {

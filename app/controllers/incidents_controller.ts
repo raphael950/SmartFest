@@ -17,7 +17,7 @@ export default class IncidentsController {
   async index({ inertia }: HttpContext) {
     const incidents = await Incident.query().orderBy('created_at', 'desc')
 
-    return inertia.render('incidents', {
+    return inertia.render('incidents/incidents', {
       incidents: incidents.map((incident) => ({
         id: incident.id,
         type: incident.type,

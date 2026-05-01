@@ -3,7 +3,7 @@ import { CheckCircle2, KeyRound, Mail, Shield, Trash2, UserRound } from 'lucide-
 import { useMemo, useState } from 'react'
 import type { InertiaProps } from '@/types'
 import type { AdminUsersPageProps, UserRole } from '@/types/admin-users.types'
-import '@/css/admin-users.css'
+import '@/css/pages/admin/admin-users.css'
 
 const formatDate = (value: string) => {
   return new Date(value).toLocaleDateString('fr-FR', {
