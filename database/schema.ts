@@ -8,7 +8,7 @@ import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
 export class ConnectedObjectSchema extends BaseModel {
-  static $columns = ['createdAt', 'firmware', 'id', 'identifier', 'name', 'sector', 'status', 'type', 'updatedAt'] as const
+  static $columns = ['createdAt', 'firmware', 'id', 'identifier', 'name', 'sector', 'status', 'teamOwner', 'type', 'updatedAt'] as const
   $columns = ConnectedObjectSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -24,6 +24,8 @@ export class ConnectedObjectSchema extends BaseModel {
   declare sector: string
   @column()
   declare status: string
+  @column()
+  declare teamOwner: number | null
   @column()
   declare type: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
@@ -119,7 +121,7 @@ export class TeamSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = ['avatarPath', 'birthDate', 'createdAt', 'email', 'followedTeam', 'followedTeamId', 'fullName', 'gender', 'id', 'isVerified', 'jobTitle', 'level', 'level', 'password', 'points', 'points', 'pseudo', 'role', 'updatedAt'] as const
+  static $columns = ['avatarPath', 'birthDate', 'createdAt', 'email', 'followedTeam', 'followedTeamId', 'fullName', 'gender', 'id', 'isVerified', 'jobTitle', 'level', 'password', 'points', 'pseudo', 'role', 'updatedAt'] as const
   $columns = UserSchema.$columns
   @column()
   declare avatarPath: string | null

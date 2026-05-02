@@ -48,29 +48,31 @@ const ConnectedObjectFormModal = ({
 }: ConnectedObjectFormModalProps) => {
   const [formState, setFormState] = useState<ConnectedObjectEditableFields>(initialValues)
 
-  useEffect(() => {
-    if (!open) {
-      return
-    }
+  // Vérification si l'objet est un GPS
+  // Note : Adapte "GPS" selon la valeur exacte dans tes CONNECTED_OBJECT_TYPE_OPTIONS
+  const isGps = formState.type.toUpperCase() === 'GPS'
 
+  useEffect(() => {
+    if (!open) return
     setFormState(initialValues)
   }, [open, initialValues])
 
   const handleSubmit = () => {
-    if (!normalizeAndValidateName) {
-      onSubmit(formState)
-      return
+    let finalValues = { ...formState }
+
+    // 1. Normalisation du nom si nécessaire
+    if (normalizeAndValidateName) {
+      const normalizedName = finalValues.name.trim()
+      if (!normalizedName) return
+      finalValues.name = normalizedName
     }
 
-    const normalizedName = formState.name.trim()
-    if (!normalizedName) {
-      return
+    // 2. Logique métier GPS : On vide le secteur
+    if (isGps) {
+      finalValues.sector = ""
     }
 
-    onSubmit({
-      ...formState,
-      name: normalizedName,
-    })
+    onSubmit(finalValues)
   }
 
   return (
@@ -82,12 +84,13 @@ const ConnectedObjectFormModal = ({
         </DialogHeader>
 
         <div className="iot-edit-modal__form">
+          {/* ... Identifiant et Nom (inchangés) ... */}
           {identifier ? (
             <div className="iot-edit-modal__row">
               <Label htmlFor={`${idPrefix}-id`}>Identifiant</Label>
               <Input
                 id={`${idPrefix}-id`}
-                className="iot-edit-modal__input focus-visible:ring-0 focus-visible:ring-offset-0"
+                className="iot-edit-modal__input"
                 value={identifier}
                 disabled
               />
@@ -98,7 +101,7 @@ const ConnectedObjectFormModal = ({
             <Label htmlFor={`${idPrefix}-name`}>Nom</Label>
             <Input
               id={`${idPrefix}-name`}
-              className="iot-edit-modal__input focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="iot-edit-modal__input"
               value={formState.name}
               onChange={(event) => setFormState((prev) => ({ ...prev, name: event.target.value }))}
               placeholder={namePlaceholder}
@@ -122,14 +125,18 @@ const ConnectedObjectFormModal = ({
               </select>
             </div>
 
-            <div className="iot-edit-modal__row">
+            <div className={`iot-edit-modal__row ${isGps ? 'opacity-50' : ''}`}>
               <Label htmlFor={`${idPrefix}-sector`}>Secteur</Label>
               <select
                 id={`${idPrefix}-sector`}
                 className="iot-edit-modal__select"
-                value={formState.sector}
+                // Si c'est un GPS, on affiche vide et on désactive
+                value={isGps ? "" : formState.sector}
+                disabled={isGps}
                 onChange={(event) => setFormState((prev) => ({ ...prev, sector: event.target.value }))}
               >
+                {/* On ajoute une option vide pour le visuel quand c'est désactivé */}
+                {isGps && <option value="">Aucun (GPS)</option>}
                 {CONNECTED_OBJECT_SECTOR_OPTIONS.map((sector) => (
                   <option key={sector} value={sector}>
                     {sector}
@@ -139,6 +146,7 @@ const ConnectedObjectFormModal = ({
             </div>
           </div>
 
+          {/* ... Statut (inchangé) ... */}
           <div className="iot-edit-modal__row">
             <Label htmlFor={`${idPrefix}-status`}>Statut</Label>
             <select

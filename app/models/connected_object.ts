@@ -30,4 +30,7 @@ export default class ConnectedObject extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
+
+  @column()
+  declare teamOwner: number | null
 }
