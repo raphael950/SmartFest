@@ -172,6 +172,11 @@ const ConnectedObjectFormModal = ({
 
           <div className={`iot-edit-modal__row ${!isGps ? 'opacity-50' : ''}`}>
             <Label htmlFor={`${idPrefix}-team`}>Equipe Proprietaire</Label>
+            {isGps ? (
+              <p className="iot-edit-modal__hint">
+                Une seule equipe peut avoir un GPS. Les equipes deja associees apparaissent desactivees dans la liste.
+              </p>
+            ) : null}
             <select
               id={`${idPrefix}-team`}
               className="iot-edit-modal__select"
@@ -188,8 +193,13 @@ const ConnectedObjectFormModal = ({
             >
               <option value="">{isGps ? 'Selectionner une equipe' : 'FIA / Direction de course'}</option>
               {teams.map((team) => (
-                <option key={team.id} value={team.id}>
+                <option
+                  key={team.id}
+                  value={team.id}
+                  disabled={isGps && Boolean(team.isGpsOccupied) && team.id !== formState.teamId}
+                >
                   {team.name}
+                  {team.isGpsOccupied && team.id !== formState.teamId ? ' - GPS deja attribue' : ''}
                 </option>
               ))}
             </select>

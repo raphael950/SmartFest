@@ -5,6 +5,7 @@ export type DeviceType = 'CAM' | 'LED' | 'GPS' | string
 export type TeamOption = {
   id: number
   name: string
+  isGpsOccupied?: boolean
 }
 
 export type PendingDeletionRequest = {

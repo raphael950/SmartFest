@@ -27,6 +27,7 @@ type SerializedConnectedDevice = {
 type TeamOption = {
   id: number
   name: string
+  isGpsOccupied: boolean
 }
 
 export default class ConnectedObjectsController {
@@ -43,6 +44,7 @@ export default class ConnectedObjectsController {
     const teams: TeamOption[] = (await Team.query().select(['id', 'name']).orderBy('name', 'asc')).map((team) => ({
       id: team.id,
       name: team.name,
+      isGpsOccupied: objects.some((device) => device.type === 'GPS' && device.teamId === team.id),
     }))
 
     const devices: SerializedConnectedDevice[] = objects.map((device) => {
@@ -168,7 +170,7 @@ export default class ConnectedObjectsController {
     }
 
     const type = this.sanitizeType(payload.type)
-    const teamId = await this.sanitizeTeamId(payload.teamId, type)
+    const teamId = await this.sanitizeTeamId(payload.teamId, type, device.identifier)
 
     if (type === 'GPS' && !teamId) {
       session.flash('error', 'Une equipe proprietaire est requise pour un objet GPS.')
@@ -266,7 +268,7 @@ export default class ConnectedObjectsController {
     return ALLOWED_SECTORS.has(normalized) ? normalized : 'S1'
   }
 
-  private async sanitizeTeamId(teamId: unknown, type: string) {
+  private async sanitizeTeamId(teamId: unknown, type: string, currentIdentifier?: string) {
     if (type !== 'GPS') {
       return null
     }
@@ -277,7 +279,18 @@ export default class ConnectedObjectsController {
     }
 
     const team = await Team.find(parsed)
-    return team ? team.id : null
+    if (!team) {
+      return null
+    }
+
+    const occupiedByGpsQuery = ConnectedObject.query().where('type', 'GPS').where('team_id', team.id)
+    if (currentIdentifier) {
+      occupiedByGpsQuery.whereNot('identifier', currentIdentifier)
+    }
+
+    const occupiedByGps = await occupiedByGpsQuery.first()
+
+    return occupiedByGps ? null : team.id
   }
 
   private async generateIdentifier(type: string) {
