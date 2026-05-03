@@ -115,11 +115,19 @@ class SocketService {
    * Appelé depuis FlagsController après validation.
    * Applique la logique de merge puis broadcast le nouvel état.
    */
-  public updateFlag(incomingColor: FlagColor, incomingSector: string): FlagState {
+  public async updateFlag(incomingColor: FlagColor, incomingSector: string): Promise<FlagState> {
     this.flagState = mergeFlag(this.flagState, incomingColor, incomingSector)
-    RaceEngineService.setFlag(this.flagState)
+    await RaceEngineService.setFlag(this.flagState)
     this.io?.emit('flag_update', this.flagState)
     return this.flagState
+  }
+
+  public async refreshLiveTiming(): Promise<void> {
+    await RaceEngineService.refreshFromConnectedObjects()
+    this.io?.emit('race_update', {
+      timestamp: Date.now(),
+      drivers: RaceEngineService.getCurrentState(),
+    })
   }
 
   /** Accès direct à l'état courant (utile pour les tests / debug) */

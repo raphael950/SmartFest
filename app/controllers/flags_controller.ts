@@ -37,7 +37,7 @@ export default class FlagsController {
     await Flag.create({ color, sector })
 
     // Met à jour l'état en mémoire et broadcast via WebSocket
-    socketService.updateFlag(color, sector)
+    await socketService.updateFlag(color, sector)
 
     return response.redirect().back()
   }

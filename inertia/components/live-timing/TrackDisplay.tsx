@@ -113,6 +113,9 @@ export default function TrackDisplay({ circuitPath, drivers, flag, selectedDrive
   }
 
   const viewBoxStr = `${transform.x} ${transform.y} ${baseViewBox.w / transform.scale} ${baseViewBox.h / transform.scale}`
+  const trackDrivers = drivers.filter((driver) => driver.gpsActive === true && driver.gpsRevealPending !== true)
+  const pitDrivers = drivers.filter((driver) => driver.hasGps === true && driver.gpsActive !== true && driver.gpsRevealPending !== true)
+  const pitAnchor = getPointAt(0.985)
 
   return (
     <div className="lt-glass lt-track-container lt-panel-section">
@@ -165,7 +168,7 @@ export default function TrackDisplay({ circuitPath, drivers, flag, selectedDrive
           />
 
           {/* 3. Pilotes */}
-          {drivers.map((driver) => {
+          {trackDrivers.map((driver) => {
             const point = getPointAt(driver.trackProgression ?? 0)
             if (!point) return null
 
@@ -209,6 +212,68 @@ export default function TrackDisplay({ circuitPath, drivers, flag, selectedDrive
               </g>
             )
           })}
+
+          {/* 4. Stand / pit lane */}
+          {pitAnchor && pitDrivers.length > 0 && (
+            <g opacity={0.72}>
+              <text
+                x={pitAnchor.x + 18}
+                y={pitAnchor.y - 24}
+                textAnchor="start"
+                fontSize={10 / Math.sqrt(transform.scale)}
+                fontWeight="700"
+                fill="#c7c7c7"
+                stroke="black"
+                strokeWidth={1.6 / transform.scale}
+                paintOrder="stroke"
+              >
+                PIT
+              </text>
+
+              {pitDrivers.map((driver, index) => {
+                const dotSize = 5.5 / Math.sqrt(transform.scale)
+                const isSelected = driver.id === selectedDriverId
+                const x = pitAnchor.x + 18
+                const y = pitAnchor.y - 8 + index * (dotSize * 3.1)
+
+                return (
+                  <g
+                    key={`pit-${driver.id}`}
+                    style={{ cursor: 'pointer', transition: 'all 0.1s linear' }}
+                    onClick={() => onDriverClick(driver.id)}
+                  >
+                    {isSelected && (
+                      <circle
+                        cx={x}
+                        cy={y}
+                        r={dotSize * 2.2}
+                        fill="none"
+                        stroke="#ffd900"
+                        strokeWidth={1.8 / transform.scale}
+                        opacity={0.9}
+                      />
+                    )}
+                    <circle cx={x} cy={y} r={dotSize * 1.45} fill={driver.accentColor} opacity={0.24} />
+                    <circle cx={x} cy={y} r={dotSize} fill="#202124" opacity={0.92} />
+                    <circle cx={x} cy={y} r={dotSize * 0.7} fill={driver.accentColor} opacity={0.9} />
+                    <text
+                      x={x + dotSize * 1.8}
+                      y={y + dotSize * 0.35}
+                      textAnchor="start"
+                      fontSize={8 / Math.sqrt(transform.scale)}
+                      fontWeight="700"
+                      fill="#d8d8d8"
+                      stroke="black"
+                      strokeWidth={1.6 / transform.scale}
+                      paintOrder="stroke"
+                    >
+                      {driver.shortName ?? driver.id}
+                    </text>
+                  </g>
+                )
+              })}
+            </g>
+          )}
         </svg>
       </div>
     </div>

@@ -15,4 +15,7 @@ export type Driver = {
   accentColor?: string
   shortName?: string
   speed?: number
+  hasGps?: boolean
+  gpsActive?: boolean
+  gpsRevealPending?: boolean
 }

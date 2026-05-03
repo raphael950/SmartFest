@@ -1,6 +1,7 @@
 import socketService, { FlagState } from '#services/socket_service'
 import Team from '#models/team'
 import { Driver } from '../types/driver.js'
+import ConnectedObject from '../models/connected_object.js'
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
 
@@ -71,8 +72,27 @@ interface DriverState extends Driver {
   _bestSector3Ms: number | null
   _sectorDisplays: [SectorDisplay, SectorDisplay, SectorDisplay]
   _isFirstLap: boolean
+  _redFlagJoinPriority: number
+  _gpsRevealPending: boolean
   /** Vrai si la vitesse de reprise a déjà été tirée pendant la neutralisation */
   _speedRerolledForRestart: boolean
+}
+
+type GpsState = {
+  hasGps: boolean
+  gpsActive: boolean
+}
+
+const TRACKABLE_GPS_STATUSES = new Set(['online', 'alert'])
+
+function makeEmptyLapData() {
+  return {
+    lapsCompleted: 0,
+    gap: '---',
+    lastLap: '---',
+    bestLap: '---',
+    sectors: makeEmptySectors(),
+  }
 }
 
 function makeSectorDisplay(): SectorDisplay {
@@ -115,26 +135,36 @@ export default class RaceEngineService {
     }, 100)
   }
 
-  public static setFlag(flag: FlagState) {
+  public static async setFlag(flag: FlagState) {
     // Transition vers le rouge → repositionnement immédiat dans l'ordre du classement
-    if (flag.color === 'rouge' && this.flagState.color !== 'rouge') {
+    const previousColor = this.flagState.color
+    this.flagState = flag
+
+    if (flag.color === 'rouge' && previousColor !== 'rouge') {
+      await this.refreshGpsAssignments()
       this.repositionForRedFlag()
     }
-    this.flagState = flag
   }
 
   public static getCurrentState(): Driver[] {
     return this.drivers.map(this.toPublicDriver)
   }
 
+  public static async refreshFromConnectedObjects() {
+    await this.refreshGpsAssignments()
+    this.rebuildLeaderboard()
+  }
+
   // ── Initialisation ──────────────────────────────────────────────────────────
 
   private static async initializeDrivers() {
     const teams = await Team.query().orderBy('display_order', 'asc').orderBy('id', 'asc')
+    const gpsStateByTeamId = await this.getGpsStateByTeamId()
     const now = performance.now()
 
     this.drivers = teams.map((team, idx) => {
       const startProgression = 0.95 + (idx / Math.max(teams.length, 1)) * 0.04
+      const gpsState = gpsStateByTeamId.get(team.id) ?? { hasGps: false, gpsActive: false }
 
       return {
         id: team.id,
@@ -148,11 +178,9 @@ export default class RaceEngineService {
         speed: randomSpeed(),
         trackProgression: startProgression,
         position: idx + 1,
-        lapsCompleted: 0,
-        gap: idx === 0 ? 'LEADER' : '--',
-        lastLap: '--:--.---',
-        bestLap: '--:--.---',
-        sectors: makeEmptySectors(),
+        hasGps: gpsState.hasGps,
+        gpsActive: gpsState.gpsActive,
+        ...makeEmptyLapData(),
         _prevProgression: startProgression,
         _lapStartedAt: now,
         _s1EnteredAt: null,
@@ -166,9 +194,48 @@ export default class RaceEngineService {
         _bestSector3Ms: null,
         _sectorDisplays: [makeSectorDisplay(), makeSectorDisplay(), makeSectorDisplay()],
         _isFirstLap: true,
+        _redFlagJoinPriority: 0,
+        _gpsRevealPending: false,
         _speedRerolledForRestart: false,
       }
     })
+  }
+
+  private static async refreshGpsAssignments() {
+    const gpsStateByTeamId = await this.getGpsStateByTeamId()
+
+    this.drivers.forEach((driver) => {
+      const previousActive = driver.gpsActive === true
+      const previousHasGps = driver.hasGps === true
+      const nextGpsState = gpsStateByTeamId.get(driver.id) ?? { hasGps: false, gpsActive: false }
+
+      if (this.flagState.color !== 'rouge' && !previousHasGps && nextGpsState.hasGps) {
+        driver._gpsRevealPending = true
+      }
+
+      if (this.flagState.color === 'rouge') {
+        driver._gpsRevealPending = false
+      }
+
+      driver._redFlagJoinPriority = !previousActive && nextGpsState.gpsActive ? 1 : 0
+      driver.hasGps = nextGpsState.hasGps
+      driver.gpsActive = nextGpsState.gpsActive
+    })
+  }
+
+  private static async getGpsStateByTeamId() {
+    const devices = await ConnectedObject.query().where('type', 'GPS').whereNotNull('teamId')
+    const stateByTeamId = new Map<number, GpsState>()
+
+    devices.forEach((device) => {
+      const current = stateByTeamId.get(device.teamId!) ?? { hasGps: false, gpsActive: false }
+      stateByTeamId.set(device.teamId!, {
+        hasGps: true,
+        gpsActive: current.gpsActive || TRACKABLE_GPS_STATUSES.has(String(device.status)),
+      })
+    })
+
+    return stateByTeamId
   }
 
   // ── Red flag : repositionnement dans l'ordre du classement ─────────────────
@@ -176,6 +243,11 @@ export default class RaceEngineService {
     // Tri explicite sur le classement courant — ne pas faire confiance
     // à l'ordre de this.drivers qui peut être en cours de mise à jour
     const sorted = [...this.drivers].sort((a, b) => {
+      const aBucket = a.gpsActive ? 0 : a.hasGps ? 1 : 2
+      const bBucket = b.gpsActive ? 0 : b.hasGps ? 1 : 2
+      if (aBucket !== bBucket) return aBucket - bBucket
+      if ((a._redFlagJoinPriority ?? 0) !== (b._redFlagJoinPriority ?? 0))
+        return (a._redFlagJoinPriority ?? 0) - (b._redFlagJoinPriority ?? 0)
       // 1. Tours complétés desc
       if ((b.lapsCompleted ?? 0) !== (a.lapsCompleted ?? 0))
         return (b.lapsCompleted ?? 0) - (a.lapsCompleted ?? 0)
@@ -209,6 +281,45 @@ export default class RaceEngineService {
     })
   }
 
+  private static rebuildLeaderboard() {
+    this.drivers.sort((a, b) => {
+      const aBucket = a.gpsActive ? 0 : a.hasGps ? 1 : 2
+      const bBucket = b.gpsActive ? 0 : b.hasGps ? 1 : 2
+      if (aBucket !== bBucket) return aBucket - bBucket
+      if ((a._redFlagJoinPriority ?? 0) !== (b._redFlagJoinPriority ?? 0))
+        return (a._redFlagJoinPriority ?? 0) - (b._redFlagJoinPriority ?? 0)
+      if ((b.lapsCompleted ?? 0) !== (a.lapsCompleted ?? 0))
+        return (b.lapsCompleted ?? 0) - (a.lapsCompleted ?? 0)
+      return b.trackProgression - a.trackProgression
+    })
+
+    const leader = this.drivers.find((driver) => driver.gpsActive) ?? this.drivers.find((driver) => driver.hasGps) ?? this.drivers[0]
+    const leaderLapMs = leader?._lastLapMs ?? leader?._bestLapMs ?? 90_000
+
+    this.drivers.forEach((d, idx) => {
+      d.position = idx + 1
+      if (!d.gpsActive) {
+        d.gap = '---'
+        d.lastLap = '---'
+        d.bestLap = '---'
+        d.sectors = makeEmptySectors()
+        return
+      }
+
+      if (idx === 0) {
+        d.gap = 'LEADER'
+      } else {
+        const lapDiff = (leader?.lapsCompleted ?? 0) - (d.lapsCompleted ?? 0)
+        if (lapDiff > 0) {
+          d.gap = `+${lapDiff} tour${lapDiff > 1 ? 's' : ''}`
+        } else {
+          const progDiff = (leader?.trackProgression ?? 0) - d.trackProgression
+          d.gap = `+${formatLapTime(Math.abs(progDiff) * leaderLapMs)}`
+        }
+      }
+    })
+  }
+
   // ── Physique ────────────────────────────────────────────────────────────────
 
   private static updatePhysics() {
@@ -216,6 +327,15 @@ export default class RaceEngineService {
     const now = performance.now()
 
     this.drivers.forEach((d) => {
+      if (!d.gpsActive) {
+        d._prevProgression = d.trackProgression
+        d.gap = '---'
+        d.lastLap = '---'
+        d.bestLap = '---'
+        d.sectors = makeEmptySectors()
+        return
+      }
+
       const prev = d._prevProgression
 
       // ── Drapeau rouge : gel total ────────────────────────────────────
@@ -407,30 +527,7 @@ export default class RaceEngineService {
       d._prevProgression = next
     })
 
-    // ── Classement ───────────────────────────────────────────────────
-    this.drivers.sort((a, b) => {
-      if ((b.lapsCompleted ?? 0) !== (a.lapsCompleted ?? 0))
-        return (b.lapsCompleted ?? 0) - (a.lapsCompleted ?? 0)
-      return b.trackProgression - a.trackProgression
-    })
-
-    const leader = this.drivers[0]
-    const leaderLapMs = leader._lastLapMs ?? leader._bestLapMs ?? 90_000
-
-    this.drivers.forEach((d, idx) => {
-      d.position = idx + 1
-      if (idx === 0) {
-        d.gap = 'LEADER'
-      } else {
-        const lapDiff = (leader.lapsCompleted ?? 0) - (d.lapsCompleted ?? 0)
-        if (lapDiff > 0) {
-          d.gap = `+${lapDiff} tour${lapDiff > 1 ? 's' : ''}`
-        } else {
-          const progDiff = leader.trackProgression - d.trackProgression
-          d.gap = `+${formatLapTime(Math.abs(progDiff) * leaderLapMs)}`
-        }
-      }
-    })
+    this.rebuildLeaderboard()
   }
 
   // ── Broadcast ───────────────────────────────────────────────────────────────
@@ -453,6 +550,9 @@ export default class RaceEngineService {
       accentColor: d.accentColor,
       shortName: d.shortName,
       position: d.position,
+      hasGps: d.hasGps,
+      gpsActive: d.gpsActive,
+      gpsRevealPending: d._gpsRevealPending,
       lapsCompleted: d.lapsCompleted,
       gap: d.gap,
       lastLap: d.lastLap,

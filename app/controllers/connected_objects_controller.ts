@@ -1,6 +1,7 @@
 import ConnectedObject from '#models/connected_object'
 import Team from '#models/team'
 import pointsService from '#services/points_service'
+import socketService from '#services/socket_service'
 import type { HttpContext } from '@adonisjs/core/http'
 
 const ALLOWED_STATUSES = new Set(['online', 'alert', 'maintenance', 'offline'])
@@ -151,6 +152,8 @@ export default class ConnectedObjectsController {
       teamId,
     })
 
+    await socketService.refreshLiveTiming()
+
     return response.redirect().back()
   }
 
@@ -186,6 +189,7 @@ export default class ConnectedObjectsController {
     })
 
     await device.save()
+    await socketService.refreshLiveTiming()
     return response.redirect().back()
   }
 
@@ -197,6 +201,7 @@ export default class ConnectedObjectsController {
     }
 
     await device.delete()
+    await socketService.refreshLiveTiming()
     return response.redirect().back()
   }
 
@@ -234,6 +239,7 @@ export default class ConnectedObjectsController {
     }
 
     await device.delete()
+    await socketService.refreshLiveTiming()
     session.flash('success', 'Suppression validee par administrateur.')
     return response.redirect().back()
   }

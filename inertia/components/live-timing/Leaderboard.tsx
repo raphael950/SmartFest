@@ -18,7 +18,16 @@ const LEADERBOARD_COLUMNS: DataPanelTableColumn[] = [
 ]
 
 export default function Leaderboard({ drivers, selectedDriverId, onDriverSelect }: LeaderboardProps) {
-  const enrichedDrivers: LeaderboardDriver[] = drivers.map((driver, index) => ({
+  const sortedDrivers = [...drivers].sort((a, b) => {
+    const aBucket = a.gpsActive ? 0 : a.hasGps ? 1 : 2
+    const bBucket = b.gpsActive ? 0 : b.hasGps ? 1 : 2
+    if (aBucket !== bBucket) return aBucket - bBucket
+    return (a.position ?? 0) - (b.position ?? 0)
+  })
+
+  const enrichedDrivers: LeaderboardDriver[] = sortedDrivers
+    .filter((driver) => driver.gpsRevealPending !== true)
+    .map((driver, index) => ({
     id: driver.id,
     name: driver.pilote ?? '',
     shortName: driver.shortName ?? '',
@@ -27,16 +36,19 @@ export default function Leaderboard({ drivers, selectedDriverId, onDriverSelect 
     carModel: driver.carModel,
     accentColor: driver.accentColor ?? '#888',
     position: driver.position ?? index + 1,
-    bestLap: driver.bestLap ?? '--:--.---',
-    lapsCompleted: driver.lapsCompleted ?? 0,
-    gap: driver.gap ?? '--',
-    lastLap: driver.lastLap ?? '--:--.---',
+    bestLap: driver.hasGps === false ? '---' : driver.bestLap ?? '--:--.---',
+    lapsCompleted: driver.hasGps === false ? 0 : driver.lapsCompleted ?? 0,
+    gap: driver.hasGps === false ? '---' : driver.gap ?? '--',
+    lastLap: driver.hasGps === false ? '---' : driver.lastLap ?? '--:--.---',
+    hasGps: driver.hasGps,
+    gpsActive: driver.gpsActive,
+    gpsRevealPending: driver.gpsRevealPending,
     sectors: driver.sectors ?? [
       { sector: 1, time: '--', delta: '--', status: 'normal' },
       { sector: 2, time: '--', delta: '--', status: 'normal' },
       { sector: 3, time: '--', delta: '--', status: 'normal' },
     ],
-  }))
+    }))
 
   return (
     <DataPanelTable

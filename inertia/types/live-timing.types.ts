@@ -14,6 +14,9 @@ export type Driver = {
   trackProgression?: number
   accentColor?: string
   shortName?: string
+  hasGps?: boolean
+  gpsActive?: boolean
+  gpsRevealPending?: boolean
 }
 
 export type LiveTimingPageProps = {

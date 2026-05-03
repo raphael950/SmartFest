@@ -78,6 +78,23 @@
   box-shadow: inset 3px 0 0 var(--lt-red);
 }
 
+.lt-driver-row--no-gps td {
+  opacity: 0.48;
+  filter: grayscale(1);
+}
+
+.lt-driver-row--no-gps:hover td,
+.lt-driver-row--no-gps:focus-visible td,
+.lt-driver-row--no-gps.lt-driver-row--active td,
+.lt-driver-row--no-gps.lt-driver-row--selected td {
+  opacity: 0.62;
+}
+
+.lt-driver-row--pit td {
+  opacity: 1;
+  filter: none;
+}
+
 .lt-driver-cell {
   color: var(--lt-white);
 }
