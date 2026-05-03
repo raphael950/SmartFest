@@ -90,6 +90,12 @@ const routes = {
     tokens: [{"old":"/admin/users","type":0,"val":"admin","end":""},{"old":"/admin/users","type":0,"val":"users","end":""}],
     types: placeholder as Registry['admin.users.index']['types'],
   },
+  'admin.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin',
+    tokens: [{"old":"/admin","type":0,"val":"admin","end":""}],
+    types: placeholder as Registry['admin.index']['types'],
+  },
   'admin.users.password': {
     methods: ["PUT"],
     pattern: '/admin/users/:id/password',

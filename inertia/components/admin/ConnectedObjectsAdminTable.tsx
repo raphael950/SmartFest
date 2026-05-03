@@ -1,5 +1,5 @@
 import { router } from '@inertiajs/react'
-import { AlertCircle, Check, RefreshCw, X } from 'lucide-react'
+import { AlertCircle, Check, X } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import {
   AlertDialog,
@@ -28,30 +28,6 @@ const statusClass = {
   offline: 'is-offline',
 } as const
 
-const getBatteryTone = (battery: number) => {
-  if (battery >= 75) {
-    return 'is-good'
-  }
-  if (battery >= 35) {
-    return 'is-medium'
-  }
-  return 'is-critical'
-}
-
-const getLatencyTone = (latencyMs: number) => {
-  if (latencyMs <= 15) {
-    return 'is-good'
-  }
-  if (latencyMs <= 60) {
-    return 'is-medium'
-  }
-  return 'is-critical'
-}
-
-const getMeterSegments = (value: number, max = 100, segments = 5) => {
-  const safe = Math.max(0, Math.min(value, max))
-  return Math.round((safe / max) * segments)
-}
 
 type ConnectedObjectsAdminTableProps = {
   devices: ConnectedObjectAdmin[]

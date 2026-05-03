@@ -80,6 +80,7 @@ router
 router
   .group(() => {
     router.get('admin/users', [AdminUsersController, 'index']).as('admin.users.index')
+    router.get('admin', [controllers.Admin, 'index']).as('admin.index')
     router.put('admin/users/:id/password', [AdminUsersController, 'updatePassword']).as('admin.users.password')
     router.post('admin/users/:id/verify', [AdminUsersController, 'verify']).as('admin.users.verify')
     router.post('admin/users/:id/role', [AdminUsersController, 'updateRole']).as('admin.users.role')

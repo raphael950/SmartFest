@@ -6,6 +6,95 @@
   gap: 1.5rem;
 }
 
+.admin-index-page {
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+}
+
+.admin-tabs {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.35rem;
+  padding: 0 0.2rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 90%, transparent);
+}
+
+.admin-tabs__btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.72rem 1rem 0.82rem;
+  border: 1px solid color-mix(in srgb, var(--border) 92%, transparent);
+  border-bottom: none;
+  border-top-left-radius: 0.95rem;
+  border-top-right-radius: 0.95rem;
+  background: linear-gradient(180deg, rgba(30, 30, 30, 0.96), rgba(22, 22, 22, 0.99));
+  color: color-mix(in srgb, var(--muted-foreground) 92%, var(--foreground));
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transform: translateY(4px);
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.02);
+  transition: transform 140ms ease, color 140ms ease, border-color 140ms ease, background 140ms ease, box-shadow 140ms ease, opacity 140ms ease;
+}
+
+.admin-tabs__btn::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  right: 50%;
+  bottom: -1px;
+  height: 3px;
+  border-radius: 999px 999px 0 0;
+  background: transparent;
+  transition: left 140ms ease, right 140ms ease, background 140ms ease;
+}
+
+.admin-tabs__btn:hover {
+  color: var(--foreground);
+  transform: translateY(2px);
+}
+
+.admin-tabs__btn.is-active {
+  color: var(--foreground);
+  background: linear-gradient(180deg, rgba(42, 42, 42, 0.98), rgba(28, 28, 28, 0.99));
+  border-color: color-mix(in srgb, var(--border) 65%, var(--foreground));
+  box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.2);
+  transform: translateY(0);
+}
+
+.admin-tabs__btn.is-active::after {
+  left: 0.95rem;
+  right: 0.95rem;
+  background: color-mix(in srgb, var(--foreground) 68%, var(--racing-red));
+}
+
+.admin-tabs__badge {
+  min-width: 1.55rem;
+  height: 1.55rem;
+  padding: 0 0.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--muted) 18%, transparent);
+  color: color-mix(in srgb, var(--foreground) 84%, var(--muted-foreground));
+  border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+  font-size: 0.74rem;
+  font-weight: 900;
+}
+
+.admin-tabs__panel {
+  min-width: 0;
+}
+
+.admin-tabs__content {
+  min-width: 0;
+}
+
 .admin-users-hero {
   position: relative;
   overflow: hidden;

@@ -33,6 +33,7 @@ export interface ApiDefinition {
       role: typeof routes['admin.users.role']
       destroy: typeof routes['admin.users.destroy']
     }
+    index: typeof routes['admin.index']
     objets: {
       index: typeof routes['admin.objets.index']
       approveDestroy: typeof routes['admin.objets.approve_destroy']

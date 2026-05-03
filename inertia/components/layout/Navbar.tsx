@@ -37,8 +37,7 @@ const NAV_ITEMS: RoleNavItem[] = [
   { label: 'Gestion Drapeaux', icon: Flag, href: '/drapeaux', minRole: 'complexe' },
   { label: 'Gestion Incidents', icon: AlertTriangle, route: 'incidents', minRole: 'complexe' },
   { label: 'Objets', icon: BarChart3, route: 'objets', minRole: 'complexe' },
-  { label: 'Admin Users', icon: Shield, href: '/admin/users', minRole: 'admin' },
-  { label: 'Admin Objets', icon: Shield, href: '/admin/objets', minRole: 'admin' },
+  { label: 'Admin', icon: Shield, href: '/admin', minRole: 'admin' },
 ]
 
 const PATH_MATCHERS: Array<{

@@ -18,6 +18,7 @@ export type ScannedRoutes = {
     'api.live-timing': { paramsTuple?: []; params?: {} }
     'session.destroy': { paramsTuple?: []; params?: {} }
     'admin.users.index': { paramsTuple?: []; params?: {} }
+    'admin.index': { paramsTuple?: []; params?: {} }
     'admin.users.password': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.users.verify': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.users.role': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -45,6 +46,7 @@ export type ScannedRoutes = {
     'live-timing': { paramsTuple?: []; params?: {} }
     'api.live-timing': { paramsTuple?: []; params?: {} }
     'admin.users.index': { paramsTuple?: []; params?: {} }
+    'admin.index': { paramsTuple?: []; params?: {} }
     'admin.objets.index': { paramsTuple?: []; params?: {} }
     'incidents': { paramsTuple?: []; params?: {} }
     'flags': { paramsTuple?: []; params?: {} }
@@ -61,6 +63,7 @@ export type ScannedRoutes = {
     'live-timing': { paramsTuple?: []; params?: {} }
     'api.live-timing': { paramsTuple?: []; params?: {} }
     'admin.users.index': { paramsTuple?: []; params?: {} }
+    'admin.index': { paramsTuple?: []; params?: {} }
     'admin.objets.index': { paramsTuple?: []; params?: {} }
     'incidents': { paramsTuple?: []; params?: {} }
     'flags': { paramsTuple?: []; params?: {} }
