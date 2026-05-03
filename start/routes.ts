@@ -84,6 +84,9 @@ router
     router.post('admin/users/:id/verify', [AdminUsersController, 'verify']).as('admin.users.verify')
     router.post('admin/users/:id/role', [AdminUsersController, 'updateRole']).as('admin.users.role')
     router.delete('admin/users/:id', [AdminUsersController, 'destroy']).as('admin.users.destroy')
+    router.get('admin/objets', [controllers.ConnectedObjects, 'indexAdmin']).as('admin.objets.index')
+    router.post('admin/objets/:id/approve-destroy', [controllers.ConnectedObjects, 'approveDestroy']).as('admin.objets.approve_destroy')
+    router.post('admin/objets/:id/reject-destroy', [controllers.ConnectedObjects, 'rejectDestroy']).as('admin.objets.reject_destroy')
   })
   .use(middleware.role({ minimumRole: 'admin' }))
 
@@ -96,6 +99,6 @@ router
     router.get('/objets', [controllers.ConnectedObjects, 'index']).as('objets')
     router.post('/objets', [controllers.ConnectedObjects, 'store']).as('objets.store')
     router.put('/objets/:identifier', [controllers.ConnectedObjects, 'update']).as('objets.update')
-    router.delete('/objets/:identifier', [controllers.ConnectedObjects, 'destroy']).as('objets.destroy')
+    router.post('/objets/:identifier/request-delete', [controllers.ConnectedObjects, 'requestDestroy']).as('objets.request_destroy')
   })
   .use(middleware.role({ minimumRole: 'complexe' }))

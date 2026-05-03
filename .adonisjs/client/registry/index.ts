@@ -114,6 +114,24 @@ const routes = {
     tokens: [{"old":"/admin/users/:id","type":0,"val":"admin","end":""},{"old":"/admin/users/:id","type":0,"val":"users","end":""},{"old":"/admin/users/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['admin.users.destroy']['types'],
   },
+  'admin.objets.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/objets',
+    tokens: [{"old":"/admin/objets","type":0,"val":"admin","end":""},{"old":"/admin/objets","type":0,"val":"objets","end":""}],
+    types: placeholder as Registry['admin.objets.index']['types'],
+  },
+  'admin.objets.approve_destroy': {
+    methods: ["POST"],
+    pattern: '/admin/objets/:id/approve-destroy',
+    tokens: [{"old":"/admin/objets/:id/approve-destroy","type":0,"val":"admin","end":""},{"old":"/admin/objets/:id/approve-destroy","type":0,"val":"objets","end":""},{"old":"/admin/objets/:id/approve-destroy","type":1,"val":"id","end":""},{"old":"/admin/objets/:id/approve-destroy","type":0,"val":"approve-destroy","end":""}],
+    types: placeholder as Registry['admin.objets.approve_destroy']['types'],
+  },
+  'admin.objets.reject_destroy': {
+    methods: ["POST"],
+    pattern: '/admin/objets/:id/reject-destroy',
+    tokens: [{"old":"/admin/objets/:id/reject-destroy","type":0,"val":"admin","end":""},{"old":"/admin/objets/:id/reject-destroy","type":0,"val":"objets","end":""},{"old":"/admin/objets/:id/reject-destroy","type":1,"val":"id","end":""},{"old":"/admin/objets/:id/reject-destroy","type":0,"val":"reject-destroy","end":""}],
+    types: placeholder as Registry['admin.objets.reject_destroy']['types'],
+  },
   'incidents': {
     methods: ["GET","HEAD"],
     pattern: '/incidents',
@@ -156,11 +174,11 @@ const routes = {
     tokens: [{"old":"/objets/:identifier","type":0,"val":"objets","end":""},{"old":"/objets/:identifier","type":1,"val":"identifier","end":""}],
     types: placeholder as Registry['objets.update']['types'],
   },
-  'objets.destroy': {
-    methods: ["DELETE"],
-    pattern: '/objets/:identifier',
-    tokens: [{"old":"/objets/:identifier","type":0,"val":"objets","end":""},{"old":"/objets/:identifier","type":1,"val":"identifier","end":""}],
-    types: placeholder as Registry['objets.destroy']['types'],
+  'objets.request_destroy': {
+    methods: ["POST"],
+    pattern: '/objets/:identifier/request-delete',
+    tokens: [{"old":"/objets/:identifier/request-delete","type":0,"val":"objets","end":""},{"old":"/objets/:identifier/request-delete","type":1,"val":"identifier","end":""},{"old":"/objets/:identifier/request-delete","type":0,"val":"request-delete","end":""}],
+    types: placeholder as Registry['objets.request_destroy']['types'],
   },
 } as const satisfies Record<string, AdonisEndpoint>
 

@@ -1,5 +1,8 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import Team from '#models/team'
+import User from '#models/user'
+import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 
 export default class ConnectedObject extends BaseModel {
   static table = 'connected_objects'
@@ -32,5 +35,17 @@ export default class ConnectedObject extends BaseModel {
   declare updatedAt: DateTime | null
 
   @column()
-  declare teamOwner: number | null
+  declare teamId: number | null
+
+  @column()
+  declare isDeletionRequested: boolean
+
+  @column()
+  declare requestedDeletionByUserId: number | null
+
+  @belongsTo(() => Team, { foreignKey: 'teamId' })
+  declare team: BelongsTo<typeof Team>
+
+  @belongsTo(() => User, { foreignKey: 'requestedDeletionByUserId' })
+  declare requestedDeletionByUser: BelongsTo<typeof User>
 }

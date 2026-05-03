@@ -22,6 +22,9 @@ export type ScannedRoutes = {
     'admin.users.verify': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.users.role': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.users.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.objets.index': { paramsTuple?: []; params?: {} }
+    'admin.objets.approve_destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.objets.reject_destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'incidents': { paramsTuple?: []; params?: {} }
     'incidents.store': { paramsTuple?: []; params?: {} }
     'flags': { paramsTuple?: []; params?: {} }
@@ -29,7 +32,7 @@ export type ScannedRoutes = {
     'objets': { paramsTuple?: []; params?: {} }
     'objets.store': { paramsTuple?: []; params?: {} }
     'objets.update': { paramsTuple: [ParamValue]; params: {'identifier': ParamValue} }
-    'objets.destroy': { paramsTuple: [ParamValue]; params: {'identifier': ParamValue} }
+    'objets.request_destroy': { paramsTuple: [ParamValue]; params: {'identifier': ParamValue} }
   }
   GET: {
     'home': { paramsTuple?: []; params?: {} }
@@ -42,6 +45,7 @@ export type ScannedRoutes = {
     'live-timing': { paramsTuple?: []; params?: {} }
     'api.live-timing': { paramsTuple?: []; params?: {} }
     'admin.users.index': { paramsTuple?: []; params?: {} }
+    'admin.objets.index': { paramsTuple?: []; params?: {} }
     'incidents': { paramsTuple?: []; params?: {} }
     'flags': { paramsTuple?: []; params?: {} }
     'objets': { paramsTuple?: []; params?: {} }
@@ -57,6 +61,7 @@ export type ScannedRoutes = {
     'live-timing': { paramsTuple?: []; params?: {} }
     'api.live-timing': { paramsTuple?: []; params?: {} }
     'admin.users.index': { paramsTuple?: []; params?: {} }
+    'admin.objets.index': { paramsTuple?: []; params?: {} }
     'incidents': { paramsTuple?: []; params?: {} }
     'flags': { paramsTuple?: []; params?: {} }
     'objets': { paramsTuple?: []; params?: {} }
@@ -68,9 +73,12 @@ export type ScannedRoutes = {
     'session.destroy': { paramsTuple?: []; params?: {} }
     'admin.users.verify': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.users.role': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.objets.approve_destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.objets.reject_destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'incidents.store': { paramsTuple?: []; params?: {} }
     'flags.store': { paramsTuple?: []; params?: {} }
     'objets.store': { paramsTuple?: []; params?: {} }
+    'objets.request_destroy': { paramsTuple: [ParamValue]; params: {'identifier': ParamValue} }
   }
   PUT: {
     'admin.users.password': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -78,7 +86,6 @@ export type ScannedRoutes = {
   }
   DELETE: {
     'admin.users.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'objets.destroy': { paramsTuple: [ParamValue]; params: {'identifier': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

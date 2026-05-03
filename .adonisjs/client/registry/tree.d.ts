@@ -33,6 +33,11 @@ export interface ApiDefinition {
       role: typeof routes['admin.users.role']
       destroy: typeof routes['admin.users.destroy']
     }
+    objets: {
+      index: typeof routes['admin.objets.index']
+      approveDestroy: typeof routes['admin.objets.approve_destroy']
+      rejectDestroy: typeof routes['admin.objets.reject_destroy']
+    }
   }
   incidents: typeof routes['incidents'] & {
     store: typeof routes['incidents.store']
@@ -43,6 +48,6 @@ export interface ApiDefinition {
   objets: typeof routes['objets'] & {
     store: typeof routes['objets.store']
     update: typeof routes['objets.update']
-    destroy: typeof routes['objets.destroy']
+    requestDestroy: typeof routes['objets.request_destroy']
   }
 }
