@@ -98,7 +98,7 @@ const AdminUsersPage = ({ users }: InertiaProps<AdminUsersPageProps>) => {
   }
 
   return (
-    <section className="admin-users-page">
+    <section className="admin-users-page h-full min-h-0 overflow-y-auto overflow-x-hidden">
       <header className="admin-users-hero">
         <div>
           <p className="admin-users-hero__eyebrow">Administration</p>
