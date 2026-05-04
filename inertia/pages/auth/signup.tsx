@@ -4,7 +4,6 @@ import { Briefcase, CalendarDays, Eye, EyeOff, Lock, Mail, Trophy, User, UserRou
 import '~/css/pages/auth/signup.css'
 import type { InertiaProps } from '~/types'
 import type { SignupProps, TeamOption } from '~/types/signup.types'
-import '~/css/signup.css'
 
 export default function Signup({ teams }: InertiaProps<SignupProps>) {
   const [showPassword, setShowPassword] = useState(false)
