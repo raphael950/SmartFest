@@ -121,6 +121,10 @@ export default defineConfig({
       reloadServer: false,
     },
     {
+      pattern: 'resources/circuits/**/*.gpx',
+      reloadServer: false,
+    },
+    {
       pattern: 'public/**',
       reloadServer: false,
     },
