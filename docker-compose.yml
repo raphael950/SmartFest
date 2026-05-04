@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  smartfest:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: smartfest-app
+    restart: unless-stopped
+    ports:
+      - "3333:3333"
+    environment:
+      # Node
+      NODE_ENV: production
+      PORT: 3333
+      HOST: 0.0.0.0
+      TZ: UTC
+      LOG_LEVEL: info
+
+      # App
+      APP_KEY: ${APP_KEY}
+      APP_URL: ${APP_URL:-http://localhost:3333}
+
+      # Session
+      SESSION_DRIVER: cookie
+
+      # Database
+      DB_CONNECTION: pg
+      PG_HOST: ${PG_HOST:-postgres}
+      PG_PORT: ${PG_PORT:-5432}
+      PG_USER: ${PG_USER}
+      PG_PASSWORD: ${PG_PASSWORD}
+      PG_DB_NAME: ${PG_DB_NAME}
+
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3333', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
