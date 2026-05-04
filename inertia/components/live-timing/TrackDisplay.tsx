@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import type { Driver, FlagState } from '@/types/live-timing.types'
+import CarFocusBadge from './CarFocusBadge'
 import './TrackDisplay.css'
 
 interface TrackDisplayProps {
@@ -113,6 +114,7 @@ export default function TrackDisplay({ circuitPath, drivers, flag, selectedDrive
   }
 
   const viewBoxStr = `${transform.x} ${transform.y} ${baseViewBox.w / transform.scale} ${baseViewBox.h / transform.scale}`
+  const labelScale = Math.sqrt(transform.scale)
   const trackDrivers = drivers.filter((driver) => {
     if (driver.gpsActive === true) return true
     if (driver.hasGps === true && driver.gpsRevealPending === false) return true
@@ -178,6 +180,10 @@ export default function TrackDisplay({ circuitPath, drivers, flag, selectedDrive
 
             const dotSize = 7 / Math.sqrt(transform.scale)
             const isSelected = selectedDriverIds.includes(driver.id)
+            const labelWidth = 126 / labelScale
+            const labelHeight = 78 / labelScale
+            const labelX = point.x - labelWidth / 2
+            const labelY = point.y - dotSize * 5.8 - labelHeight
 
             return (
               <g
@@ -185,16 +191,18 @@ export default function TrackDisplay({ circuitPath, drivers, flag, selectedDrive
                 style={{ cursor: 'pointer', transition: 'all 0.1s linear' }}
                 onClick={() => onDriverClick(driver.id)}
               >
-                {/* Halo jaune si sélectionné */}
                 {isSelected && (
-                  <circle
-                    cx={point.x}
-                    cy={point.y}
-                    r={dotSize * 2.6}
-                    fill="none"
-                    stroke="#ffd900"
-                    strokeWidth={2 / transform.scale}
-                    opacity={0.9}
+                  <CarFocusBadge
+                    anchorX={point.x}
+                    anchorY={point.y}
+                    badgeX={labelX}
+                    badgeY={labelY}
+                    badgeWidth={labelWidth}
+                    badgeHeight={labelHeight}
+                    scale={transform.scale}
+                    team={driver.team}
+                    carModel={driver.carModel}
+                    accentColor={driver.accentColor}
                   />
                 )}
                 <circle cx={point.x} cy={point.y} r={dotSize * 1.6} fill={driver.accentColor} opacity={0.3} />
@@ -239,6 +247,10 @@ export default function TrackDisplay({ circuitPath, drivers, flag, selectedDrive
                 const isSelected = selectedDriverIds.includes(driver.id)
                 const x = pitAnchor.x + 18
                 const y = pitAnchor.y - 8 + index * (dotSize * 3.1)
+                const labelWidth = 126 / labelScale
+                const labelHeight = 78 / labelScale
+                const labelX = x + 18
+                const labelY = y - dotSize * 4.8 - labelHeight
 
                 return (
                   <g
@@ -247,14 +259,17 @@ export default function TrackDisplay({ circuitPath, drivers, flag, selectedDrive
                     onClick={() => onDriverClick(driver.id)}
                   >
                     {isSelected && (
-                      <circle
-                        cx={x}
-                        cy={y}
-                        r={dotSize * 2.2}
-                        fill="none"
-                        stroke="#ffd900"
-                        strokeWidth={1.8 / transform.scale}
-                        opacity={0.9}
+                      <CarFocusBadge
+                        anchorX={x}
+                        anchorY={y}
+                        badgeX={labelX}
+                        badgeY={labelY}
+                        badgeWidth={labelWidth}
+                        badgeHeight={labelHeight}
+                        scale={transform.scale}
+                        team={driver.team}
+                        carModel={driver.carModel}
+                        accentColor={driver.accentColor}
                       />
                     )}
                     <circle cx={x} cy={y} r={dotSize * 1.45} fill={driver.accentColor} opacity={0.24} />
