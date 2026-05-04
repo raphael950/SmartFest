@@ -13,6 +13,7 @@ export default class NetworkingController {
 
     const followedTeamIds = [...new Set(users.map((user) => user.followedTeamId).filter((id) => id != null))]
     const teams = followedTeamIds.length ? await Team.query().whereIn('id', followedTeamIds) : []
+    const teamMap = new Map(teams.map((team) => [team.id, team.name]))
 
     const usersWithPseudo = users.filter((user): user is User & { pseudo: string } => user.pseudo !== null)
 
@@ -23,6 +24,7 @@ export default class NetworkingController {
         fullName: user.fullName,
         email: user.email,
         avatarUrl: user.avatarPath ? `/${user.avatarPath}` : null,
+        followedTeam: user.followedTeamId ? teamMap.get(user.followedTeamId) ?? null : null,
         followedTeamId: user.followedTeamId,
         jobTitle: user.jobTitle,
         isCurrentUser: user.id === currentUserId,

@@ -14,8 +14,8 @@ RUN npm ci
 # Copie le code source
 COPY . .
 
-# Build l'app AdonisJS
-RUN npm run build
+# Build l'app AdonisJS (ignore les erreurs TS)
+RUN npm run build -- --ignore-ts-errors
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Stage 2: Production

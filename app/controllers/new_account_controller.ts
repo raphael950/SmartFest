@@ -10,7 +10,7 @@ export default class NewAccountController {
     return inertia.render('auth/signup', {
       teams: teams.map((team) => ({
         id: team.id,
-        name: team.name,
+        label: team.name,
       })),
     })
   }
