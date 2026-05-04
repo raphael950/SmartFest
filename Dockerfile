@@ -31,10 +31,12 @@ WORKDIR /app
 # Installe dumb-init pour les signaux
 RUN apk add --no-cache dumb-init
 
+# Installe uniquement les dépendances de production
+COPY --from=build /app/package.json /app/package-lock.json ./
+RUN npm ci --omit=dev
+
 # Copie les fichiers buildés depuis la phase 1
 COPY --from=build /app/build ./build
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/public ./public
 COPY --from=build /app/resources ./resources
 
