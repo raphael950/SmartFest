@@ -25,6 +25,13 @@ export type TeamCard = {
   teamPrincipal: string
 }
 
+export type TeamCardWithMedia = TeamCard & {
+  carImageSrc: string
+  carImageAlt: string
+  logoImageSrc: string
+  logoImageAlt: string
+}
+
 export type HomePageProps = {
   events: EventCard[]
   teams: TeamCard[]
