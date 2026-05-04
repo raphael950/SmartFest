@@ -3,9 +3,9 @@ import { useMemo, useState } from 'react'
 import { Mail, Search, Sparkles, Trophy, UserRound, Users } from 'lucide-react'
 import type { InertiaProps } from '@/types'
 import '@/css/pages/networking/networking.css'
-import { NetworkingPageProps } from '@/types/networking.types'
+import { NetworkingPageProps, NetworkingUser } from '@/types/networking.types'
 
-const NetworkingPage = ({ users }: InertiaProps<NetworkingPageProps>) => {
+const NetworkingPage = ({ users, teams }: InertiaProps<NetworkingPageProps>) => {
   const [searchTerm, setSearchTerm] = useState('')
 
   const filteredUsers = useMemo(() => {
@@ -15,8 +15,11 @@ const NetworkingPage = ({ users }: InertiaProps<NetworkingPageProps>) => {
       return users
     }
 
-    return users.filter((user) => {
-      const haystack = [user.pseudo, user.email, user.fullName ?? '', user.jobTitle ?? '', user.followedTeam ?? '']
+    const teamById = new Map(teams.map((t: any) => [t.id, t.name]))
+
+    return users.filter((user: NetworkingUser) => {
+      const teamName = user.followedTeamId ? teamById.get(user.followedTeamId) ?? '' : ''
+      const haystack = [user.pseudo, user.email, user.fullName ?? '', user.jobTitle ?? '', teamName]
         .join(' ')
         .toLowerCase()
 
@@ -66,7 +69,7 @@ const NetworkingPage = ({ users }: InertiaProps<NetworkingPageProps>) => {
         </div>
 
         <div className="networking-grid">
-          {filteredUsers.map((user) => (
+          {filteredUsers.map((user: NetworkingUser) => (
             <article key={user.id} className="networking-card">
               <div className="networking-card__head">
                 <div className="networking-card__avatar-wrap">
@@ -103,7 +106,13 @@ const NetworkingPage = ({ users }: InertiaProps<NetworkingPageProps>) => {
                 </p>
                 <p>
                   <Trophy size={14} />
-                  <span>{user.followedTeam || 'Equipe non renseignee'}</span>
+                  <span>
+                    {String(
+                      user.followedTeamId
+                        ? new Map(teams.map((t: { id: any; name: any }) => [t.id, t.name])).get(user.followedTeamId) ?? 'Equipe non renseignee'
+                        : 'Equipe non renseignee'
+                    )}
+                  </span>
                 </p>
               </div>
 

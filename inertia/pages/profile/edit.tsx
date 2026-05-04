@@ -1,13 +1,14 @@
-import ProfileEditForm, { type EditableProfile } from '@/components/profile/ProfileEditForm'
+import ProfileEditForm, { type EditableProfile, type TeamOption } from '@/components/profile/ProfileEditForm'
 import { InertiaProps } from '~/types'
 import '~/css/pages/auth/profile.css'
 
 type ProfileEditPageProps = {
   profile: EditableProfile
+  teams: TeamOption[]
   hasPublicProfile: boolean
 }
 
-export default function ProfileEdit({ profile, hasPublicProfile }: InertiaProps<ProfileEditPageProps>) {
+export default function ProfileEdit({ profile, teams, hasPublicProfile }: InertiaProps<ProfileEditPageProps>) {
   return (
     <section className="profile-page">
       <div className="profile-hero-card profile-hero-card--edit">
@@ -22,7 +23,7 @@ export default function ProfileEdit({ profile, hasPublicProfile }: InertiaProps<
           </p>
         </div>
 
-        <ProfileEditForm profile={profile} hasPublicProfile={hasPublicProfile} />
+        <ProfileEditForm profile={profile} teams={teams} hasPublicProfile={hasPublicProfile} />
       </div>
     </section>
   )

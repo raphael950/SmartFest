@@ -208,6 +208,41 @@
   transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
 }
 
+.auth-page select {
+  width: 100%;
+  height: 50px;
+  border: 1px solid var(--auth-input-border);
+  border-radius: 12px;
+  padding: 0 46px 0 46px;
+  background-color: var(--auth-input-background);
+  background-image: linear-gradient(45deg, transparent 50%, var(--auth-icon) 50%), linear-gradient(135deg, var(--auth-icon) 50%, transparent 50%);
+  background-position: calc(100% - 22px) 21px, calc(100% - 16px) 21px;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  appearance: none;
+  -webkit-appearance: none;
+  font: inherit;
+  color: var(--auth-input-text);
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+.auth-page select:focus {
+  outline: none;
+  border-color: var(--auth-submit-bg);
+  box-shadow: 0 0 0 3px var(--auth-focus-ring);
+  background-color: color-mix(in srgb, var(--auth-input-background) 86%, var(--racing-dark));
+}
+
+.auth-page select[data-invalid='true'] {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 4px var(--danger-ring);
+}
+
+.auth-page select option {
+  background: var(--racing-dark);
+  color: var(--racing-white);
+}
+
 .auth-page input::placeholder {
   color: var(--auth-input-placeholder);
 }
@@ -289,7 +324,12 @@
   }
 
   .auth-page input,
+  .auth-page select,
   .auth-submit {
     height: 48px;
+  }
+
+  .auth-page select {
+    background-position: calc(100% - 20px) 20px, calc(100% - 14px) 20px;
   }
 }

@@ -2,7 +2,7 @@ import { router } from '@inertiajs/react'
 import { CheckCircle2, KeyRound, Mail, Shield, Trash2, UserRound } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import type { InertiaProps } from '@/types'
-import type { AdminUsersPageProps, UserRole } from '@/types/admin-users.types'
+import type { AdminUsersPageProps, UserRole, AdminUser } from '@/types/admin-users.types'
 import '@/css/pages/admin/admin-users.css'
 
 const formatDate = (value: string) => {
@@ -20,7 +20,7 @@ const AdminUsersPage = ({ users }: InertiaProps<AdminUsersPageProps>) => {
 
   const stats = useMemo(() => {
     const total = users.length
-    const verified = users.filter((user) => user.isVerified).length
+    const verified = users.filter((user: AdminUser) => user.isVerified).length
     const pending = total - verified
 
     return { total, verified, pending }
@@ -33,7 +33,7 @@ const AdminUsersPage = ({ users }: InertiaProps<AdminUsersPageProps>) => {
       return users
     }
 
-    return users.filter((user) => {
+    return users.filter((user: AdminUser) => {
       const haystack = [user.email, user.fullName ?? '', user.pseudo ?? ''].join(' ').toLowerCase()
       return haystack.includes(query)
     })
@@ -141,7 +141,7 @@ const AdminUsersPage = ({ users }: InertiaProps<AdminUsersPageProps>) => {
           </p>
         </div>
 
-        {filteredUsers.map((user) => {
+        {filteredUsers.map((user: AdminUser) => {
           const displayName = user.fullName || user.pseudo || 'Utilisateur'
           const passwordValue = passwordByUser[user.id] ?? ''
           const selectedRole = roleByUser[user.id] ?? user.role

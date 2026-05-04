@@ -7,8 +7,23 @@
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
+export class ConnectedObjectDeletionRequestSchema extends BaseModel {
+  static $columns = ['connectedObjectId', 'createdAt', 'id', 'requestedByUserId', 'updatedAt'] as const
+  $columns = ConnectedObjectDeletionRequestSchema.$columns
+  @column()
+  declare connectedObjectId: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare requestedByUserId: number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
 export class ConnectedObjectSchema extends BaseModel {
-  static $columns = ['createdAt', 'firmware', 'id', 'identifier', 'name', 'sector', 'status', 'type', 'updatedAt'] as const
+  static $columns = ['createdAt', 'firmware', 'id', 'identifier', 'isDeletionRequested', 'name', 'requestedDeletionByUserId', 'sector', 'status', 'teamId', 'type', 'updatedAt'] as const
   $columns = ConnectedObjectSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -19,11 +34,17 @@ export class ConnectedObjectSchema extends BaseModel {
   @column()
   declare identifier: string
   @column()
+  declare isDeletionRequested: boolean | null
+  @column()
   declare name: string
+  @column()
+  declare requestedDeletionByUserId: number | null
   @column()
   declare sector: string
   @column()
   declare status: string
+  @column()
+  declare teamId: number | null
   @column()
   declare type: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
@@ -129,8 +150,6 @@ export class UserSchema extends BaseModel {
   declare createdAt: DateTime
   @column()
   declare email: string
-  @column()
-  declare followedTeam: string | null
   @column()
   declare followedTeamId: number | null
   @column()

@@ -9,6 +9,7 @@ export default class User extends compose(UserSchema, withAuthFinder(hash)) {
   declare points: number
   declare level: UserLevel
   declare role: UserRole
+  declare followedTeamId: number | null
 
   hasRole(required: UserRole) {
     return hasMinimumRole(this.role, required)

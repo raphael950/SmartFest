@@ -99,14 +99,14 @@ const FlagsPage = ({ flags }: InertiaProps<FlagsPageProps>) => {
             {flags.length === 0 ? (
               <p className="flags-history__empty">Aucun drapeau enregistré.</p>
             ) : (
-              flags.map((flag) => (
+              flags.map((flag: Flag) => (
                 <article key={flag.id} className="flag-card">
                   <div className="flag-card__header">
                     <div className="flag-card__time">
                       <Clock size={14} /> {formatTime(flag.createdAt)}
                     </div>
                     <span className={`flag-card__badge flag-card__badge--${flag.color}`}>
-                      {COLOR_LABELS[flag.color] ?? flag.color}
+                      {COLOR_LABELS[flag.color as FlagColor] ?? flag.color}
                     </span>
                   </div>
                   <div className="flag-card__details">

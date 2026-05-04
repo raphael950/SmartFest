@@ -4,6 +4,7 @@ import { Briefcase, Cake, Sparkles, Trophy, UserRound, VenusAndMars } from 'luci
 import { useEffect, useState } from 'react'
 import profileBg from '~/images/profile/profile-bg.jpg'
 import ProfileEditModal from '@/components/profile/ProfileEditModal'
+import type { TeamOption } from '@/components/profile/ProfileEditForm'
 import '~/css/pages/auth/profile.css'
 import { UserLevelProgress } from '#services/user_level_service'
 
@@ -15,7 +16,7 @@ type PublicProfile = {
   gender: string | null
   birthDate: string | null
   jobTitle: string | null
-  followedTeam: string | null
+  followedTeamId: number | null
   points: number
   level: 'debutant' | 'intermediaire' | 'avance' | 'expert'
   levelLabel: string
@@ -24,6 +25,7 @@ type PublicProfile = {
 
 type ProfilePageProps = {
   profile: PublicProfile
+  teams: TeamOption[]
   canEdit: boolean
 }
 
@@ -75,11 +77,14 @@ const splitIdentity = (fullName: string | null, pseudo: string | null) => {
   return { firstName, lastName }
 }
 
-export default function ProfileShow({ profile, canEdit }: InertiaProps<ProfilePageProps>) {
+export default function ProfileShow({ profile, teams, canEdit }: InertiaProps<ProfilePageProps>) {
   const [isAvatarBroken, setIsAvatarBroken] = useState(false)
   const [isEditOpen, setIsEditOpen] = useState(false)
   const age = computeAge(profile.birthDate)
   const identity = splitIdentity(profile.fullName, profile.pseudo)
+  const followedTeamName = profile.followedTeamId
+    ? teams.find((t: TeamOption) => t.id === profile.followedTeamId)?.name ?? null
+    : null
 
   useEffect(() => {
     setIsAvatarBroken(false)
@@ -146,7 +151,7 @@ export default function ProfileShow({ profile, canEdit }: InertiaProps<ProfilePa
               <VenusAndMars size={16} />
             </span>
             <div>
-              <p className="profile-item-label">Sexe / Genre</p>
+              <p className="profile-item-label">Sexe</p>
               <p className="profile-item-value">{profile.gender || 'Non renseigne'}</p>
             </div>
           </article>
@@ -201,15 +206,17 @@ export default function ProfileShow({ profile, canEdit }: InertiaProps<ProfilePa
             </div>
           </article>
 
-          <article className="profile-item">
-            <span className="profile-item-icon">
-              <Trophy size={16} />
-            </span>
-            <div>
-              <p className="profile-item-label">Equipe suivie</p>
-              <p className="profile-item-value">{profile.followedTeam || 'Non renseignee'}</p>
-            </div>
-          </article>
+          {followedTeamName ? (
+            <article className="profile-item">
+              <span className="profile-item-icon">
+                <Trophy size={16} />
+              </span>
+              <div>
+                <p className="profile-item-label">Equipe suivie</p>
+                <p className="profile-item-value">{followedTeamName}</p>
+              </div>
+            </article>
+          ) : null}
         </div>
 
         <div className="profile-actions">
@@ -235,13 +242,15 @@ export default function ProfileShow({ profile, canEdit }: InertiaProps<ProfilePa
             gender: profile.gender,
             birthDate: profile.birthDate,
             jobTitle: profile.jobTitle,
-            followedTeam: profile.followedTeam,
+            followedTeamId: profile.followedTeamId,
+            followedTeamName: followedTeamName,
             avatarUrl: profile.avatarUrl,
             points: profile.points,
             level: profile.level,
             levelLabel: profile.levelLabel,
             levelProgress: profile.levelProgress
           }}
+          teams={teams}
           hasPublicProfile={Boolean(profile.pseudo)}
         />
       ) : null}

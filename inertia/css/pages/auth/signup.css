@@ -55,6 +55,10 @@
   gap: 10px;
 }
 
+.auth-page.signup-page .signup-grid-two .field:only-child {
+  grid-column: 1 / -1;
+}
+
 .auth-page.signup-page .signup-columns .signup-section {
   margin-top: 0;
   border: 1px solid color-mix(in srgb, var(--auth-card-border) 80%, transparent);
@@ -153,8 +157,15 @@
 /* Avoid horizontal clipping in two columns */
 .auth-page.signup-page .signup-columns .field,
 .auth-page.signup-page .signup-columns .input-wrap,
-.auth-page.signup-page .signup-columns input {
+.auth-page.signup-page .signup-columns input,
+.auth-page.signup-page .signup-columns select {
   min-width: 0;
+}
+
+.auth-page.signup-page select {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 48px;
 }
 
 @media (max-width: 900px) {

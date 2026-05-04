@@ -212,19 +212,19 @@ const IncidentsPage = ({ incidents }: InertiaProps<IncidentsPageProps>) => {
           {incidents.length === 0 ? (
             <p className="incidents-timeline__empty">Aucun incident enregistré.</p>
           ) : (
-            incidents.map((incident) => (
+            incidents.map((incident: Incident) => (
               <article key={incident.id} className={`incident-card incident-card--${incident.severity}`}>
                 <div className="incident-card__header">
                   <div className="incident-card__meta">
                     <span className="incident-card__time">{formatTime(incident.createdAt)}</span>
                     <span className={`incident-card__badge incident-card__badge--${incident.severity}`}>
-                      {SEVERITY_LABELS[incident.severity]}
+                      {SEVERITY_LABELS[incident.severity as IncidentSeverity]}
                     </span>
                   </div>
                   <span className="incident-card__sector">{formatSector(incident.sector)}</span>
                 </div>
 
-                <p className="incident-card__type">{TYPE_LABELS[incident.type]}</p>
+                <p className="incident-card__type">{TYPE_LABELS[incident.type as IncidentType]}</p>
                 <p className="incident-card__vehicles">Véhicules: {incident.vehicles}</p>
 
                 <div className="incident-card__description">{incident.description}</div>
