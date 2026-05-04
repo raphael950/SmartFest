@@ -1,6 +1,6 @@
 import { ChevronRight } from 'lucide-react'
 import type { CSSProperties } from 'react'
-import { useState, useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './live-timing.base.css'
 import './DriverRow.css'
 import type { Driver } from '@/types/live-timing.types'
@@ -23,29 +23,34 @@ interface DriverRowProps {
   rank: number
   columnCount: number
   isSelected: boolean
-  onSelect: () => void
 }
 
-export default function DriverRow({ driver, rank, columnCount, isSelected, onSelect }: DriverRowProps) {
+export default function DriverRow({ driver, rank, columnCount, isSelected }: DriverRowProps) {
   const [expanded, setExpanded] = useState(false)
+  const rowRef = useRef<HTMLTableRowElement>(null)
   const hasGps = driver.hasGps === true
   const gpsActive = driver.gpsActive === true
   const gpsRevealPending = driver.gpsRevealPending === true
   const isPit = hasGps && !gpsActive
   const isNoGps = !hasGps
 
-  // Ouvre automatiquement si sélectionné depuis le TrackDisplay
   useEffect(() => {
-    if (isSelected) setExpanded(true)
+    setExpanded(isSelected)
+  }, [isSelected])
+
+  useEffect(() => {
+    if (!isSelected) return
+
+    const rafId = window.requestAnimationFrame(() => {
+      rowRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    })
+
+    return () => window.cancelAnimationFrame(rafId)
   }, [isSelected])
 
   const handleClick = () => {
     const next = !expanded
     setExpanded(next)
-    // Si on ferme manuellement, on désélectionne aussi
-    if (!next && isSelected) onSelect()
-    // Si on ouvre, on sélectionne
-    if (next) onSelect()
   }
 
   const posBadgeClass =
@@ -62,6 +67,7 @@ export default function DriverRow({ driver, rank, columnCount, isSelected, onSel
   return (
     <>
       <tr
+        ref={rowRef}
         className={`lt-driver-row${expanded ? ' lt-driver-row--active' : ''}${isSelected ? ' lt-driver-row--selected' : ''}${isNoGps ? ' lt-driver-row--no-gps' : ''}${isPit ? ' lt-driver-row--pit' : ''}${gpsRevealPending ? ' lt-driver-row--pending' : ''}`}
         onClick={handleClick}
         onKeyDown={(event) => {

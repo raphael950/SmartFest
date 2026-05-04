@@ -79,7 +79,6 @@ export default function LiveTimingPanel({ circuitPath }: LiveTimingPanelProps) {
             <Leaderboard
               drivers={drivers}
               selectedDriverId={selectedDriverId}
-              onDriverSelect={(id) => setSelectedDriverId((prev) => prev === id ? null : id)}
             />
           </ResizablePanel>
         </ResizablePanelGroup>
