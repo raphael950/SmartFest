@@ -1,11 +1,11 @@
 import { UserSchema } from '#database/schema'
 import type { UserLevel } from '#services/user_level_service'
 import { hasMinimumRole, type UserRole } from '#models/user_role'
-import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
+import hash from '@adonisjs/core/services/hash'
 
-export default class User extends compose(UserSchema, withAuthFinder(hash)) {
+export default class User extends compose(UserSchema, withAuthFinder(() => hash.use())) {
   declare points: number
   declare level: UserLevel
   declare role: UserRole
