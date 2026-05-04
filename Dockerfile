@@ -17,6 +17,10 @@ COPY . .
 # Build l'app AdonisJS (ignore les erreurs TS)
 RUN npm run build -- --ignore-ts-errors
 
+# Ensure frontend assets are available in /app/public (some builds output to build/public)
+RUN mkdir -p public \
+    && if [ -d build/public ]; then cp -r build/public/* public/; fi
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Stage 2: Production
 # ──────────────────────────────────────────────────────────────────────────────
