@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import type { Driver, FlagState } from '@/types/live-timing.types'
+import type { RaceState } from '@/types/race-state.types'
 import './TrackDisplay.css'
 
 interface TrackDisplayProps {
   circuitPath: string
   drivers: Driver[]
   flag: FlagState
+  raceState?: RaceState
   selectedDriverId: number | null
   onDriverClick: (id: number) => void
 }
@@ -21,7 +23,7 @@ const MIN_SCALE = 1
 const MAX_SCALE = 8
 const ZOOM_SENSITIVITY = 0.005
 
-export default function TrackDisplay({ circuitPath, drivers, flag, selectedDriverId, onDriverClick }: TrackDisplayProps) {
+export default function TrackDisplay({ circuitPath, drivers, flag, raceState, selectedDriverId, onDriverClick }: TrackDisplayProps) {
   const pathRef = useRef<SVGPathElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
   const [totalLength, setTotalLength] = useState(0)

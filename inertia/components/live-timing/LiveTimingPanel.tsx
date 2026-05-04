@@ -18,8 +18,9 @@ export default function LiveTimingPanel({ circuitPath }: LiveTimingPanelProps) {
   const [isStacked, setIsStacked] = useState(false)
   const [selectedDriverId, setSelectedDriverId] = useState<number | null>(null)
 
-  const { drivers, flag: wsFlag, isConnected, error } = useRaceWebSocket()
+  const { drivers, flag: wsFlag, raceState, isConnected, error } = useRaceWebSocket()
   const flag: FlagState = wsFlag ?? DEFAULT_FLAG
+  const isRaceRunning = raceState?.status === 'running'
 
   useEffect(() => {
     const mq = window.matchMedia(`(max-width: ${STACKED_BREAKPOINT}px)`)
@@ -34,6 +35,16 @@ export default function LiveTimingPanel({ circuitPath }: LiveTimingPanelProps) {
       <div className="lt-panel-header">
         <h1 className="lt-panel-title">Bugatti Circuit Le Mans</h1>
         <p className="lt-panel-subtitle">Circuit automobile Le Mans Bugatti</p>
+        {!isRaceRunning && (
+          <p style={{ color: '#ef4444', fontSize: '0.85rem', marginTop: 6, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            🛑 COURSE ARRÊTÉE
+          </p>
+        )}
+        {isRaceRunning && (
+          <p style={{ color: '#22c55e', fontSize: '0.85rem', marginTop: 6, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            🏁 COURSE EN COURS
+          </p>
+        )}
         {error && (
           <p className="lt-panel-error" style={{ color: '#f87171', fontSize: '0.8rem', marginTop: 4 }}>
             ⚠️ {error}
@@ -60,6 +71,7 @@ export default function LiveTimingPanel({ circuitPath }: LiveTimingPanelProps) {
               circuitPath={circuitPath}
               drivers={drivers}
               flag={flag}
+              raceState={raceState}
               selectedDriverId={selectedDriverId}
               onDriverClick={(id) => setSelectedDriverId((prev) => prev === id ? null : id)}
             />
