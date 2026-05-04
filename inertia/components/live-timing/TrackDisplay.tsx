@@ -113,8 +113,12 @@ export default function TrackDisplay({ circuitPath, drivers, flag, selectedDrive
   }
 
   const viewBoxStr = `${transform.x} ${transform.y} ${baseViewBox.w / transform.scale} ${baseViewBox.h / transform.scale}`
-  const trackDrivers = drivers.filter((driver) => driver.gpsActive === true && driver.gpsRevealPending !== true)
-  const pitDrivers = drivers.filter((driver) => driver.hasGps === true && driver.gpsActive !== true && driver.gpsRevealPending !== true)
+  const trackDrivers = drivers.filter((driver) => {
+    if (driver.gpsActive === true) return true
+    if (driver.hasGps === true && driver.gpsRevealPending === false) return true
+    return false
+  })
+  const pitDrivers = drivers.filter((driver) => driver.gpsRevealPending === true)
   const pitAnchor = getPointAt(0.985)
 
   return (
