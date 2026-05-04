@@ -11,6 +11,15 @@
   flex-shrink: 0;
 }
 
+@media (max-width: 640px) {
+  .lt-pos-badge {
+    width: 24px;
+    height: 24px;
+    font-size: 0.72rem;
+    border-radius: 4px;
+  }
+}
+
 .lt-pos-badge--1 {
   background: var(--lt-red);
   color: #fff;
@@ -137,6 +146,12 @@
   text-overflow: ellipsis;
 }
 
+@media (max-width: 640px) {
+  .lt-driver-team-name {
+    font-size: 0.8rem;
+  }
+}
+
 .lt-driver-team-code {
   font-family: var(--lt-font-mono);
   font-size: 0.68rem;
@@ -148,6 +163,12 @@
   font-family: var(--lt-font-mono);
   font-size: 0.8rem;
   color: var(--lt-white);
+}
+
+@media (max-width: 640px) {
+  .lt-driver-mono {
+    font-size: 0.7rem;
+  }
 }
 
 .lt-driver-mono.is-leader {
@@ -205,6 +226,14 @@
   padding: 14px 14px 0 68px;
 }
 
+@media (max-width: 640px) {
+  .lt-driver-detail-summary {
+    grid-template-columns: 1fr;
+    padding-left: 14px;
+    gap: 8px;
+  }
+}
+
 .lt-driver-detail-card {
   display: flex;
   flex-direction: column;
@@ -213,6 +242,14 @@
   border: 1px solid var(--lt-border);
   border-radius: 10px;
   background: color-mix(in srgb, var(--lt-bg-row) 90%, transparent);
+}
+
+@media (max-width: 640px) {
+  .lt-driver-detail-card {
+    padding: 8px 10px;
+    gap: 3px;
+    border-radius: 8px;
+  }
 }
 
 .lt-driver-detail-label {
@@ -241,12 +278,26 @@
   padding: 12px 14px 14px 68px;
 }
 
+@media (max-width: 640px) {
+  .lt-driver-sector-list {
+    padding: 12px 8px 14px 8px;
+    gap: 6px;
+  }
+}
+
 .lt-driver-sector-item {
   min-width: 72px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
+}
+
+@media (max-width: 640px) {
+  .lt-driver-sector-item {
+    min-width: 56px;
+    gap: 2px;
+  }
 }
 
 .lt-driver-sector-label {
@@ -257,6 +308,13 @@
   color: var(--lt-muted);
 }
 
+@media (max-width: 640px) {
+  .lt-driver-sector-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.06em;
+  }
+}
+
 .lt-sector-pill {
   font-family: var(--lt-font-mono);
   font-size: 0.72rem;
@@ -265,6 +323,13 @@
   border-radius: 6px;
   letter-spacing: 0.04em;
   transition: background 0.2s ease, color 0.2s ease;
+}
+
+@media (max-width: 640px) {
+  .lt-sector-pill {
+    font-size: 0.65rem;
+    padding: 2px 6px;
+  }
 }
 
 .lt-sector-pill--normal {
@@ -293,23 +358,14 @@
 }
 
 @media (max-width: 900px) {
-  .lt-driver-detail-summary {
-    grid-template-columns: 1fr;
-  }
-
-  .lt-driver-detail-summary,
-  .lt-driver-sector-list {
-    padding-left: 14px;
-  }
-
   .lt-sector-drawer--open {
     max-height: 420px;
   }
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 768px) {
   .lt-sector-drawer--open {
-    max-height: 380px;
+    max-height: 360px;
   }
 }
 

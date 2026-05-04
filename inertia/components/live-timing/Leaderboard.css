@@ -53,6 +53,22 @@
   text-align: center;
 }
 
+@media (max-width: 640px) {
+  .lt-leaderboard__col--pos {
+    width: 40px;
+  }
+
+  .lt-leaderboard__col--team {
+    width: 120px;
+    min-width: 120px;
+  }
+
+  .lt-leaderboard__col--laps,
+  .lt-leaderboard__col--gap {
+    width: 60px;
+  }
+}
+
 .lt-leaderboard__empty {
   padding: 22px 12px;
   text-align: center;

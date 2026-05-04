@@ -57,7 +57,7 @@ export default function Leaderboard({ drivers, selectedDriverId }: LeaderboardPr
       badge={<span className="lt-leaderboard__badge">LIVE</span>}
       scrollClassName="lt-leaderboard__scroll"
       tableClassName="lt-leaderboard__table"
-      tableStyle={{ minWidth: 500 }}
+      tableStyle={{ minWidth: '100%', maxWidth: '100%' }}
     >
       {enrichedDrivers.length === 0 ? (
         <tr>
