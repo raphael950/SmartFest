@@ -39,20 +39,20 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/new_account_controller').default['create']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/new_account_controller').default['create']>>>
+      response: unknown
+      errorResponse: unknown
     }
   }
   'new_account.store': {
     methods: ["POST"]
     pattern: '/signup'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/user').signupValidator)>>
+      body: {}
       paramsTuple: []
       params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/user').signupValidator)>>
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/new_account_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/new_account_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+      query: {}
+      response: unknown
+      errorResponse: unknown
     }
   }
   'session.create': {
@@ -63,8 +63,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/session_controller').default['create']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/session_controller').default['create']>>>
+      response: unknown
+      errorResponse: unknown
     }
   }
   'session.store': {
@@ -75,8 +75,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/session_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/session_controller').default['store']>>>
+      response: unknown
+      errorResponse: unknown
     }
   }
   'profile.me': {
@@ -159,8 +159,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/session_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/session_controller').default['destroy']>>>
+      response: unknown
+      errorResponse: unknown
     }
   }
   'admin.users.index': {
@@ -255,8 +255,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/flags_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/flags_controller').default['index']>>>
+      response: unknown
+      errorResponse: unknown
     }
   }
   'flags.store': {
@@ -267,8 +267,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/flags_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/flags_controller').default['store']>>>
+      response: unknown
+      errorResponse: unknown
     }
   }
   'objets': {
@@ -279,8 +279,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['index']>>>
+      response: unknown
+      errorResponse: unknown
     }
   }
   'objets.store': {
@@ -291,8 +291,8 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['store']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['store']>>>
+      response: unknown
+      errorResponse: unknown
     }
   }
   'objets.update': {
@@ -303,8 +303,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { identifier: ParamValue }
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['update']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['update']>>>
+      response: unknown
+      errorResponse: unknown
     }
   }
   'objets.destroy': {
@@ -315,8 +315,8 @@ export interface Registry {
       paramsTuple: [ParamValue]
       params: { identifier: ParamValue }
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['destroy']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['destroy']>>>
+      response: unknown
+      errorResponse: unknown
     }
   }
 }
