@@ -4,6 +4,7 @@
  */
 
 export const controllers = {
+  Admin: () => import('#controllers/admin_controller'),
   AdminUsers: () => import('#controllers/admin_users_controller'),
   ConnectedObjects: () => import('#controllers/connected_objects_controller'),
   Flags: () => import('#controllers/flags_controller'),

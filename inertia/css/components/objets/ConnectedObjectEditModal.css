@@ -45,6 +45,13 @@
   gap: 6px;
 }
 
+.iot-edit-modal__hint {
+  margin: -2px 0 0;
+  color: color-mix(in srgb, var(--shell-fg) 72%, var(--shell-border));
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
 .iot-edit-modal__select {
   height: 40px;
   border-radius: 8px;

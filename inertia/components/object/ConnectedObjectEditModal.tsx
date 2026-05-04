@@ -9,9 +9,10 @@ const emptyFormState: ConnectedObjectEditableFields = {
   type: 'CAM',
   status: 'online',
   sector: 'S1',
+  teamId: null,
 }
 
-const ConnectedObjectEditModal = ({ open, device, onClose, onSave }: ConnectedObjectEditModalProps) => {
+const ConnectedObjectEditModal = ({ open, device, teams, onClose, onSave }: ConnectedObjectEditModalProps) => {
   const handleSubmit = (values: ConnectedObjectEditableFields) => {
     if (!device) {
       return
@@ -34,9 +35,11 @@ const ConnectedObjectEditModal = ({ open, device, onClose, onSave }: ConnectedOb
               type: device.type,
               status: device.status,
               sector: device.sector,
+              teamId: device.teamId,
             }
           : emptyFormState
       }
+      teams={teams}
       identifier={device?.identifier}
       idPrefix="iot-edit"
       onSubmit={handleSubmit}

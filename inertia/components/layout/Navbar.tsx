@@ -37,7 +37,7 @@ const NAV_ITEMS: RoleNavItem[] = [
   { label: 'Gestion Drapeaux', icon: Flag, href: '/drapeaux', minRole: 'complexe' },
   { label: 'Gestion Incidents', icon: AlertTriangle, route: 'incidents', minRole: 'complexe' },
   { label: 'Objets', icon: BarChart3, route: 'objets', minRole: 'complexe' },
-  { label: 'Admin', icon: Shield, href: '/admin/users', minRole: 'admin' },
+  { label: 'Admin', icon: Shield, href: '/admin', minRole: 'admin' },
 ]
 
 const PATH_MATCHERS: Array<{
@@ -63,8 +63,12 @@ const PATH_MATCHERS: Array<{
   },
   { label: 'Objets', test: (pathname) => pathname === '/objets' || pathname.startsWith('/objets/') },
   {
-    label: 'Admin',
+    label: 'Admin Users',
     test: (pathname) => pathname === '/admin/users' || pathname.startsWith('/admin/users/'),
+  },
+  {
+    label: 'Admin Objets',
+    test: (pathname) => pathname === '/admin/objets' || pathname.startsWith('/admin/objets/'),
   },
 ]
 

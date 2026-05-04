@@ -140,7 +140,7 @@ export class TeamSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = ['avatarPath', 'birthDate', 'createdAt', 'email', 'followedTeam', 'followedTeamId', 'fullName', 'gender', 'id', 'isVerified', 'jobTitle', 'level', 'level', 'password', 'points', 'points', 'pseudo', 'role', 'updatedAt'] as const
+  static $columns = ['avatarPath', 'birthDate', 'createdAt', 'email', 'followedTeam', 'followedTeamId', 'fullName', 'gender', 'id', 'isVerified', 'jobTitle', 'level', 'password', 'points', 'pseudo', 'role', 'updatedAt'] as const
   $columns = UserSchema.$columns
   @column()
   declare avatarPath: string | null

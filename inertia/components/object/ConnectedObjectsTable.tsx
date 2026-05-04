@@ -1,6 +1,7 @@
-import { router } from '@inertiajs/react'
+import { router, usePage } from '@inertiajs/react'
 import { Plus, Power, RefreshCw, Search, Trash2, Wifi } from 'lucide-react'
 import { useMemo, useState } from 'react'
+import type { Data } from '@generated/data'
 import '@/css/components/objets/ConnectedObjectsTable.css'
 import ConnectedObjectEditModal from '@/components/object/ConnectedObjectEditModal'
 import ConnectedObjectCreateModal from '@/components/object/ConnectedObjectCreateModal'
@@ -15,10 +16,12 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import type { ConnectedObjectEditableFields } from '@/types/connected-object-edit-modal.types'
-import { ConnectedObject, DeviceStatus } from '@/types/connected-objects.types'
+import { ConnectedObject, DeviceStatus, PendingDeletionRequest, TeamOption } from '@/types/connected-objects.types'
 
 type ConnectedObjectsTableProps = {
   devices: ConnectedObject[]
+  teams: TeamOption[]
+  pendingDeletionRequests: PendingDeletionRequest[]
 }
 
 type DeviceFilter = 'all' | 'online' | 'warning' | 'offline' | 'maintenance'
@@ -82,7 +85,10 @@ const getMeterSegments = (value: number, max = 100, segments = 5) => {
 
 const canToggleAvailability = (status: DeviceStatus) => status === 'online' || status === 'offline'
 
-const ConnectedObjectsTable = ({ devices: initialDevices }: ConnectedObjectsTableProps) => {
+const ConnectedObjectsTable = ({ devices: initialDevices, teams, pendingDeletionRequests }: ConnectedObjectsTableProps) => {
+  const page = usePage<Data.SharedProps>()
+  const currentRole = String((page.props.user as { role?: string } | undefined)?.role || '').toLowerCase()
+  const isAdmin = currentRole === 'admin'
   const [activeFilter, setActiveFilter] = useState<DeviceFilter>('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [isEditOpen, setIsEditOpen] = useState(false)
@@ -145,18 +151,12 @@ const ConnectedObjectsTable = ({ devices: initialDevices }: ConnectedObjectsTabl
     })
   }
 
-  const handleDelete = (identifier: string) => {
-    if (!identifier) {
-      return
-    }
+  const approveDeleteRequest = (deviceId: number) => {
+    router.post(`/admin/objets/${deviceId}/approve-destroy`, {}, { preserveScroll: true })
+  }
 
-    router.delete(getObjectPath(identifier), {
-      preserveScroll: true,
-      onSuccess: () => {
-        closeEditModal()
-        setDeleteCandidate(null)
-      },
-    })
+  const rejectDeleteRequest = (deviceId: number) => {
+    router.post(`/admin/objets/${deviceId}/reject-destroy`, {}, { preserveScroll: true })
   }
 
   const handleToggleAvailability = (device: ConnectedObject) => {
@@ -170,6 +170,7 @@ const ConnectedObjectsTable = ({ devices: initialDevices }: ConnectedObjectsTabl
       type: device.type,
       sector: device.sector,
       status: nextStatus,
+      teamId: device.teamId,
     }
 
     handleUpdate(device.identifier, updates)
@@ -211,6 +212,7 @@ const ConnectedObjectsTable = ({ devices: initialDevices }: ConnectedObjectsTabl
         device.identifier,
         device.type,
         device.sector,
+        device.teamName ?? 'fia direction de course',
         statusLabel[device.status],
         device.firmware,
       ]
@@ -284,12 +286,44 @@ const ConnectedObjectsTable = ({ devices: initialDevices }: ConnectedObjectsTabl
         </div>
       </div>
 
+      {isAdmin && pendingDeletionRequests.length > 0 ? (
+        <div className="iot-registry__toolbar iot-pending-toolbar">
+          <div className="iot-registry__filters iot-pending-toolbar__content">
+            <strong className="iot-pending-toolbar__title">Demandes de suppression en attente: {pendingDeletionRequests.length}</strong>
+            {pendingDeletionRequests.map((request) => (
+              <div key={request.id} className="iot-action-cell iot-pending-request-item">
+                <span className="iot-table__muted">
+                  {request.name} ({request.identifier}) - demande par {request.requestedBy}
+                </span>
+                <button
+                  type="button"
+                  className="iot-action-btn iot-action-btn--text is-toggle"
+                  aria-label={`Valider suppression ${request.identifier}`}
+                  onClick={() => approveDeleteRequest(request.id)}
+                >
+                  Valider
+                </button>
+                <button
+                  type="button"
+                  className="iot-action-btn iot-action-btn--text"
+                  aria-label={`Rejeter suppression ${request.identifier}`}
+                  onClick={() => rejectDeleteRequest(request.id)}
+                >
+                  Rejeter
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : null}
+
       <div className="iot-table-wrap">
         <table className="iot-table">
           <thead>
             <tr>
               <th>OBJET</th>
               <th>TYPE</th>
+              <th>EQUIPE</th>
               <th>SECTEUR</th>
               <th>STATUT</th>
               <th>BATTERIE</th>
@@ -302,7 +336,7 @@ const ConnectedObjectsTable = ({ devices: initialDevices }: ConnectedObjectsTabl
           <tbody>
             {filteredDevices.length === 0 ? (
               <tr>
-                <td className="iot-table__empty" colSpan={9}>
+                <td className="iot-table__empty" colSpan={10}>
                   Aucun objet ne correspond a la recherche.
                 </td>
               </tr>
@@ -322,12 +356,22 @@ const ConnectedObjectsTable = ({ devices: initialDevices }: ConnectedObjectsTabl
                   role="button"
                   aria-label={`Modifier ${device.name}`}
                 >
-                  <td className="iot-table__id">{device.name}</td>
+                  <td className="iot-table__id">
+                    <div className="iot-table__id-stack">
+                      <span>{device.name}</span>
+                      {device.isDeletionRequested ? (
+                        <span className="iot-pending-badge" title={`Demande en attente${device.requestedDeletionByUserName ? ` (${device.requestedDeletionByUserName})` : ''}`}>
+                          EN ATTENTE VALIDATION ADMIN
+                        </span>
+                      ) : null}
+                    </div>
+                  </td>
                   <td>
-                    <span className={`iot-pill iot-pill--type ${device.type === 'LED' ? 'is-led' : 'is-cam'}`}>
+                    <span className={`iot-pill iot-pill--type ${device.type.toLowerCase()}`}>
                       {device.type}
                     </span>
                   </td>
+                  <td className="iot-table__muted">{device.teamName ?? 'FIA / Direction de course'}</td>
                   <td className="iot-table__muted">{device.sector}</td>
                   <td>
                     <span className={`iot-pill iot-pill--status ${statusClass[device.status]}`}>
@@ -409,7 +453,13 @@ const ConnectedObjectsTable = ({ devices: initialDevices }: ConnectedObjectsTabl
                       <button
                         type="button"
                         className="iot-action-btn is-delete"
-                        aria-label={`Supprimer ${device.name}`}
+                        aria-label={isAdmin ? `Supprimer ${device.name}` : `Demander suppression ${device.name}`}
+                        disabled={device.isDeletionRequested}
+                        title={
+                          device.isDeletionRequested
+                            ? `Demande en attente${device.requestedDeletionByUserName ? ` (${device.requestedDeletionByUserName})` : ''}`
+                            : (isAdmin ? 'Supprimer' : 'Demander validation admin')
+                        }
                         onClick={(event) => {
                           event.stopPropagation()
                           openDeleteConfirm(device)
@@ -429,20 +479,26 @@ const ConnectedObjectsTable = ({ devices: initialDevices }: ConnectedObjectsTabl
       <ConnectedObjectEditModal
         open={isEditOpen}
         device={selectedDevice}
+        teams={teams}
         onClose={closeEditModal}
         onSave={handleUpdate}
       />
 
-      <ConnectedObjectCreateModal open={isCreateOpen} onClose={closeCreateModal} onCreate={handleCreate} />
+      <ConnectedObjectCreateModal
+        open={isCreateOpen}
+        teams={teams}
+        onClose={closeCreateModal}
+        onCreate={handleCreate}
+      />
 
       <AlertDialog open={Boolean(deleteCandidate)} onOpenChange={(open) => !open && closeDeleteConfirm()}>
-        <AlertDialogContent>
+            <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Supprimer cet objet ?</AlertDialogTitle>
             <AlertDialogDescription>
-              Cette action est irreversible. L&apos;objet
+              {isAdmin ? 'Cette action est irreversible. L\'objet' : 'Cette demande sera envoyee a un administrateur pour validation de suppression de l\'objet'}
               {deleteCandidate ? ` ${deleteCandidate.name}` : ''}
-              {' '}sera supprime definitivement.
+              {isAdmin ? ' sera supprime definitivement.' : '.'}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -453,10 +509,23 @@ const ConnectedObjectsTable = ({ devices: initialDevices }: ConnectedObjectsTabl
                 if (!deleteCandidate) {
                   return
                 }
-                handleDelete(deleteCandidate.identifier)
+
+                if (isAdmin) {
+                  // Admins approve immediately via admin endpoint
+                  approveDeleteRequest((deleteCandidate as any).id)
+                } else {
+                  // Non-admins send a deletion request
+                  router.post(`${getObjectPath(deleteCandidate.identifier)}/request-delete`, {}, {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                      closeEditModal()
+                      setDeleteCandidate(null)
+                    },
+                  })
+                }
               }}
             >
-              Supprimer
+              {isAdmin ? 'Supprimer' : 'Envoyer la demande'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

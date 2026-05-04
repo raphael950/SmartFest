@@ -265,6 +265,27 @@
   letter-spacing: 0.05em;
 }
 
+.iot-table__id-stack {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.iot-pending-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 18px;
+  padding: 0 8px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--shell-accent) 55%, transparent);
+  background: color-mix(in srgb, var(--shell-accent) 12%, transparent);
+  color: color-mix(in srgb, var(--shell-accent) 72%, var(--racing-yellow-light));
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+
 .iot-table__muted {
   color: var(--shell-muted);
 }
@@ -282,6 +303,28 @@
   gap: 6px;
 }
 
+.iot-pending-toolbar {
+  margin-bottom: 0.75rem;
+}
+
+.iot-pending-toolbar__content {
+  width: 100%;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.iot-pending-toolbar__title {
+  color: color-mix(in srgb, var(--shell-accent) 65%, var(--racing-yellow-light));
+}
+
+.iot-pending-request-item {
+  background: color-mix(in srgb, var(--shell-menu-bg) 74%, transparent);
+  border: 1px solid color-mix(in srgb, var(--shell-border) 85%, transparent);
+  padding: 0.4rem 0.6rem;
+  border-radius: 10px;
+}
+
 .iot-action-btn {
   border: 1px solid color-mix(in srgb, var(--shell-border) 85%, transparent);
   width: 30px;
@@ -294,6 +337,14 @@
   justify-content: center;
   cursor: pointer;
   transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.iot-action-btn--text {
+  width: auto;
+  min-width: 66px;
+  padding: 0 10px;
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
 }
 
 .iot-action-btn:hover {
@@ -352,13 +403,19 @@
   letter-spacing: 0.12em;
 }
 
-.iot-pill--type.is-cam {
+.iot-pill--type.cam {
   color: var(--racing-blue);
   border-color: color-mix(in srgb, var(--racing-blue) 60%, transparent);
   background: color-mix(in srgb, var(--racing-blue) 15%, transparent);
 }
 
-.iot-pill--type.is-led {
+.iot-pill--type.gps {
+  color: var(--racing-violet);
+  border-color: color-mix(in srgb, var(--racing-violet) 60%, transparent);
+  background: color-mix(in srgb, var(--racing-violet) 15%, transparent);
+}
+
+.iot-pill--type.led {
   color: var(--racing-yellow);
   border-color: color-mix(in srgb, var(--racing-yellow) 55%, transparent);
   background: color-mix(in srgb, var(--racing-yellow) 15%, transparent);

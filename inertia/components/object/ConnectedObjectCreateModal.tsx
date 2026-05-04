@@ -7,9 +7,10 @@ const emptyFormState: ConnectedObjectEditableFields = {
   type: 'CAM',
   status: 'online',
   sector: 'S1',
+  teamId: null,
 }
 
-const ConnectedObjectCreateModal = ({ open, onClose, onCreate }: ConnectedObjectCreateModalProps) => {
+const ConnectedObjectCreateModal = ({ open, teams, onClose, onCreate }: ConnectedObjectCreateModalProps) => {
   return (
     <ConnectedObjectFormModal
       open={open}
@@ -18,6 +19,7 @@ const ConnectedObjectCreateModal = ({ open, onClose, onCreate }: ConnectedObject
       description="Creation persistante en base: l&apos;ID et les donnees techniques sont generees automatiquement."
       submitLabel="Ajouter"
       initialValues={emptyFormState}
+      teams={teams}
       onSubmit={onCreate}
       idPrefix="iot-create"
       namePlaceholder="Ex: Camera Virage S2"

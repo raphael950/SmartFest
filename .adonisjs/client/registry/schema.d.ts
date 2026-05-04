@@ -175,6 +175,18 @@ export interface Registry {
       errorResponse: unknown
     }
   }
+  'admin.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/admin_controller').default['index']>>>
+    }
+  }
   'admin.users.password': {
     methods: ["PUT"]
     pattern: '/admin/users/:id/password'
@@ -221,6 +233,42 @@ export interface Registry {
       query: {}
       response: unknown
       errorResponse: unknown
+    }
+  }
+  'admin.objets.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/objets'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['indexAdmin']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['indexAdmin']>>>
+    }
+  }
+  'admin.objets.approve_destroy': {
+    methods: ["POST"]
+    pattern: '/admin/objets/:id/approve-destroy'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['approveDestroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['approveDestroy']>>>
+    }
+  }
+  'admin.objets.reject_destroy': {
+    methods: ["POST"]
+    pattern: '/admin/objets/:id/reject-destroy'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['rejectDestroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['rejectDestroy']>>>
     }
   }
   'incidents': {
@@ -307,16 +355,16 @@ export interface Registry {
       errorResponse: unknown
     }
   }
-  'objets.destroy': {
-    methods: ["DELETE"]
-    pattern: '/objets/:identifier'
+  'objets.request_destroy': {
+    methods: ["POST"]
+    pattern: '/objets/:identifier/request-delete'
     types: {
       body: {}
       paramsTuple: [ParamValue]
       params: { identifier: ParamValue }
       query: {}
-      response: unknown
-      errorResponse: unknown
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['requestDestroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/connected_objects_controller').default['requestDestroy']>>>
     }
   }
 }

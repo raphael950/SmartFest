@@ -14,6 +14,7 @@ export type LeaderboardDriver = Driver & {
   gap: string
   lastLap: string
   bestLap?: string
+  gpsRevealPending?: boolean
   sectors: Array<{ sector: number; time: string; delta: string; status: string }>
 }
 
@@ -27,6 +28,11 @@ interface DriverRowProps {
 
 export default function DriverRow({ driver, rank, columnCount, isSelected, onSelect }: DriverRowProps) {
   const [expanded, setExpanded] = useState(false)
+  const hasGps = driver.hasGps === true
+  const gpsActive = driver.gpsActive === true
+  const gpsRevealPending = driver.gpsRevealPending === true
+  const isPit = hasGps && !gpsActive
+  const isNoGps = !hasGps
 
   // Ouvre automatiquement si sélectionné depuis le TrackDisplay
   useEffect(() => {
@@ -56,7 +62,7 @@ export default function DriverRow({ driver, rank, columnCount, isSelected, onSel
   return (
     <>
       <tr
-        className={`lt-driver-row${expanded ? ' lt-driver-row--active' : ''}${isSelected ? ' lt-driver-row--selected' : ''}`}
+        className={`lt-driver-row${expanded ? ' lt-driver-row--active' : ''}${isSelected ? ' lt-driver-row--selected' : ''}${isNoGps ? ' lt-driver-row--no-gps' : ''}${isPit ? ' lt-driver-row--pit' : ''}${gpsRevealPending ? ' lt-driver-row--pending' : ''}`}
         onClick={handleClick}
         onKeyDown={(event) => {
           if (event.key === 'Enter' || event.key === ' ') {
@@ -84,11 +90,11 @@ export default function DriverRow({ driver, rank, columnCount, isSelected, onSel
         </td>
 
         <td className="lt-driver-cell lt-driver-cell--center">
-          <span className="lt-driver-mono">{driver.lapsCompleted}</span>
+          <span className="lt-driver-mono">{isPit ? 'PIT' : hasGps ? driver.lapsCompleted : '---'}</span>
         </td>
 
         <td className="lt-driver-cell lt-driver-cell--center">
-          <span className={`lt-driver-mono${rank === 1 ? ' is-leader' : ''}`}>{driver.gap}</span>
+          <span className={`lt-driver-mono${rank === 1 && gpsActive ? ' is-leader' : ''}`}>{gpsActive ? driver.gap : '---'}</span>
         </td>
       </tr>
 
@@ -103,13 +109,13 @@ export default function DriverRow({ driver, rank, columnCount, isSelected, onSel
               <div className="lt-driver-detail-card">
                 <span className="lt-driver-detail-label">Dernier tour</span>
                 <span className="lt-driver-detail-value lt-driver-detail-value--mono">
-                  {driver.lastLap}
+                  {gpsActive ? driver.lastLap : '---'}
                 </span>
               </div>
               <div className="lt-driver-detail-card">
                 <span className="lt-driver-detail-label">Meilleur tour</span>
                 <span className="lt-driver-detail-value lt-driver-detail-value--mono">
-                  {driver.bestLap ?? '--:--.---'}
+                  {gpsActive ? driver.bestLap ?? '--:--.---' : '---'}
                 </span>
               </div>
             </div>
@@ -130,7 +136,7 @@ export default function DriverRow({ driver, rank, columnCount, isSelected, onSel
                 return (
                   <div key={sector.sector} className="lt-driver-sector-item">
                     <span className="lt-driver-sector-label">Sector {sector.sector}</span>
-                    <span className={pillClass}>{sector.time}</span>
+                    <span className={pillClass}>{gpsActive ? sector.time : '---'}</span>
                   </div>
                 )
               })}
