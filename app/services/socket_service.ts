@@ -6,6 +6,7 @@ import Flag from '#models/flag'
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type FlagColor = 'vert' | 'jaune' | 'rouge'
+export type RaceStatus = 'stopped' | 'running'
 
 export interface FlagState {
   color: FlagColor
@@ -13,9 +14,15 @@ export interface FlagState {
   sectors: string[]
 }
 
+export interface RaceState {
+  status: RaceStatus
+  startedAt: number | null
+}
+
 // ─── État drapeau par défaut ──────────────────────────────────────────────────
 
 const DEFAULT_FLAG: FlagState = { color: 'vert', sectors: [] }
+const DEFAULT_RACE: RaceState = { status: 'stopped', startedAt: null }
 
 // ─── Logique de merge ─────────────────────────────────────────────────────────
 
@@ -74,6 +81,9 @@ class SocketService {
   /** État courant du drapeau, partagé entre toutes les connexions */
   private flagState: FlagState = { ...DEFAULT_FLAG }
 
+  /** État courant de la course, partagé entre toutes les connexions */
+  private raceState: RaceState = { ...DEFAULT_RACE }
+
   public boot() {
     if (this.io) return
 
@@ -88,6 +98,7 @@ class SocketService {
       const currentState = RaceEngineService.getCurrentState()
       socket.emit('initial_state', {
         drivers: currentState,
+        raceState: this.raceState,
         serverTime: Date.now(),
       })
 
@@ -104,6 +115,7 @@ class SocketService {
 
       // Envoie l'état courant au nouveau connecté
       socket.emit('flag_update', this.flagState)
+      socket.emit('race_state_update', this.raceState)
 
       socket.on('disconnect', () => {
         console.log('👋 Spectateur déconnecté')
@@ -122,17 +134,50 @@ class SocketService {
     return this.flagState
   }
 
+  /**
+   * Démarre la course
+   */
+  public async startRace(): Promise<RaceState> {
+    this.raceState = {
+      status: 'running',
+      startedAt: Date.now(),
+    }
+    await RaceEngineService.startRace()
+    this.io?.emit('race_state_update', this.raceState)
+    return this.raceState
+  }
+
+  /**
+   * Arrête la course et envoie toutes les voitures aux stands
+   */
+  public async stopRace(): Promise<RaceState> {
+    this.raceState = {
+      status: 'stopped',
+      startedAt: null,
+    }
+    // Envoie les voitures aux stands via RaceEngineService
+    await RaceEngineService.sendAllCarsToStandby()
+    this.io?.emit('race_state_update', this.raceState)
+    return this.raceState
+  }
+
   public async refreshLiveTiming(): Promise<void> {
     await RaceEngineService.refreshFromConnectedObjects()
     this.io?.emit('race_update', {
       timestamp: Date.now(),
       drivers: RaceEngineService.getCurrentState(),
+      raceState: this.raceState,
     })
   }
 
   /** Accès direct à l'état courant (utile pour les tests / debug) */
   public getFlagState(): FlagState {
     return this.flagState
+  }
+
+  /** Accès direct à l'état courant de la course */
+  public getRaceState(): RaceState {
+    return this.raceState
   }
 }
 

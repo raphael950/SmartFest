@@ -295,9 +295,9 @@ export interface Registry {
       errorResponse: unknown
     }
   }
-  'flags': {
+  'race': {
     methods: ["GET","HEAD"]
-    pattern: '/drapeaux'
+    pattern: '/course'
     types: {
       body: {}
       paramsTuple: []
@@ -307,9 +307,33 @@ export interface Registry {
       errorResponse: unknown
     }
   }
-  'flags.store': {
+  'race.store': {
     methods: ["POST"]
-    pattern: '/drapeaux'
+    pattern: '/course'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'race.start': {
+    methods: ["POST"]
+    pattern: '/course/start'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'race.stop': {
+    methods: ["POST"]
+    pattern: '/course/stop'
     types: {
       body: {}
       paramsTuple: []

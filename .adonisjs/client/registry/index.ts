@@ -150,17 +150,29 @@ const routes = {
     tokens: [{"old":"/incidents","type":0,"val":"incidents","end":""}],
     types: placeholder as Registry['incidents.store']['types'],
   },
-  'flags': {
+  'race': {
     methods: ["GET","HEAD"],
-    pattern: '/drapeaux',
-    tokens: [{"old":"/drapeaux","type":0,"val":"drapeaux","end":""}],
-    types: placeholder as Registry['flags']['types'],
+    pattern: '/course',
+    tokens: [{"old":"/course","type":0,"val":"course","end":""}],
+    types: placeholder as Registry['race']['types'],
   },
-  'flags.store': {
+  'race.store': {
     methods: ["POST"],
-    pattern: '/drapeaux',
-    tokens: [{"old":"/drapeaux","type":0,"val":"drapeaux","end":""}],
-    types: placeholder as Registry['flags.store']['types'],
+    pattern: '/course',
+    tokens: [{"old":"/course","type":0,"val":"course","end":""}],
+    types: placeholder as Registry['race.store']['types'],
+  },
+  'race.start': {
+    methods: ["POST"],
+    pattern: '/course/start',
+    tokens: [{"old":"/course/start","type":0,"val":"course","end":""},{"old":"/course/start","type":0,"val":"start","end":""}],
+    types: placeholder as Registry['race.start']['types'],
+  },
+  'race.stop': {
+    methods: ["POST"],
+    pattern: '/course/stop',
+    tokens: [{"old":"/course/stop","type":0,"val":"course","end":""},{"old":"/course/stop","type":0,"val":"stop","end":""}],
+    types: placeholder as Registry['race.stop']['types'],
   },
   'objets': {
     methods: ["GET","HEAD"],
