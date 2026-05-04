@@ -4,16 +4,30 @@ export default class extends BaseSchema {
   protected tableName = 'users'
 
   async up() {
-    this.schema.alterTable(this.tableName, (table) => {
-      table.integer('followed_team_id').unsigned().nullable().references('id').inTable('teams').onDelete('SET NULL')
-      table.dropColumn('followed_team')
-    })
+    if (!(await this.db.schema.hasColumn(this.tableName, 'followed_team_id'))) {
+      this.schema.alterTable(this.tableName, (table) => {
+        table.integer('followed_team_id').unsigned().nullable().references('id').inTable('teams').onDelete('SET NULL')
+      })
+    }
+
+    if (await this.db.schema.hasColumn(this.tableName, 'followed_team')) {
+      this.schema.alterTable(this.tableName, (table) => {
+        table.dropColumn('followed_team')
+      })
+    }
   }
 
   async down() {
-    this.schema.alterTable(this.tableName, (table) => {
-      table.string('followed_team', 120).nullable()
-      table.dropColumn('followed_team_id')
-    })
+    if (!(await this.db.schema.hasColumn(this.tableName, 'followed_team'))) {
+      this.schema.alterTable(this.tableName, (table) => {
+        table.string('followed_team', 120).nullable()
+      })
+    }
+
+    if (await this.db.schema.hasColumn(this.tableName, 'followed_team_id')) {
+      this.schema.alterTable(this.tableName, (table) => {
+        table.dropColumn('followed_team_id')
+      })
+    }
   }
 }
