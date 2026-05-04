@@ -1,9 +1,9 @@
 import { Form, Link } from '@adonisjs/inertia/react'
 import { useMemo, useState } from 'react'
 import { Briefcase, CalendarDays, Eye, EyeOff, Lock, Mail, Trophy, User, UserRound, VenusAndMars } from 'lucide-react'
-import type { InertiaProps } from '@/types'
-import type { SignupProps, TeamOption } from '@/types/signup.types'
-import '@/css/pages/auth/signup.css'
+import '~/css/pages/auth/signup.css'
+import type { InertiaProps } from '~/types'
+import type { SignupProps, TeamOption } from '~/types/signup.types'
 
 export default function Signup({ teams }: InertiaProps<SignupProps>) {
   const [showPassword, setShowPassword] = useState(false)
