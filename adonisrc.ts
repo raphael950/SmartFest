@@ -59,7 +59,6 @@ export default defineConfig({
     () => import('@adonisjs/inertia/inertia_provider'),
     () => import('@adonisjs/auth/auth_provider'),
     () => import('#providers/api_provider'),
-    () => import('@adonisjs/redis/redis_provider'),
     () => import('#providers/socket_provider')
   ],
 

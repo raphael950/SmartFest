@@ -31,8 +31,4 @@ export default await Env.create(new URL('../', import.meta.url), {
   PG_USER: Env.schema.string(),
   PG_PASSWORD: Env.schema.string(),
   PG_DB_NAME: Env.schema.string(),
-
-  REDIS_HOST: Env.schema.string({ format: 'host' }),
-  REDIS_PORT: Env.schema.number(),
-  REDIS_PASSWORD: Env.schema.secret.optional()
 })
