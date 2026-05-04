@@ -1,8 +1,9 @@
 import { ChevronRight } from 'lucide-react'
 import type { CSSProperties } from 'react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import './live-timing.base.css'
 import './DriverRow.css'
+import { resolveImageSrc } from '@/lib/home_team_media'
 import type { Driver } from '@/types/live-timing.types'
 
 export type LeaderboardDriver = Driver & {
@@ -23,10 +24,10 @@ interface DriverRowProps {
   rank: number
   columnCount: number
   isSelected: boolean
+  onDriverClick: (id: number) => void
 }
 
-export default function DriverRow({ driver, rank, columnCount, isSelected }: DriverRowProps) {
-  const [expanded, setExpanded] = useState(false)
+export default function DriverRow({ driver, rank, columnCount, isSelected, onDriverClick }: DriverRowProps) {
   const rowRef = useRef<HTMLTableRowElement>(null)
   const hasGps = driver.hasGps === true
   const gpsActive = driver.gpsActive === true
@@ -34,9 +35,7 @@ export default function DriverRow({ driver, rank, columnCount, isSelected }: Dri
   const isPit = hasGps && !gpsActive
   const isNoGps = !hasGps
 
-  useEffect(() => {
-    setExpanded(isSelected)
-  }, [isSelected])
+  const expanded = isSelected
 
   useEffect(() => {
     if (!isSelected) return
@@ -49,8 +48,7 @@ export default function DriverRow({ driver, rank, columnCount, isSelected }: Dri
   }, [isSelected])
 
   const handleClick = () => {
-    const next = !expanded
-    setExpanded(next)
+    onDriverClick(driver.id)
   }
 
   const posBadgeClass =
@@ -63,6 +61,7 @@ export default function DriverRow({ driver, rank, columnCount, isSelected }: Dri
           : 'lt-pos-badge lt-pos-badge--n'
 
   const teamStyle = { '--team-color': driver.accentColor } as CSSProperties
+  const logoSrc = resolveImageSrc(driver.team ?? (driver.carModel ?? ''), 'logo')
 
   return (
     <>
@@ -86,6 +85,16 @@ export default function DriverRow({ driver, rank, columnCount, isSelected }: Dri
 
         <td className="lt-driver-cell">
           <div className="lt-driver-team" style={teamStyle}>
+            {logoSrc ? (
+              <img
+                src={logoSrc}
+                alt={`${driver.team} logo`}
+                className="lt-driver-team-logo"
+                onError={(e) => {
+                  ;(e.currentTarget as HTMLImageElement).style.display = 'none'
+                }}
+              />
+            ) : null}
             <div className="lt-driver-team-bar" aria-hidden="true" />
             <div className="lt-driver-team-meta">
               <span className="lt-driver-team-name">{driver.team}</span>

@@ -13,7 +13,7 @@ const normalizeTeamName = (teamName: string) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
 
-const resolveImageSrc = (teamName: string, imageType: 'car' | 'logo') => {
+export const resolveImageSrc = (teamName: string, imageType: 'car' | 'logo') => {
   const normalizedName = normalizeTeamName(teamName)
   const brandStem = normalizedName.split('-')[0]
   const candidateStems = [normalizedName, brandStem].filter(Boolean)

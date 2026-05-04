@@ -120,6 +120,85 @@
   min-width: 0;
 }
 
+.lt-driver-team-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+@media (max-width: 640px) {
+  .lt-driver-team-logo {
+    width: 28px;
+    height: 28px;
+    border-radius: 5px;
+  }
+}
+
+/* On mobile, prefer the team logo only (hide name/code to save space) */
+@media (max-width: 640px) {
+  .lt-driver-team {
+    gap: 8px;
+  }
+
+  /* Hide team name/code on small screens to keep only the logo visible */
+  .lt-driver-team-meta {
+    display: none !important;
+    width: 0 !important;
+    max-width: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    visibility: hidden !important;
+    overflow: hidden !important;
+  }
+
+  /* also hide any children and text nodes as a fallback */
+  .lt-driver-team-meta * {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  .lt-driver-team-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+  }
+
+  /* slightly reduce the color bar so the logo has more room */
+  .lt-driver-team-bar {
+    width: 2px;
+    height: 28px;
+  }
+}
+
+/* Tweak spacing on narrow mobile to avoid large empty gap between bar and chevron */
+@media (max-width: 480px) {
+  .lt-driver-team {
+    gap: 6px;
+    align-items: center;
+  }
+
+  /* keep chevron close to the bar/logo instead of pushing it to the far right */
+  .lt-driver-chevron {
+    margin-left: 6px !important;
+    color: var(--lt-muted);
+    align-self: center;
+  }
+
+  /* ensure table cell padding doesn't create extra space */
+  .lt-driver-cell {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  /* Slightly reduce the bar height for compactness */
+  .lt-driver-team-bar {
+    height: 24px;
+  }
+}
+
 .lt-driver-team-bar {
   width: 3px;
   height: 32px;

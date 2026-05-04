@@ -6,7 +6,7 @@ interface TrackDisplayProps {
   circuitPath: string
   drivers: Driver[]
   flag: FlagState
-  selectedDriverId: number | null
+  selectedDriverIds: number[]
   onDriverClick: (id: number) => void
 }
 
@@ -21,7 +21,7 @@ const MIN_SCALE = 1
 const MAX_SCALE = 8
 const ZOOM_SENSITIVITY = 0.005
 
-export default function TrackDisplay({ circuitPath, drivers, flag, selectedDriverId, onDriverClick }: TrackDisplayProps) {
+export default function TrackDisplay({ circuitPath, drivers, flag, selectedDriverIds, onDriverClick }: TrackDisplayProps) {
   const pathRef = useRef<SVGPathElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
   const [totalLength, setTotalLength] = useState(0)
@@ -177,7 +177,7 @@ export default function TrackDisplay({ circuitPath, drivers, flag, selectedDrive
             if (!point) return null
 
             const dotSize = 7 / Math.sqrt(transform.scale)
-            const isSelected = driver.id === selectedDriverId
+            const isSelected = selectedDriverIds.includes(driver.id)
 
             return (
               <g
@@ -236,7 +236,7 @@ export default function TrackDisplay({ circuitPath, drivers, flag, selectedDrive
 
               {pitDrivers.map((driver, index) => {
                 const dotSize = 5.5 / Math.sqrt(transform.scale)
-                const isSelected = driver.id === selectedDriverId
+                const isSelected = selectedDriverIds.includes(driver.id)
                 const x = pitAnchor.x + 18
                 const y = pitAnchor.y - 8 + index * (dotSize * 3.1)
 
