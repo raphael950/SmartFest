@@ -138,12 +138,20 @@
   background: #000;
 }
 
+.lt-camera-player__frame--blocked {
+  min-height: 240px;
+}
+
 .lt-camera-player__video {
   display: block;
   width: 100%;
   max-height: 240px;
   aspect-ratio: 16 / 9;
   object-fit: cover;
+}
+
+.lt-camera-player__video--blocked {
+  opacity: 0.1;
 }
 
 .lt-camera-player__progress {
@@ -269,6 +277,12 @@
     rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
   text-align: center;
+}
+
+.lt-camera-player__status-panel--overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
 }
 
 .lt-camera-player__status-title {

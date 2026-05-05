@@ -19,7 +19,7 @@ export default function LiveTimingPanel({ circuitPath, cameras }: LiveTimingPane
   const [isStacked, setIsStacked] = useState(false)
   const [selectedDriverIds, setSelectedDriverIds] = useState<number[]>([])
 
-  const { drivers, flag: wsFlag, raceState, isConnected, error } = useRaceWebSocket()
+  const { drivers, cameras: reactiveCameras, flag: wsFlag, raceState, isConnected, error } = useRaceWebSocket(cameras)
   const flag: FlagState = wsFlag ?? DEFAULT_FLAG
   const isRaceRunning = raceState?.status === 'running'
 
@@ -81,7 +81,7 @@ export default function LiveTimingPanel({ circuitPath, cameras }: LiveTimingPane
             <TrackDisplay
               circuitPath={circuitPath}
               drivers={drivers}
-              cameras={cameras}
+              cameras={reactiveCameras}
               flag={flag}
               raceState={raceState}
               selectedDriverIds={selectedDriverIds}

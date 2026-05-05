@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { LiveTimingCamera } from '@/types/live-timing.types'
 
 import type { RaceState } from '@/types/race-state.types'
@@ -29,6 +29,18 @@ export default function CameraPlayer({ camera, sourceUrl, raceState }: CameraPla
 
     const isRaceStopped = raceState?.status === 'stopped'
     const isUnavailable = camera.status === 'maintenance' || camera.status === 'offline' || isRaceStopped
+
+    useLayoutEffect(() => {
+        const video = videoRef.current
+        if (!video) return
+
+        if (!isUnavailable) return
+
+        video.pause()
+        video.removeAttribute('src')
+        video.load()
+        setIsPlaying(false)
+    }, [isUnavailable])
 
     useEffect(() => {
         if (isUnavailable) return
@@ -123,37 +135,27 @@ export default function CameraPlayer({ camera, sourceUrl, raceState }: CameraPla
         }
     }
 
-    if (isUnavailable) {
-        let title = 'Flux indisponible'
-        let message = 'La caméra est actuellement indisponible.'
+    let title = 'Flux indisponible'
+    let message = 'La caméra est actuellement indisponible.'
 
-        if (isRaceStopped) {
-            title = 'Course arrêtée'
-            message = 'Le flux vidéo n\'est disponible que pendant la course.'
-        } else if (camera.status === 'maintenance') {
-            title = STATUS_LABEL[camera.status]
-            message = STATUS_MESSAGE[camera.status]
-        } else if (camera.status === 'offline') {
-            title = STATUS_LABEL[camera.status]
-            message = STATUS_MESSAGE[camera.status]
-        }
-
-        return (
-            <div className="lt-camera-player lt-camera-player--unavailable">
-                <div className="lt-camera-player__status-panel" role="status" aria-live="polite">
-                    <p className="lt-camera-player__status-title">{title}</p>
-                    <p className="lt-camera-player__status-text">{message}</p>
-                </div>
-            </div>
-        )
+    if (isRaceStopped) {
+        title = 'Course arrêtée'
+        message = 'Le flux vidéo n\'est disponible que pendant la course.'
+    } else if (camera.status === 'maintenance') {
+        title = STATUS_LABEL[camera.status]
+        message = STATUS_MESSAGE[camera.status]
+    } else if (camera.status === 'offline') {
+        title = STATUS_LABEL[camera.status]
+        message = STATUS_MESSAGE[camera.status]
     }
 
     return (
         <div className="lt-camera-player">
-            <div className="lt-camera-player__frame">
+            <div className={`lt-camera-player__frame${isUnavailable ? ' lt-camera-player__frame--blocked' : ''}`}>
                 <video
                     ref={videoRef}
-                    className="lt-camera-player__video"
+                    className={`lt-camera-player__video${isUnavailable ? ' lt-camera-player__video--blocked' : ''}`}
+                    src={isUnavailable ? undefined : sourceUrl}
                     muted
                     autoPlay
                     loop
@@ -164,34 +166,41 @@ export default function CameraPlayer({ camera, sourceUrl, raceState }: CameraPla
                     controlsList="nodownload noplaybackrate noremoteplayback"
                     onPlay={() => setIsPlaying(true)}
                     onPause={() => setIsPlaying(false)}
-                >
-                    <source src={sourceUrl} type="video/mp4" />
-                </video>
+                />
 
-                <div className="lt-camera-player__progress" aria-hidden="true">
-                    <div className="lt-camera-player__progress-track">
-                        <div className="lt-camera-player__progress-fill" />
+                {isUnavailable ? (
+                    <div className="lt-camera-player__status-panel lt-camera-player__status-panel--overlay" role="status" aria-live="polite">
+                        <p className="lt-camera-player__status-title">{title}</p>
+                        <p className="lt-camera-player__status-text">{message}</p>
                     </div>
-                </div>
+                ) : (
+                    <>
+                        <div className="lt-camera-player__progress" aria-hidden="true">
+                            <div className="lt-camera-player__progress-track">
+                                <div className="lt-camera-player__progress-fill" />
+                            </div>
+                        </div>
 
-                <div className="lt-camera-player__controls" aria-label="Contrôles du lecteur caméra">
-                    <button type="button" className="lt-camera-player__control-button" onClick={togglePlayback}>
-                        {isPlaying ? 'Pause' : 'Lecture'}
-                    </button>
+                        <div className="lt-camera-player__controls" aria-label="Contrôles du lecteur caméra">
+                            <button type="button" className="lt-camera-player__control-button" onClick={togglePlayback}>
+                                {isPlaying ? 'Pause' : 'Lecture'}
+                            </button>
 
-                    <label className="lt-camera-player__volume" aria-label="Volume du lecteur caméra">
-                        <span className="lt-camera-player__volume-label">Volume</span>
-                        <input
-                            type="range"
-                            min="0"
-                            max="1"
-                            step="0.01"
-                            value={volume}
-                            onChange={handleVolumeChange}
-                            className="lt-camera-player__volume-range"
-                        />
-                    </label>
-                </div>
+                            <label className="lt-camera-player__volume" aria-label="Volume du lecteur caméra">
+                                <span className="lt-camera-player__volume-label">Volume</span>
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max="1"
+                                    step="0.01"
+                                    value={volume}
+                                    onChange={handleVolumeChange}
+                                    className="lt-camera-player__volume-range"
+                                />
+                            </label>
+                        </div>
+                    </>
+                )}
             </div>
 
         </div>
