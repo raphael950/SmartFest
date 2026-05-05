@@ -12,6 +12,7 @@ const SECTOR_THRESHOLDS = {
 } as const
 
 const YELLOW_SPEED = 0.0003
+const PIT_POSITION = 0.985 // Position visuelle des stands, près de la ligne d'arrivée
 const randomSpeed = () => 0.00065 + Math.random() * 0.0007
 
 // ─── Utilitaires ──────────────────────────────────────────────────────────────
@@ -209,11 +210,28 @@ export default class RaceEngineService {
       const previousHasGps = driver.hasGps === true
       const nextGpsState = gpsStateByTeamId.get(driver.id) ?? { hasGps: false, gpsActive: false }
 
+      // Transition offline : la voiture est téléportée aux stands et affichée dans la pit lane.
+      if (previousActive && !nextGpsState.gpsActive) {
+        driver.trackProgression = PIT_POSITION
+        driver._prevProgression = PIT_POSITION
+        driver._gpsRevealPending = true
+      }
+
+      // Transition online : la voiture va attendre le drapeau rouge pour réapparaître
+      if (!previousActive && nextGpsState.gpsActive) {
+        if (this.flagState.color !== 'rouge') {
+          driver._gpsRevealPending = true
+        } else {
+          driver._gpsRevealPending = false
+        }
+      }
+
       if (this.flagState.color !== 'rouge' && !previousHasGps && nextGpsState.hasGps) {
         driver._gpsRevealPending = true
       }
 
-      if (this.flagState.color === 'rouge') {
+      // Au drapeau rouge, une voiture online peut réapparaître sur la piste.
+      if (this.flagState.color === 'rouge' && nextGpsState.gpsActive) {
         driver._gpsRevealPending = false
       }
 

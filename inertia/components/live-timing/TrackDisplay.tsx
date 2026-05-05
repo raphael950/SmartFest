@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import type { Driver, FlagState } from '@/types/live-timing.types'
 import CarFocusBadge from './CarFocusBadge'
 import '@/css/components/live-timing/TrackDisplay.css'
+
 interface TrackDisplayProps {
   circuitPath: string
   drivers: Driver[]
@@ -27,47 +28,33 @@ export default function TrackDisplay({ circuitPath, drivers, flag, selectedDrive
   const [totalLength, setTotalLength] = useState(0)
   const [baseViewBox, setBaseViewBox] = useState({ x: 0, y: 0, w: 500, h: 300 })
   const [transform, setTransform] = useState<ViewTransform>({ x: 0, y: 0, scale: 1 })
-
   const isDragging = useRef(false)
   const lastMousePos = useRef({ x: 0, y: 0 })
 
-  // Initialisation et calcul du ViewBox auto-centré
   useEffect(() => {
     if (!pathRef.current) return
     const path = pathRef.current
     const { x, y, width, height } = path.getBBox()
     const padding = 30
     setTotalLength(path.getTotalLength())
-    const newBase = {
-      x: x - padding,
-      y: y - padding,
-      w: width + padding * 2,
-      h: height + padding * 2
-    }
+    const newBase = { x: x - padding, y: y - padding, w: width + padding * 2, h: height + padding * 2 }
     setBaseViewBox(newBase)
     setTransform({ x: newBase.x, y: newBase.y, scale: 1 })
   }, [circuitPath])
 
-  // Logique de Zoom
   const handleWheel = useCallback((e: WheelEvent) => {
     e.preventDefault()
     const svg = svgRef.current
     if (!svg) return
-
     const rect = svg.getBoundingClientRect()
-
     setTransform((prev) => {
       const delta = -e.deltaY * ZOOM_SENSITIVITY
       const newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, prev.scale * (1 + delta)))
-
       if (newScale === prev.scale) return prev
-
       const mouseX = ((e.clientX - rect.left) / rect.width) * (baseViewBox.w / prev.scale) + prev.x
       const mouseY = ((e.clientY - rect.top) / rect.height) * (baseViewBox.h / prev.scale) + prev.y
-
       const newX = mouseX - ((e.clientX - rect.left) / rect.width) * (baseViewBox.w / newScale)
       const newY = mouseY - ((e.clientY - rect.top) / rect.height) * (baseViewBox.h / newScale)
-
       return { scale: newScale, x: newX, y: newY }
     })
   }, [baseViewBox])
@@ -79,29 +66,21 @@ export default function TrackDisplay({ circuitPath, drivers, flag, selectedDrive
     return () => svg.removeEventListener('wheel', handleWheel)
   }, [handleWheel])
 
-  // Logique de Pan (Déplacement)
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (transform.scale <= 1) return // Optionnel : désactive le pan si pas de zoom
+    if (transform.scale <= 1) return
     isDragging.current = true
     lastMousePos.current = { x: e.clientX, y: e.clientY }
   }
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging.current || !svgRef.current) return
-
     const dx = e.clientX - lastMousePos.current.x
     const dy = e.clientY - lastMousePos.current.y
     lastMousePos.current = { x: e.clientX, y: e.clientY }
-
     const rect = svgRef.current.getBoundingClientRect()
     const moveX = (dx / rect.width) * (baseViewBox.w / transform.scale)
     const moveY = (dy / rect.height) * (baseViewBox.h / transform.scale)
-
-    setTransform((prev) => ({
-      ...prev,
-      x: prev.x - moveX,
-      y: prev.y - moveY
-    }))
+    setTransform((prev) => ({ ...prev, x: prev.x - moveX, y: prev.y - moveY }))
   }
 
   const handleMouseUp = () => { isDragging.current = false }
@@ -112,15 +91,46 @@ export default function TrackDisplay({ circuitPath, drivers, flag, selectedDrive
     return pathRef.current.getPointAtLength(totalLength * (progression ?? 0))
   }
 
+  const getPitLaneAnchor = () => {
+    if (!pathRef.current || totalLength === 0) return null
+    const finishProg = 0.985
+    const epsilon = 0.005
+    const p1 = pathRef.current.getPointAtLength(totalLength * (finishProg - epsilon))
+    const p2 = pathRef.current.getPointAtLength(totalLength * (finishProg + epsilon))
+    const dx = p2.x - p1.x
+    const dy = p2.y - p1.y
+    const len = Math.sqrt(dx * dx + dy * dy)
+    const tx = dx / len
+    const ty = dy / len
+
+    // Perpendiculaire vers la droite
+    const perpX = ty
+    const perpY = -tx
+
+    const finishPoint = pathRef.current.getPointAtLength(totalLength * finishProg)
+    const offset = -50  // plus éloigné du circuit
+    const angleRad = ( -13*Math.PI) / 180
+
+    return {
+      baseX: finishPoint.x + perpX * offset -115,
+      baseY: finishPoint.y + perpY * offset,
+      alongX: Math.cos(angleRad),
+      alongY:  Math.sin(angleRad),
+    }
+  }
+
   const viewBoxStr = `${transform.x} ${transform.y} ${baseViewBox.w / transform.scale} ${baseViewBox.h / transform.scale}`
   const labelScale = Math.sqrt(transform.scale)
+
+  const pitDrivers = drivers.filter((driver) => driver.gpsRevealPending === true)
+  const pitDriverIds = new Set(pitDrivers.map((d) => d.id))
   const trackDrivers = drivers.filter((driver) => {
+    if (pitDriverIds.has(driver.id)) return false
     if (driver.gpsActive === true) return true
     if (driver.hasGps === true && driver.gpsRevealPending === false) return true
     return false
   })
-  const pitDrivers = drivers.filter((driver) => driver.gpsRevealPending === true)
-  const pitAnchor = getPointAt(0.985)
+  const pitAnchor = getPitLaneAnchor()
 
   return (
     <div className="lt-glass lt-track-container lt-panel-section">
@@ -146,7 +156,7 @@ export default function TrackDisplay({ circuitPath, drivers, flag, selectedDrive
           onDoubleClick={handleDoubleClick}
           style={{ cursor: isDragging.current ? 'grabbing' : transform.scale > 1 ? 'grab' : 'default' }}
         >
-          {/* 1. Contour des secteurs (Couleurs) */}
+          {/* 1. Secteurs */}
           {SECTOR_COLORS.map((color, i) => (
             <path
               key={i}
@@ -161,7 +171,7 @@ export default function TrackDisplay({ circuitPath, drivers, flag, selectedDrive
             />
           ))}
 
-          {/* 2. Piste principale (Noir, par-dessus les secteurs pour créer l'effet de bordure) */}
+          {/* 2. Piste principale */}
           <path
             ref={pathRef}
             d={circuitPath}
@@ -172,11 +182,10 @@ export default function TrackDisplay({ circuitPath, drivers, flag, selectedDrive
             strokeLinecap="round"
           />
 
-          {/* 3. Pilotes */}
+          {/* 3. Pilotes sur la piste */}
           {trackDrivers.map((driver) => {
             const point = getPointAt(driver.trackProgression ?? 0)
             if (!point) return null
-
             const dotSize = 7 / Math.sqrt(transform.scale)
             const isSelected = selectedDriverIds.includes(driver.id)
             const labelWidth = 126 / labelScale
@@ -185,38 +194,25 @@ export default function TrackDisplay({ circuitPath, drivers, flag, selectedDrive
             const labelY = point.y - dotSize * 5.8 - labelHeight
 
             return (
-              <g
-                key={driver.id}
-                style={{ cursor: 'pointer', transition: 'all 0.1s linear' }}
-                onClick={() => onDriverClick(driver.id)}
-              >
+              <g key={driver.id} style={{ cursor: 'pointer', transition: 'all 0.1s linear' }} onClick={() => onDriverClick(driver.id)}>
                 {isSelected && (
                   <CarFocusBadge
-                    anchorX={point.x}
-                    anchorY={point.y}
-                    badgeX={labelX}
-                    badgeY={labelY}
-                    badgeWidth={labelWidth}
-                    badgeHeight={labelHeight}
+                    anchorX={point.x} anchorY={point.y}
+                    badgeX={labelX} badgeY={labelY}
+                    badgeWidth={labelWidth} badgeHeight={labelHeight}
                     scale={transform.scale}
-                    team={driver.team}
-                    carModel={driver.carModel}
-                    accentColor={driver.accentColor}
+                    team={driver.team} carModel={driver.carModel} accentColor={driver.accentColor}
                   />
                 )}
                 <circle cx={point.x} cy={point.y} r={dotSize * 1.6} fill={driver.accentColor} opacity={0.3} />
                 <circle cx={point.x} cy={point.y} r={dotSize * 1.2} fill="white" />
                 <circle cx={point.x} cy={point.y} r={dotSize} fill={driver.accentColor} />
                 <text
-                  x={point.x}
-                  y={point.y - dotSize * 2}
+                  x={point.x} y={point.y - dotSize * 2}
                   textAnchor="middle"
                   fontSize={9 / Math.sqrt(transform.scale)}
-                  fontWeight="600"
-                  fill="white"
-                  stroke="black"
-                  strokeWidth={2 / transform.scale}
-                  paintOrder="stroke"
+                  fontWeight="600" fill="white" stroke="black"
+                  strokeWidth={2 / transform.scale} paintOrder="stroke"
                 >
                   {driver.shortName ?? driver.id}
                 </text>
@@ -224,14 +220,15 @@ export default function TrackDisplay({ circuitPath, drivers, flag, selectedDrive
             )
           })}
 
-          {/* 4. Stand / pit lane */}
+          {/* 4. Pit lane — voitures alignées le long de la tangente */}
           {pitAnchor && pitDrivers.length > 0 && (
-            <g opacity={0.72}>
+            <g opacity={0.85}>
+              {/* Label PIT décalé perpendiculairement au début de la file */}
               <text
-                x={pitAnchor.x + 18}
-                y={pitAnchor.y - 24}
-                textAnchor="start"
-                fontSize={10 / Math.sqrt(transform.scale)}
+                x={pitAnchor.baseX - pitAnchor.alongX * 6}
+                y={pitAnchor.baseY - pitAnchor.alongY * 6 - 8 / Math.sqrt(transform.scale)}
+                textAnchor="middle"
+                fontSize={8 / Math.sqrt(transform.scale)}
                 fontWeight="700"
                 fill="#c7c7c7"
                 stroke="black"
@@ -243,13 +240,13 @@ export default function TrackDisplay({ circuitPath, drivers, flag, selectedDrive
 
               {pitDrivers.map((driver, index) => {
                 const dotSize = 5.5 / Math.sqrt(transform.scale)
+                const spacing = dotSize * 2.5
+                // Chaque voiture alignée le long de la tangente du circuit
+                const x = pitAnchor.baseX + pitAnchor.alongX * index * spacing
+                const y = pitAnchor.baseY + pitAnchor.alongY * index * spacing
                 const isSelected = selectedDriverIds.includes(driver.id)
-                const x = pitAnchor.x + 18
-                const y = pitAnchor.y - 8 + index * (dotSize * 3.1)
                 const labelWidth = 126 / labelScale
                 const labelHeight = 78 / labelScale
-                const labelX = x + 18
-                const labelY = y - dotSize * 4.8 - labelHeight
 
                 return (
                   <g
@@ -259,31 +256,23 @@ export default function TrackDisplay({ circuitPath, drivers, flag, selectedDrive
                   >
                     {isSelected && (
                       <CarFocusBadge
-                        anchorX={x}
-                        anchorY={y}
-                        badgeX={labelX}
-                        badgeY={labelY}
-                        badgeWidth={labelWidth}
-                        badgeHeight={labelHeight}
+                        anchorX={x} anchorY={y}
+                        badgeX={x - labelWidth / 2}
+                        badgeY={y - dotSize * 4.8 - labelHeight}
+                        badgeWidth={labelWidth} badgeHeight={labelHeight}
                         scale={transform.scale}
-                        team={driver.team}
-                        carModel={driver.carModel}
-                        accentColor={driver.accentColor}
+                        team={driver.team} carModel={driver.carModel} accentColor={driver.accentColor}
                       />
                     )}
                     <circle cx={x} cy={y} r={dotSize * 1.45} fill={driver.accentColor} opacity={0.24} />
                     <circle cx={x} cy={y} r={dotSize} fill="#202124" opacity={0.92} />
                     <circle cx={x} cy={y} r={dotSize * 0.7} fill={driver.accentColor} opacity={0.9} />
                     <text
-                      x={x + dotSize * 1.8}
-                      y={y + dotSize * 0.35}
-                      textAnchor="start"
-                      fontSize={8 / Math.sqrt(transform.scale)}
-                      fontWeight="700"
-                      fill="#d8d8d8"
-                      stroke="black"
-                      strokeWidth={1.6 / transform.scale}
-                      paintOrder="stroke"
+                      x={x} y={y + dotSize * 2.2}
+                      textAnchor="middle"
+                      fontSize={7 / Math.sqrt(transform.scale)}
+                      fontWeight="700" fill="#d8d8d8" stroke="black"
+                      strokeWidth={1.6 / transform.scale} paintOrder="stroke"
                     >
                       {driver.shortName ?? driver.id}
                     </text>

@@ -26,7 +26,7 @@ export default function Leaderboard({ drivers, selectedDriverIds, onDriverClick 
   })
 
   const enrichedDrivers: LeaderboardDriver[] = sortedDrivers
-    .filter((driver) => driver.gpsRevealPending !== true)
+    .filter((driver) => driver.hasGps === true)
     .map((driver, index) => ({
     id: driver.id,
     name: driver.pilote ?? '',
