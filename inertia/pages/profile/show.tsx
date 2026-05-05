@@ -1,11 +1,12 @@
 import { Link } from '@adonisjs/inertia/react'
 import { router } from '@inertiajs/react'
 import { InertiaProps } from '~/types'
-import { ArrowUp, Briefcase, Cake, Sparkles, Trophy, UserRound, VenusAndMars } from 'lucide-react'
+import { ArrowUp, Briefcase, Sparkles, Trophy, UserRound } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import profileBg from '~/images/profile/profile-bg.jpg'
 import ProfileEditModal from '@/components/profile/ProfileEditModal'
 import type { TeamOption } from '@/components/profile/ProfileEditForm'
+import { resolveImageSrc } from '@/lib/home_team_media'
 import '~/css/pages/auth/profile.css'
 import { UserLevelProgress } from '#services/user_level_service'
 
@@ -88,9 +89,11 @@ export default function ProfileShow({ profile, teams, canEdit }: InertiaProps<Pr
   const upgradeLevel = () => {
     router.post('/mon-profil/niveau', {}, { preserveScroll: true })
   }
-  const followedTeamName = profile.followedTeamId
-    ? teams.find((t: TeamOption) => t.id === profile.followedTeamId)?.name ?? null
+  const followedTeam = profile.followedTeamId
+    ? teams.find((t: TeamOption) => t.id === profile.followedTeamId) ?? null
     : null
+  const followedTeamName = followedTeam?.name ?? null
+  const followedTeamLogo = followedTeam ? resolveImageSrc(followedTeam.name, 'logo') : null
 
   useEffect(() => {
     setIsAvatarBroken(false)
@@ -113,7 +116,7 @@ export default function ProfileShow({ profile, teams, canEdit }: InertiaProps<Pr
           <h1>
             @{profile.pseudo || `fan-${profile.id}`}
           </h1>
-          <p>Un profil SmartFest public pour partager sa vibe course et sa team preferee.</p>
+          <p>Partage la vibe de la course.</p>
         </div>
 
         <article className="profile-identity-card">
@@ -147,31 +150,19 @@ export default function ProfileShow({ profile, teams, canEdit }: InertiaProps<Pr
                 <p className="profile-item-label">Age</p>
                 <p className="profile-item-value">{age !== null ? `${age} ans` : 'Non renseigne'}</p>
               </div>
+              <div>
+                <p className="profile-item-label">Sexe</p>
+                <p className="profile-item-value">{profile.gender || 'Non renseigne'}</p>
+              </div>
+              <div>
+                <p className="profile-item-label">Naissance</p>
+                <p className="profile-item-value">{formatBirthDate(profile.birthDate)}</p>
+              </div>
             </div>
           </div>
         </article>
 
         <div className="profile-grid">
-          <article className="profile-item">
-            <span className="profile-item-icon">
-              <VenusAndMars size={16} />
-            </span>
-            <div>
-              <p className="profile-item-label">Sexe</p>
-              <p className="profile-item-value">{profile.gender || 'Non renseigne'}</p>
-            </div>
-          </article>
-
-          <article className="profile-item">
-            <span className="profile-item-icon">
-              <Cake size={16} />
-            </span>
-            <div>
-              <p className="profile-item-label">Date de naissance</p>
-              <p className="profile-item-value">{formatBirthDate(profile.birthDate)}</p>
-            </div>
-          </article>
-
           <article className="profile-item">
             <span className="profile-item-icon">
               <Briefcase size={16} />
@@ -182,8 +173,8 @@ export default function ProfileShow({ profile, teams, canEdit }: InertiaProps<Pr
             </div>
           </article>
 
-          <article className="profile-item">
-            <span className="profile-item-icon">
+          <article className="profile-item profile-item--wide">
+            <span className="profile-item-icon profile-item-icon--accent">
               <Sparkles size={16} />
             </span>
             <div className="profile-progress-card">
@@ -225,11 +216,21 @@ export default function ProfileShow({ profile, teams, canEdit }: InertiaProps<Pr
           </article>
 
           {followedTeamName ? (
-            <article className="profile-item">
-              <span className="profile-item-icon">
-                <Trophy size={16} />
-              </span>
-              <div>
+            <article className="profile-item profile-item--team">
+              <div className="profile-team-logo-box">
+                {followedTeamLogo ? (
+                  <img
+                    src={followedTeamLogo}
+                    alt={`Logo de ${followedTeamName}`}
+                    className="profile-team-logo"
+                  />
+                ) : (
+                  <span className="profile-item-icon profile-item-icon--team">
+                    <Trophy size={16} />
+                  </span>
+                )}
+              </div>
+              <div className="profile-team-card">
                 <p className="profile-item-label">Equipe suivie</p>
                 <p className="profile-item-value">{followedTeamName}</p>
               </div>

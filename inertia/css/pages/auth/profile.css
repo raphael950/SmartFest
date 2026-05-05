@@ -115,8 +115,9 @@
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 12px;
+  align-items: start;
 }
 
 .profile-identity-card {
@@ -172,7 +173,7 @@
 
 .profile-identity-names {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 10px;
 }
 
@@ -185,6 +186,28 @@
   border: 1px solid color-mix(in srgb, var(--auth-card-border) 88%, transparent);
   background: color-mix(in srgb, var(--shell-menu-bg) 78%, transparent);
   padding: 14px;
+  grid-column: span 4;
+}
+
+.profile-item--wide {
+  grid-column: span 4;
+  padding: 14px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--shell-menu-bg) 86%, transparent), color-mix(in srgb, var(--shell-accent) 10%, transparent));
+  box-shadow: 0 10px 20px color-mix(in srgb, var(--racing-black) 12%, transparent);
+}
+
+.profile-item--wide-full {
+  grid-column: span 4;
+}
+
+.profile-item--team {
+  gap: 12px;
+  grid-column: span 4;
+  background:
+    linear-gradient(155deg, color-mix(in srgb, var(--shell-menu-bg) 90%, transparent), color-mix(in srgb, var(--racing-blue) 9%, transparent));
+  padding: 14px 14px 14px 12px;
+  align-items: center;
 }
 
 .profile-item-icon {
@@ -197,6 +220,14 @@
   background: linear-gradient(135deg, color-mix(in srgb, var(--racing-red) 80%, var(--racing-red-light)), color-mix(in srgb, var(--racing-blue) 85%, var(--racing-white)));
   box-shadow: 0 8px 16px color-mix(in srgb, var(--racing-black) 50%, transparent);
   flex-shrink: 0;
+}
+
+.profile-item-icon--accent {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--shell-accent) 92%, var(--racing-white)), color-mix(in srgb, var(--racing-red) 74%, var(--racing-red-light)));
+}
+
+.profile-item-icon--team {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--racing-blue) 88%, var(--racing-white)), color-mix(in srgb, var(--shell-accent) 72%, var(--racing-blue)));
 }
 
 .profile-item-label {
@@ -213,6 +244,39 @@
   color: var(--racing-white);
   font-weight: 700;
   word-break: break-word;
+}
+
+.profile-team-logo-box {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--auth-card-border) 88%, transparent);
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--shell-menu-bg) 90%, transparent);
+  overflow: hidden;
+}
+
+.profile-team-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 4px;
+}
+
+.profile-team-card {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.profile-team-card__hint {
+  margin: 0;
+  color: var(--shell-muted);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  max-width: 28ch;
 }
 
 .profile-actions {
@@ -471,7 +535,7 @@
 .profile-points-progress,
 .profile-progress-card {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr;
   gap: 8px;
   min-width: 0;
 }
@@ -483,7 +547,8 @@
 .profile-progress-card__header,
 .profile-progress-card__summary,
 .profile-progress-bar {
-  grid-column: 1 / -1;
+  grid-column: 1;
+  width: 100%;
 }
 
 .profile-points-progress__header,
@@ -491,13 +556,13 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 12px;
+  gap: 8px;
 }
 
 .profile-progress-card__level-with-btn {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   min-width: 0;
 }
 
@@ -511,12 +576,13 @@
 .profile-progress-card__summary {
   margin: 0;
   color: var(--shell-muted);
-  font-size: 0.82rem;
+  font-size: 0.76rem;
+  line-height: 1.3;
 }
 
 .profile-progress-bar {
   position: relative;
-  height: 10px;
+  height: 8px;
   border-radius: 999px;
   overflow: hidden;
   background: color-mix(in srgb, var(--shell-menu-bg) 86%, transparent);
@@ -538,9 +604,9 @@
 .profile-progress-card__scale {
   display: flex;
   justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
   color: var(--shell-muted);
-  font-size: 0.76rem;
+  font-size: 0.7rem;
   align-items: center;
 }
 
@@ -727,6 +793,18 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .profile-item {
+    grid-column: auto;
+  }
+
+  .profile-item--wide {
+    grid-column: span 1;
+  }
+
+  .profile-item--team {
+    grid-column: span 1;
+  }
+
   .profile-identity-card {
     grid-template-columns: 1fr;
     text-align: center;
@@ -764,5 +842,16 @@
 
   .profile-grid {
     grid-template-columns: 1fr;
+  }
+
+  .profile-item,
+  .profile-item--wide,
+  .profile-item--wide-full,
+  .profile-item--team {
+    grid-column: auto;
+  }
+
+  .profile-item--wide {
+    padding: 14px;
   }
 }
