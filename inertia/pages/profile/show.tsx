@@ -1,8 +1,8 @@
-import { Link } from '@adonisjs/inertia/react'
 import { router } from '@inertiajs/react'
 import { InertiaProps } from '~/types'
-import { ArrowUp, Briefcase, Sparkles, Trophy, UserRound } from 'lucide-react'
+import { ArrowUp, Briefcase, Trophy, UserRound } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import type { CSSProperties } from 'react'
 import profileBg from '~/images/profile/profile-bg.jpg'
 import ProfileEditModal from '@/components/profile/ProfileEditModal'
 import type { TeamOption } from '@/components/profile/ProfileEditForm'
@@ -68,19 +68,20 @@ const splitIdentity = (fullName: string | null, pseudo: string | null) => {
   if (!fullName || !fullName.trim()) {
     return {
       firstName: pseudo || 'Fan',
-      lastName: 'SmartFest',
+      lastName: null,
     }
   }
 
   const parts = fullName.trim().split(/\s+/)
   const firstName = parts[0]
-  const lastName = parts.slice(1).join(' ') || '-'
+  const lastName = parts.slice(1).join(' ') || null
 
   return { firstName, lastName }
 }
 
 export default function ProfileShow({ profile, teams, canEdit }: InertiaProps<ProfilePageProps>) {
   const [isAvatarBroken, setIsAvatarBroken] = useState(false)
+  const [isTeamLogoBroken, setIsTeamLogoBroken] = useState(false)
   const [isEditOpen, setIsEditOpen] = useState(false)
   const age = computeAge(profile.birthDate)
   const identity = splitIdentity(profile.fullName, profile.pseudo)
@@ -94,162 +95,111 @@ export default function ProfileShow({ profile, teams, canEdit }: InertiaProps<Pr
     : null
   const followedTeamName = followedTeam?.name ?? null
   const followedTeamLogo = followedTeam ? resolveImageSrc(followedTeam.name, 'logo') : null
+  const shouldShowTeamLogo = Boolean(followedTeamLogo) && !isTeamLogoBroken
 
   useEffect(() => {
     setIsAvatarBroken(false)
   }, [profile.avatarUrl])
 
+  useEffect(() => {
+    setIsTeamLogoBroken(false)
+  }, [followedTeamLogo])
+
   return (
     <section className="profile-page">
       <div
         className="profile-hero-card profile-hero-card--public"
-        style={{ '--profile-cover-image': `url(${profileBg})` } as React.CSSProperties}
+        style={{ '--profile-cover-image': `url(${profileBg})` } as CSSProperties}
       >
         <div className="profile-hero-glow profile-hero-glow--left" />
         <div className="profile-hero-glow profile-hero-glow--right" />
 
-        <div className="profile-headline">
-          <span className="profile-badge">
-            <Sparkles size={14} />
-            Profil public
-          </span>
-          <h1>
-            @{profile.pseudo || `fan-${profile.id}`}
-          </h1>
-          <p>Partage la vibe de la course.</p>
-        </div>
+        <div className="profile-hero-main">
+          <div className="hero-left">
+            <div className="profile-avatar-frame" aria-hidden="false">
+              {profile.avatarUrl && !isAvatarBroken ? (
+                <img
+                  className="profile-avatar-frame__image"
+                  src={profile.avatarUrl}
+                  alt={profile.pseudo || 'Photo de profil'}
+                  onError={() => setIsAvatarBroken(true)}
+                />
+              ) : (
+                <div className="profile-avatar-frame__image profile-avatar-frame__image--placeholder" aria-hidden="true">
+                  <UserRound size={42} />
+                </div>
+              )}
+            </div>
 
-        <article className="profile-identity-card">
-          <div className="profile-identity-avatar-wrap">
-            {profile.avatarUrl && !isAvatarBroken ? (
-              <img
-                src={profile.avatarUrl}
-                alt={`Photo de ${profile.pseudo || 'profil'}`}
-                className="profile-identity-avatar"
-                onError={() => setIsAvatarBroken(true)}
-              />
-            ) : (
-              <div className="profile-identity-avatar-placeholder">
-                <UserRound size={42} />
-              </div>
-            )}
-          </div>
-
-          <div className="profile-identity-info">
-            <p className="profile-identity-kicker">Fiche identite</p>
-            <div className="profile-identity-names">
-              <div>
-                <p className="profile-item-label">Prenom</p>
-                <p className="profile-item-value">{identity.firstName}</p>
-              </div>
-              <div>
-                <p className="profile-item-label">Nom</p>
-                <p className="profile-item-value">{identity.lastName}</p>
-              </div>
-              <div>
-                <p className="profile-item-label">Age</p>
-                <p className="profile-item-value">{age !== null ? `${age} ans` : 'Non renseigne'}</p>
-              </div>
-              <div>
-                <p className="profile-item-label">Sexe</p>
-                <p className="profile-item-value">{profile.gender || 'Non renseigne'}</p>
-              </div>
-              <div>
-                <p className="profile-item-label">Naissance</p>
-                <p className="profile-item-value">{formatBirthDate(profile.birthDate)}</p>
-              </div>
+            <div className="identity-compact">
+              <h2 className="identity-name">
+                {identity.firstName}
+                {identity.lastName ? <span className="identity-last"> {identity.lastName}</span> : null}
+              </h2>
+              <p className="identity-meta">
+                {age !== null ? `${age} ans` : 'Age non renseignee'} • {profile.gender || 'Sexe non renseigne'} • {formatBirthDate(profile.birthDate)}
+              </p>
+              <p className="identity-job"><Briefcase size={14} /> {profile.jobTitle || 'Metier non renseigne'}</p>
             </div>
           </div>
-        </article>
 
-        <div className="profile-grid">
-          <article className="profile-item profile-item--job">
-            <span className="profile-item-icon">
-              <Briefcase size={16} />
-            </span>
-            <div>
-              <p className="profile-item-label">Metier</p>
-              <p className="profile-item-value">{profile.jobTitle || 'Non renseigne'}</p>
-            </div>
-          </article>
-
-          <article className="profile-item profile-item--wide">
-            <span className="profile-item-icon profile-item-icon--accent">
-              <Sparkles size={16} />
-            </span>
-            <div className="profile-progress-card">
-              <div className="profile-progress-card__header">
-                <div>
-                  <p className="profile-item-label">Points & niveau</p>
-                  <div className="profile-progress-card__level-with-btn">
-                    <p className="profile-item-value">{profile.levelLabel}</p>
-                    {canUpgradeLevel ? (
-                      <button
-                        type="button"
-                        className="profile-progress-card__upgrade-btn profile-progress-card__upgrade-btn--in-header"
-                        onClick={upgradeLevel}
-                        aria-label="Passer au niveau supérieur"
-                        title="Passer au niveau supérieur"
-                      >
-                        <ArrowUp size={16} />
-                      </button>
-                    ) : null}
-                  </div>
+          <aside className="hero-right">
+            <div className="instrument instrument--level">
+              <div className="instrument-header">
+                <p className="instrument-label">Niveau</p>
+                <p className="instrument-value">{profile.levelLabel}</p>
+              </div>
+              <div
+                className="level-gauge"
+                role="img"
+                aria-label={`Progression ${profile.levelProgress.progressPercent} %`}
+                style={{ ['--progress' as any]: profile.levelProgress.progressPercent }}
+              >
+                <svg viewBox="0 0 120 120" aria-hidden="true" className="level-gauge__svg">
+                  <circle className="level-gauge__track" cx="60" cy="60" r="46" />
+                  <circle className="level-gauge__value" cx="60" cy="60" r="46" />
+                </svg>
+                <div className="level-center">{Math.round(profile.levelProgress.progressPercent)}%</div>
+                <div className="level-gauge__bubbles" aria-hidden="true">
+                  <span className="level-gauge__bubble level-gauge__bubble--one" />
+                  <span className="level-gauge__bubble level-gauge__bubble--two" />
+                  <span className="level-gauge__bubble level-gauge__bubble--three" />
                 </div>
               </div>
-              <p className="profile-progress-card__summary">
-                {profile.levelProgress.isMaxLevel
-                  ? 'Niveau maximum atteint'
-                  : `${profile.levelProgress.pointsToNextLevel} pts avant ${profile.levelProgress.nextLevelLabel}`}
-              </p>
-              <div className="profile-progress-bar" aria-hidden="true">
-                <span
-                  className="profile-progress-bar__fill"
-                  style={{ width: `${profile.levelProgress.progressPercent}%` }}
-                />
-              </div>
-              <div className="profile-progress-card__scale">
-                <span>{profile.points} pts</span>
-                <span>{profile.levelProgress.nextLevelThreshold ?? profile.points} pts</span>
+              <div className="instrument-footer">
+                <span className="points">{profile.points} pts</span>
+                {canUpgradeLevel ? (
+                  <button className="instrument-btn instrument-btn--upgrade" onClick={upgradeLevel} aria-label="Passer niveau">
+                    <ArrowUp size={14} />
+                  </button>
+                ) : null}
               </div>
             </div>
-          </article>
 
-          {followedTeamName ? (
-            <article className="profile-item profile-item--team">
-              <div className="profile-team-logo-box">
-                {followedTeamLogo ? (
-                  <img
-                    src={followedTeamLogo}
-                    alt={`Logo de ${followedTeamName}`}
-                    className="profile-team-logo"
-                  />
+            <div className="instrument instrument--team">
+              <div className="instrument-header">
+                <p className="instrument-label">Equipe suivie</p>
+                <p className="instrument-value">{followedTeamName || 'Aucune'}</p>
+              </div>
+              <div className="team-display">
+                {shouldShowTeamLogo ? (
+                  <img src={followedTeamLogo!} alt={followedTeamName || 'Equipe'} className="team-logo" />
                 ) : (
-                  <span className="profile-item-icon profile-item-icon--team">
-                    <Trophy size={16} />
-                  </span>
+                  <div className="team-placeholder"><Trophy size={20} /></div>
                 )}
               </div>
-              <div className="profile-team-card">
-                <p className="profile-item-label">Equipe suivie</p>
-                <p className="profile-item-value">{followedTeamName}</p>
-              </div>
-            </article>
-          ) : null}
-        </div>
-
-        <div className="profile-actions">
-          {canEdit ? (
-            <button type="button" className="profile-btn profile-btn--primary" onClick={() => setIsEditOpen(true)}>
-              Editer mon profil
-            </button>
-          ) : null}
-
-          <Link route="home" className="profile-btn profile-btn--ghost">
-            Retour accueil
-          </Link>
+            </div>
+          </aside>
         </div>
       </div>
+
+      {canEdit ? (
+        <div className="profile-actions profile-actions--outside">
+          <button type="button" className="profile-btn profile-btn--primary" onClick={() => setIsEditOpen(true)}>
+            Editer mon profil
+          </button>
+        </div>
+      ) : null}
 
       {canEdit ? (
         <ProfileEditModal
