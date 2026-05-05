@@ -1,12 +1,19 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
-import type { Driver, FlagState } from '@/types/live-timing.types'
+import { createPortal } from 'react-dom'
+import type { Driver, FlagState, LiveTimingCamera } from '@/types/live-timing.types'
 import type { RaceState } from '@/types/race-state.types'
+import CameraPlayer from './CameraPlayer'
 import CarFocusBadge from './CarFocusBadge'
 import '@/css/components/live-timing/TrackDisplay.css'
+import '@/css/components/live-timing/TrackCamera.css'
+import sector1VideoUrl from '@/videos/sector1.mp4'
+import sector2VideoUrl from '@/videos/sector2.mp4'
+import sector3VideoUrl from '@/videos/sector3.mp4'
 
 interface TrackDisplayProps {
   circuitPath: string
   drivers: Driver[]
+  cameras: LiveTimingCamera[]
   flag: FlagState
   raceState?: RaceState
   selectedDriverIds: number[]
@@ -23,13 +30,24 @@ const SECTOR_COLORS = ['#ff0033df', '#ffd900da', '#1500ffc1']
 const MIN_SCALE = 1
 const MAX_SCALE = 8
 const ZOOM_SENSITIVITY = 0.005
+const CAMERA_SECTOR_BASE: Record<string, number> = {
+  S1: 0.12,
+  S2: 0.46,
+  S3: 0.79,
+}
+const CAMERA_SECTOR_OFFSET: Record<string, number> = {
+  S1: 42,
+  S2: 38,
+  S3: 44,
+}
 
-export default function TrackDisplay({ circuitPath, drivers, flag, raceState, selectedDriverIds, onDriverClick }: TrackDisplayProps) {
+export default function TrackDisplay({ circuitPath, drivers, cameras, flag, raceState, selectedDriverIds, onDriverClick }: TrackDisplayProps) {
   const pathRef = useRef<SVGPathElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
   const [totalLength, setTotalLength] = useState(0)
   const [baseViewBox, setBaseViewBox] = useState({ x: 0, y: 0, w: 500, h: 300 })
   const [transform, setTransform] = useState<ViewTransform>({ x: 0, y: 0, scale: 1 })
+  const [activeCameraId, setActiveCameraId] = useState<number | null>(null)
   const isDragging = useRef(false)
   const lastMousePos = useRef({ x: 0, y: 0 })
 
@@ -93,6 +111,23 @@ export default function TrackDisplay({ circuitPath, drivers, flag, raceState, se
     return pathRef.current.getPointAtLength(totalLength * (progression ?? 0))
   }
 
+  const getTrackFrame = (progression: number) => {
+    if (!pathRef.current || totalLength === 0) return null
+    const normalized = ((progression % 1) + 1) % 1
+    const delta = 0.003
+    const previous = pathRef.current.getPointAtLength(totalLength * (((normalized - delta) % 1) + 1) % 1)
+    const next = pathRef.current.getPointAtLength(totalLength * (((normalized + delta) % 1) + 1) % 1)
+    const point = pathRef.current.getPointAtLength(totalLength * normalized)
+    const dx = next.x - previous.x
+    const dy = next.y - previous.y
+    const length = Math.sqrt(dx * dx + dy * dy) || 1
+    return {
+      point,
+      normalX: -dy / length,
+      normalY: dx / length,
+    }
+  }
+
   const getPitLaneAnchor = () => {
     if (!pathRef.current || totalLength === 0) return null
     const finishProg = 0.985
@@ -104,20 +139,16 @@ export default function TrackDisplay({ circuitPath, drivers, flag, raceState, se
     const len = Math.sqrt(dx * dx + dy * dy)
     const tx = dx / len
     const ty = dy / len
-
-    // Perpendiculaire vers la droite
     const perpX = ty
     const perpY = -tx
-
     const finishPoint = pathRef.current.getPointAtLength(totalLength * finishProg)
-    const offset = -50  // plus éloigné du circuit
-    const angleRad = ( -13*Math.PI) / 180
-
+    const offset = -50
+    const angleRad = (-13 * Math.PI) / 180
     return {
-      baseX: finishPoint.x + perpX * offset -115,
+      baseX: finishPoint.x + perpX * offset - 115,
       baseY: finishPoint.y + perpY * offset,
       alongX: Math.cos(angleRad),
-      alongY:  Math.sin(angleRad),
+      alongY: Math.sin(angleRad),
     }
   }
 
@@ -135,6 +166,147 @@ export default function TrackDisplay({ circuitPath, drivers, flag, raceState, se
   const pitAnchor = getPitLaneAnchor()
 
   const isRaceStopped = raceState?.status === 'stopped'
+  const activeCamera = cameras.find((camera) => camera.id === activeCameraId) ?? null
+
+  // ── Modal drag ──────────────────────────────────────────────────────────────
+  const modalDragRef = useRef<{ startX: number; startY: number; originX: number; originY: number } | null>(null)
+  const [modalPos, setModalPos] = useState({ x: 0, y: 0 })
+  const [modalDragging, setModalDragging] = useState(false)
+
+  useEffect(() => {
+    if (!activeCamera) return
+    const width = Math.min(420, window.innerWidth - 28)
+    const height = 352
+    setModalPos({
+      x: Math.max(16, window.innerWidth - width - 16),
+      y: Math.max(16, window.innerHeight - height - 16),
+    })
+  }, [activeCamera?.id])
+
+  useEffect(() => {
+    if (!modalDragging) return
+    const handlePointerMove = (event: PointerEvent) => {
+      const drag = modalDragRef.current
+      if (!drag) return
+      setModalPos({
+        x: drag.originX + (event.clientX - drag.startX),
+        y: drag.originY + (event.clientY - drag.startY),
+      })
+    }
+    const handlePointerUp = () => {
+      setModalDragging(false)
+      modalDragRef.current = null
+    }
+    window.addEventListener('pointermove', handlePointerMove)
+    window.addEventListener('pointerup', handlePointerUp)
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove)
+      window.removeEventListener('pointerup', handlePointerUp)
+    }
+  }, [modalDragging])
+
+  const startModalDrag = (event: React.PointerEvent<HTMLDivElement>) => {
+    event.preventDefault()
+    event.stopPropagation()
+    modalDragRef.current = {
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: modalPos.x,
+      originY: modalPos.y,
+    }
+    setModalDragging(true)
+  }
+
+  // ── Camera markers ──────────────────────────────────────────────────────────
+  const CAMERA_VIDEO_BY_SECTOR: Record<string, string> = {
+    S1: sector1VideoUrl,
+    S2: sector2VideoUrl,
+    S3: sector3VideoUrl,
+  }
+
+  const cameraMarkers = cameras
+    .filter((camera) => camera.type === 'CAM')
+    .reduce<Record<string, LiveTimingCamera[]>>((accumulator, camera) => {
+      if (!accumulator[camera.sector]) accumulator[camera.sector] = []
+      accumulator[camera.sector].push(camera)
+      return accumulator
+    }, {})
+
+  const cameraElements = Object.entries(cameraMarkers).flatMap(([sector, sectorCameras]) =>
+    sectorCameras.map((camera, index) => {
+      const sectorBase = CAMERA_SECTOR_BASE[sector] ?? 0.12
+      const sectorOffset = CAMERA_SECTOR_OFFSET[sector] ?? 40
+      const progression = sectorBase + (index - (Math.max(sectorCameras.length, 1) - 1) / 2) * 0.02
+      const frame = getTrackFrame(progression)
+      if (!frame) return []
+      const position = {
+        x: frame.point.x + frame.normalX * (sectorOffset / Math.sqrt(transform.scale)),
+        y: frame.point.y + frame.normalY * (sectorOffset / Math.sqrt(transform.scale)),
+      }
+      const size = 4 / Math.sqrt(transform.scale)
+      return (
+        <g
+          key={camera.identifier}
+          transform={`translate(${position.x}, ${position.y})`}
+          style={{ cursor: 'pointer' }}
+          onClick={(event) => {
+            event.stopPropagation()
+            setActiveCameraId(camera.id)
+          }}
+        >
+          <circle cx={0} cy={0} r={size} fill="rgba(34,197,94,0.9)" stroke="#051122" strokeWidth={1 / transform.scale} />
+          <text x={size * 1.8} y={size * 0.8} fontSize={9 / Math.sqrt(transform.scale)} fontWeight={700} fill="#fff" stroke="#000" strokeWidth={1 / transform.scale} paintOrder="stroke">CAM</text>
+        </g>
+      )
+    }),
+  )
+
+  // ── Modal via portal (rendu dans document.body, hors de toute hiérarchie CSS) ──
+  const cameraModal = activeCamera
+    ? createPortal(
+        <div
+          className="lt-camera-modal"
+          style={{ left: `${modalPos.x}px`, top: `${modalPos.y}px` }}
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="lt-camera-modal__header" onPointerDown={startModalDrag}>
+            <div className="lt-camera-modal__title-wrap">
+              <span className="lt-camera-modal__badge">LIVE</span>
+              <div>
+                <p className="lt-camera-modal__title">{activeCamera.name}</p>
+                <p className="lt-camera-modal__subtitle">
+                  Secteur {activeCamera.sector.replace('S', '')} · {activeCamera.status.toUpperCase()}
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              className="lt-camera-modal__close"
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation()
+                setActiveCameraId(null)
+              }}
+              aria-label="Fermer la vidéo"
+            >
+              ✕
+            </button>
+          </div>
+          <div className="lt-camera-modal__body">
+            <CameraPlayer
+              camera={activeCamera}
+              sourceUrl={CAMERA_VIDEO_BY_SECTOR[activeCamera.sector] ?? sector1VideoUrl}
+              raceState={raceState}
+            />
+            <div className="lt-camera-modal__footer">
+              <span className="lt-camera-modal__meta lt-camera-modal__meta--muted">Glisser l'en-tête pour déplacer</span>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )
+    : null
 
   return (
     <div className="lt-glass lt-track-container lt-panel-section">
@@ -196,7 +368,6 @@ export default function TrackDisplay({ circuitPath, drivers, flag, raceState, se
             const labelHeight = 78 / labelScale
             const labelX = point.x - labelWidth / 2
             const labelY = point.y - dotSize * 5.8 - labelHeight
-
             return (
               <g key={driver.id} style={{ cursor: 'pointer', transition: 'all 0.1s linear' }} onClick={() => onDriverClick(driver.id)}>
                 {isSelected && (
@@ -224,10 +395,11 @@ export default function TrackDisplay({ circuitPath, drivers, flag, raceState, se
             )
           })}
 
-          {/* 4. Pit lane — voitures alignées le long de la tangente */}
+          {cameraElements}
+
+          {/* 4. Pit lane */}
           {pitAnchor && pitDrivers.length > 0 && (
             <g opacity={0.85}>
-              {/* Label PIT décalé perpendiculairement au début de la file */}
               <text
                 x={pitAnchor.baseX - pitAnchor.alongX * 6}
                 y={pitAnchor.baseY - pitAnchor.alongY * 6 - 8 / Math.sqrt(transform.scale)}
@@ -241,17 +413,14 @@ export default function TrackDisplay({ circuitPath, drivers, flag, raceState, se
               >
                 PIT
               </text>
-
               {pitDrivers.map((driver, index) => {
                 const dotSize = 5.5 / Math.sqrt(transform.scale)
                 const spacing = dotSize * 2.5
-                // Chaque voiture alignée le long de la tangente du circuit
                 const x = pitAnchor.baseX + pitAnchor.alongX * index * spacing
                 const y = pitAnchor.baseY + pitAnchor.alongY * index * spacing
                 const isSelected = selectedDriverIds.includes(driver.id)
                 const labelWidth = 126 / labelScale
                 const labelHeight = 78 / labelScale
-
                 return (
                   <g
                     key={`pit-${driver.id}`}
@@ -287,6 +456,9 @@ export default function TrackDisplay({ circuitPath, drivers, flag, raceState, se
           )}
         </svg>
       </div>
+
+      {/* Portal — rendu dans document.body, échappe à overflow:hidden et backdrop-filter */}
+      {cameraModal}
     </div>
   )
 }

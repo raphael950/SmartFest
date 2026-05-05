@@ -173,6 +173,7 @@ export default class ConnectedObjectsController {
     }
 
     const type = this.sanitizeType(payload.type)
+    const nextStatus = this.sanitizeStatus(payload.status)
     const teamId = await this.sanitizeTeamId(payload.teamId, type, device.identifier)
 
     if (type === 'GPS' && !teamId) {
@@ -184,11 +185,14 @@ export default class ConnectedObjectsController {
       name,
       type,
       sector: this.sanitizeSector(payload.sector),
-      status: this.sanitizeStatus(payload.status),
+      status: nextStatus,
       teamId,
     })
 
     await device.save()
+    if (device.type === 'CAM') {
+      socketService.updateCamera(device.id, device.status)
+    }
     await socketService.refreshLiveTiming()
     return response.redirect().back()
   }

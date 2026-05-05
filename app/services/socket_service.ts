@@ -19,6 +19,11 @@ export interface RaceState {
   startedAt: number | null
 }
 
+export interface CameraUpdatePayload {
+  cameraId: number
+  status: string
+}
+
 // ─── État drapeau par défaut ──────────────────────────────────────────────────
 
 const DEFAULT_FLAG: FlagState = { color: 'vert', sectors: [] }
@@ -168,6 +173,15 @@ class SocketService {
       drivers: RaceEngineService.getCurrentState(),
       raceState: this.raceState,
     })
+  }
+
+  /**
+   * Diffuse un changement de statut caméra à tous les clients connectés.
+   */
+  public updateCamera(cameraId: number, status: string): CameraUpdatePayload {
+    const payload: CameraUpdatePayload = { cameraId, status }
+    this.io?.emit('camera_update', payload)
+    return payload
   }
 
   /** Accès direct à l'état courant (utile pour les tests / debug) */

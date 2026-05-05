@@ -3,6 +3,7 @@ import { parseGpx, gpxPointsToSvgPath } from '#services/gpx_parser'
 import { fileURLToPath } from 'node:url'
 import { access } from 'node:fs/promises'
 import Team from '#models/team'
+import ConnectedObject from '#models/connected_object'
 
 // État en mémoire des progressions — persiste entre les requêtes
 const driverProgressions = new Map<number, number>()
@@ -27,6 +28,12 @@ export default class LiveTimingController {
       position: idx + 1,
     }))
 
+    const cameras = await ConnectedObject.query()
+      .select(['id', 'identifier', 'name', 'type', 'sector', 'status'])
+      .where('type', 'CAM')
+      .orderBy('sector', 'asc')
+      .orderBy('id', 'asc')
+
     let circuitPath = ''
 
     try {
@@ -47,6 +54,14 @@ export default class LiveTimingController {
     return inertia.render('live-timing/live-timing', {
       drivers,
       circuitPath,
+      cameras: cameras.map((camera) => ({
+        id: camera.id,
+        identifier: camera.identifier,
+        name: camera.name,
+        type: camera.type,
+        sector: camera.sector,
+        status: camera.status,
+      })),
     })
   }
 

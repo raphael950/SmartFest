@@ -2,18 +2,28 @@
 import { useEffect, useState } from 'react'
 import { io } from 'socket.io-client'
 
-import type { Driver, FlagState } from '@/types/live-timing.types'
+import type { Driver, FlagState, LiveTimingCamera } from '@/types/live-timing.types'
 import type { RaceState } from '@/types/race-state.types'
 
 const DEFAULT_FLAG: FlagState = { color: 'vert', sectors: [] }
 const DEFAULT_RACE: RaceState = { status: 'stopped', startedAt: null }
 
-export function useRaceWebSocket() {
+type CameraUpdatePayload = {
+  cameraId: number
+  status: LiveTimingCamera['status']
+}
+
+export function useRaceWebSocket(initialCameras: LiveTimingCamera[] = []) {
   const [drivers, setDrivers] = useState<Driver[]>([])
   const [flag, setFlag] = useState<FlagState>(DEFAULT_FLAG)
   const [raceState, setRaceState] = useState<RaceState>(DEFAULT_RACE)
+  const [cameras, setCameras] = useState<LiveTimingCamera[]>(initialCameras)
   const [isConnected, setIsConnected] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    setCameras(initialCameras)
+  }, [initialCameras])
 
   useEffect(() => {
     const socket = io(import.meta.env.VITE_WS_URL || window.location.origin)
@@ -42,6 +52,16 @@ export function useRaceWebSocket() {
       setRaceState(data)
     })
 
+    socket.on('camera_update', ({ cameraId, status }: CameraUpdatePayload) => {
+      setCameras((prev) =>
+        prev.map((camera) =>
+          camera.id === cameraId
+            ? { ...camera, status }
+            : camera,
+        ),
+      )
+    })
+
     socket.on('connect_error', () => {
       setError('Connexion au live timing perdue')
       setIsConnected(false)
@@ -52,5 +72,5 @@ export function useRaceWebSocket() {
     }
   }, [])
 
-  return { drivers, flag, raceState, isConnected, error }
+  return { drivers, flag, raceState, cameras, isConnected, error }
 }
