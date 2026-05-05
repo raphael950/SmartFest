@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import type { Driver, FlagState, LiveTimingCamera } from '@/types/live-timing.types'
 import type { RaceState } from '@/types/race-state.types'
+import CameraPlayer from './CameraPlayer'
 import CarFocusBadge from './CarFocusBadge'
 import '@/css/components/live-timing/TrackDisplay.css'
 import '@/css/components/live-timing/TrackCamera.css'
@@ -166,15 +167,9 @@ export default function TrackDisplay({ circuitPath, drivers, cameras, flag, race
 
   const isRaceStopped = raceState?.status === 'stopped'
   const activeCamera = cameras.find((camera) => camera.id === activeCameraId) ?? null
-  const activeCameraStatusLabel = activeCamera?.status === 'maintenance'
-    ? 'Caméra en maintenance'
-    : activeCamera?.status === 'offline'
-      ? 'Caméra hors ligne'
-      : null
 
   // ── Modal drag ──────────────────────────────────────────────────────────────
   const modalDragRef = useRef<{ startX: number; startY: number; originX: number; originY: number } | null>(null)
-  const modalVideoRef = useRef<HTMLVideoElement>(null)
   const [modalPos, setModalPos] = useState({ x: 0, y: 0 })
   const [modalDragging, setModalDragging] = useState(false)
 
@@ -299,39 +294,12 @@ export default function TrackDisplay({ circuitPath, drivers, cameras, flag, race
             </button>
           </div>
           <div className="lt-camera-modal__body">
-            {activeCameraStatusLabel ? (
-              <div className="lt-camera-modal__status-panel" role="status" aria-live="polite">
-                <p className="lt-camera-modal__status-title">{activeCameraStatusLabel}</p>
-                <p className="lt-camera-modal__status-text">
-                  {activeCamera.status === 'maintenance'
-                    ? 'Le flux vidéo de ce secteur est temporairement indisponible. Réessaie un peu plus tard.'
-                    : 'La caméra de ce secteur n’est actuellement pas disponible.'}
-                </p>
-              </div>
-            ) : (
-              <>
-                <video
-                  ref={modalVideoRef}
-                  className="lt-camera-modal__video"
-                  controls
-                  playsInline
-                  preload="metadata"
-                >
-                  <source src={CAMERA_VIDEO_BY_SECTOR[activeCamera.sector] ?? sector1VideoUrl} type="video/mp4" />
-                </video>
-                <button
-                  type="button"
-                  className="lt-camera-modal__play"
-                  onClick={() => { void modalVideoRef.current?.play() }}
-                >
-                  Lancer la lecture
-                </button>
-              </>
-            )}
+            <CameraPlayer
+              camera={activeCamera}
+              sourceUrl={CAMERA_VIDEO_BY_SECTOR[activeCamera.sector] ?? sector1VideoUrl}
+              raceState={raceState}
+            />
             <div className="lt-camera-modal__footer">
-              <span className="lt-camera-modal__meta">
-                {activeCameraStatusLabel ?? 'Vidéo et audio du secteur associé'}
-              </span>
               <span className="lt-camera-modal__meta lt-camera-modal__meta--muted">Glisser l'en-tête pour déplacer</span>
             </div>
           </div>
