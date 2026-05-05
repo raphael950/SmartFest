@@ -6,9 +6,12 @@ import CameraPlayer from './CameraPlayer'
 import CarFocusBadge from './CarFocusBadge'
 import '@/css/components/live-timing/TrackDisplay.css'
 import '@/css/components/live-timing/TrackCamera.css'
-import sector1VideoUrl from '@/videos/sector1.mp4'
-import sector2VideoUrl from '@/videos/sector2.mp4'
-import sector3VideoUrl from '@/videos/sector3.mp4'
+
+const VIDEO_URLS = {
+  S1: '/videos/sector1.mp4',
+  S2: '/videos/sector2.mp4',
+  S3: '/videos/sector3.mp4',
+}
 
 interface TrackDisplayProps {
   circuitPath: string
@@ -218,11 +221,7 @@ export default function TrackDisplay({ circuitPath, drivers, cameras, flag, race
   }
 
   // ── Camera markers ──────────────────────────────────────────────────────────
-  const CAMERA_VIDEO_BY_SECTOR: Record<string, string> = {
-    S1: sector1VideoUrl,
-    S2: sector2VideoUrl,
-    S3: sector3VideoUrl,
-  }
+  const CAMERA_VIDEO_BY_SECTOR: Record<string, string> = VIDEO_URLS as Record<string, string>
 
   const cameraMarkers = cameras
     .filter((camera) => camera.type === 'CAM')
@@ -296,7 +295,7 @@ export default function TrackDisplay({ circuitPath, drivers, cameras, flag, race
           <div className="lt-camera-modal__body">
             <CameraPlayer
               camera={activeCamera}
-              sourceUrl={CAMERA_VIDEO_BY_SECTOR[activeCamera.sector] ?? sector1VideoUrl}
+              sourceUrl={CAMERA_VIDEO_BY_SECTOR[activeCamera.sector] ?? VIDEO_URLS.S1}
               raceState={raceState}
             />
             <div className="lt-camera-modal__footer">
