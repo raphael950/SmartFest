@@ -190,7 +190,20 @@ export default function ProfileShow({ profile, teams, canEdit }: InertiaProps<Pr
               <div className="profile-progress-card__header">
                 <div>
                   <p className="profile-item-label">Points & niveau</p>
-                  <p className="profile-item-value">{profile.levelLabel}</p>
+                  <div className="profile-progress-card__level-with-btn">
+                    <p className="profile-item-value">{profile.levelLabel}</p>
+                    {canUpgradeLevel ? (
+                      <button
+                        type="button"
+                        className="profile-progress-card__upgrade-btn profile-progress-card__upgrade-btn--in-header"
+                        onClick={upgradeLevel}
+                        aria-label="Passer au niveau supérieur"
+                        title="Passer au niveau supérieur"
+                      >
+                        <ArrowUp size={16} />
+                      </button>
+                    ) : null}
+                  </div>
                 </div>
               </div>
               <p className="profile-progress-card__summary">
@@ -208,19 +221,6 @@ export default function ProfileShow({ profile, teams, canEdit }: InertiaProps<Pr
                 <span>{profile.points} pts</span>
                 <span>{profile.levelProgress.nextLevelThreshold ?? profile.points} pts</span>
               </div>
-              {canUpgradeLevel ? (
-                <div className="profile-progress-card__actions">
-                  <button
-                    type="button"
-                    className="profile-progress-card__upgrade-btn"
-                    onClick={upgradeLevel}
-                    aria-label="Passer au niveau supérieur"
-                    title="Passer au niveau supérieur"
-                  >
-                    <ArrowUp size={16} />
-                  </button>
-                </div>
-              ) : null}
             </div>
           </article>
 

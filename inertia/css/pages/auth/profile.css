@@ -470,8 +470,8 @@
 
 .profile-points-progress,
 .profile-progress-card {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr auto;
   gap: 8px;
   min-width: 0;
 }
@@ -480,12 +480,25 @@
   min-width: 220px;
 }
 
+.profile-progress-card__header,
+.profile-progress-card__summary,
+.profile-progress-bar {
+  grid-column: 1 / -1;
+}
+
 .profile-points-progress__header,
 .profile-progress-card__header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
+}
+
+.profile-progress-card__level-with-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
 }
 
 .profile-points-progress__target,
@@ -528,12 +541,50 @@
   gap: 10px;
   color: var(--shell-muted);
   font-size: 0.76rem;
+  align-items: center;
 }
 
 .profile-progress-card__actions {
   display: flex;
-  justify-content: center;
-  width: 100%;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+@keyframes upgrade-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--racing-green) 60%, transparent), 
+                0 10px 18px color-mix(in srgb, var(--racing-green) 22%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 8px color-mix(in srgb, var(--racing-green) 0%, transparent),
+                0 10px 18px color-mix(in srgb, var(--racing-green) 22%, transparent);
+  }
+}
+
+@keyframes upgrade-glow {
+  0%, 100% {
+    filter: brightness(1.1) drop-shadow(0 0 6px color-mix(in srgb, var(--racing-green) 60%, transparent));
+  }
+  50% {
+    filter: brightness(1.2) drop-shadow(0 0 12px color-mix(in srgb, var(--racing-green) 80%, transparent));
+  }
+}
+
+.profile-progress-card__upgrade-btn--in-header {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  padding: 0;
+  flex-shrink: 0;
+  animation: upgrade-pulse 2s infinite, upgrade-glow 2s infinite;
+  transition: all 0.2s ease;
+}
+
+.profile-progress-card__upgrade-btn--in-header:hover {
+  transform: scale(1.15) translateY(-1px);
+  animation: none;
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--racing-green) 80%, transparent),
+              0 10px 24px color-mix(in srgb, var(--racing-green) 40%, transparent);
 }
 
 .profile-progress-card__upgrade-btn {
@@ -551,6 +602,7 @@
   display: grid;
   place-items: center;
   transition: transform 0.18s ease, filter 0.18s ease;
+  cursor: pointer;
 }
 
 .profile-progress-card__upgrade-btn:hover {
