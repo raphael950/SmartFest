@@ -119,10 +119,12 @@ export default function TrackDisplay({ circuitPath, drivers, flag, raceState, se
   const pitDrivers = drivers.filter((driver) => driver.hasGps === true && driver.gpsActive !== true && driver.gpsRevealPending !== true)
   const pitAnchor = getPointAt(0.985)
 
+  const isRaceStopped = raceState?.status === 'stopped'
+
   return (
     <div className="lt-glass lt-track-container lt-panel-section">
-      <div className={`lt-track-flag lt-track-flag--${flag.color}`}>
-        {flag.color.toUpperCase()}
+      <div className={isRaceStopped ? 'lt-track-flag lt-track-flag--chequered' : `lt-track-flag lt-track-flag--${flag.color}`}>
+        {isRaceStopped ? 'Course arrêtée' : flag.color.toUpperCase()}
       </div>
 
       {transform.scale > 1.05 && (
