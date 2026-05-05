@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
 import TrackDisplay from './TrackDisplay'
 import Leaderboard from './Leaderboard'
-import './live-timing.base.css'
-import './LiveTimingPanel.css'
+import '@/css/pages/live-timing/live-timing.base.css'
+import '@/css/pages/live-timing/LiveTimingPanel.css'
 import { useRaceWebSocket } from '@/hooks/use-race-websocket'
 import { FlagState } from '@/types/live-timing.types'
 
@@ -16,7 +16,7 @@ const DEFAULT_FLAG: FlagState = { color: 'vert', sectors: [] }
 
 export default function LiveTimingPanel({ circuitPath }: LiveTimingPanelProps) {
   const [isStacked, setIsStacked] = useState(false)
-  const [selectedDriverId, setSelectedDriverId] = useState<number | null>(null)
+  const [selectedDriverIds, setSelectedDriverIds] = useState<number[]>([])
 
   const { drivers, flag: wsFlag, isConnected, error } = useRaceWebSocket()
   const flag: FlagState = wsFlag ?? DEFAULT_FLAG
@@ -28,6 +28,16 @@ export default function LiveTimingPanel({ circuitPath }: LiveTimingPanelProps) {
     mq.addEventListener('change', update)
     return () => mq.removeEventListener('change', update)
   }, [])
+
+  const handleTrackClick = (id: number) => {
+    setSelectedDriverIds([id])
+  }
+
+  const handleLeaderboardClick = (id: number) => {
+    setSelectedDriverIds((prev) =>
+      prev.includes(id) ? prev.filter((driverId) => driverId !== id) : [...prev, id],
+    )
+  }
 
   return (
     <div className="lt-panel-root">
@@ -60,8 +70,8 @@ export default function LiveTimingPanel({ circuitPath }: LiveTimingPanelProps) {
               circuitPath={circuitPath}
               drivers={drivers}
               flag={flag}
-              selectedDriverId={selectedDriverId}
-              onDriverClick={(id) => setSelectedDriverId((prev) => prev === id ? null : id)}
+              selectedDriverIds={selectedDriverIds}
+              onDriverClick={handleTrackClick}
             />
           </ResizablePanel>
 
@@ -78,7 +88,8 @@ export default function LiveTimingPanel({ circuitPath }: LiveTimingPanelProps) {
           >
             <Leaderboard
               drivers={drivers}
-              selectedDriverId={selectedDriverId}
+              selectedDriverIds={selectedDriverIds}
+              onDriverClick={handleLeaderboardClick}
             />
           </ResizablePanel>
         </ResizablePanelGroup>

@@ -1,12 +1,13 @@
 import DataPanelTable, { type DataPanelTableColumn } from '@/components/ui/DataPanelTable'
 import DriverRow, { type LeaderboardDriver } from './DriverRow'
-import './live-timing.base.css'
-import './Leaderboard.css'
+import '@/css/pages/live-timing/live-timing.base.css'
+import '@/css/components/live-timing/Leaderboard.css'
 import type { Driver } from '@/types/live-timing.types'
 
 interface LeaderboardProps {
   drivers: Driver[]
-  selectedDriverId: number | null
+  selectedDriverIds: number[]
+  onDriverClick: (id: number) => void
 }
 
 const LEADERBOARD_COLUMNS: DataPanelTableColumn[] = [
@@ -16,7 +17,7 @@ const LEADERBOARD_COLUMNS: DataPanelTableColumn[] = [
   { key: 'gap', label: 'ECART', className: 'lt-leaderboard__col--gap' },
 ]
 
-export default function Leaderboard({ drivers, selectedDriverId }: LeaderboardProps) {
+export default function Leaderboard({ drivers, selectedDriverIds, onDriverClick }: LeaderboardProps) {
   const sortedDrivers = [...drivers].sort((a, b) => {
     const aBucket = a.gpsActive ? 0 : a.hasGps ? 1 : 2
     const bBucket = b.gpsActive ? 0 : b.hasGps ? 1 : 2
@@ -25,7 +26,7 @@ export default function Leaderboard({ drivers, selectedDriverId }: LeaderboardPr
   })
 
   const enrichedDrivers: LeaderboardDriver[] = sortedDrivers
-    .filter((driver) => driver.gpsRevealPending !== true)
+    .filter((driver) => driver.hasGps === true)
     .map((driver, index) => ({
     id: driver.id,
     name: driver.pilote ?? '',
@@ -57,7 +58,7 @@ export default function Leaderboard({ drivers, selectedDriverId }: LeaderboardPr
       badge={<span className="lt-leaderboard__badge">LIVE</span>}
       scrollClassName="lt-leaderboard__scroll"
       tableClassName="lt-leaderboard__table"
-      tableStyle={{ minWidth: 500 }}
+      tableStyle={{ minWidth: '100%', maxWidth: '100%' }}
     >
       {enrichedDrivers.length === 0 ? (
         <tr>
@@ -72,7 +73,8 @@ export default function Leaderboard({ drivers, selectedDriverId }: LeaderboardPr
             columnCount={LEADERBOARD_COLUMNS.length}
             driver={driver}
             rank={index + 1}
-            isSelected={driver.id === selectedDriverId}
+            isSelected={selectedDriverIds.includes(driver.id)}
+            onDriverClick={onDriverClick}
           />
         ))
       )}

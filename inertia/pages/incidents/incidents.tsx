@@ -1,6 +1,6 @@
 import { router } from '@inertiajs/react'
-import { AlertTriangle } from 'lucide-react'
-import { useState } from 'react'
+import { AlertTriangle, ChevronDown } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { InertiaProps } from '@/types'
 import type { Incident, IncidentSector, IncidentSeverity, IncidentType } from '@/types/incidents.types'
 import '@/css/pages/incidents/incidents.css'
@@ -53,6 +53,11 @@ const isIncidentSector = (value: string): value is IncidentSector => {
 
 type IncidentsPageProps = {
   incidents: Incident[]
+  teams: Array<{
+    id: number
+    name: string
+    carModel: string
+  }>
 }
 
 const formatTime = (dateString: string) => {
@@ -64,16 +69,62 @@ const formatSector = (sector: string) => {
   return `Secteur ${sector.replace('S', '')}`
 }
 
-const IncidentsPage = ({ incidents }: InertiaProps<IncidentsPageProps>) => {
+const IncidentsPage = ({ incidents, teams }: InertiaProps<IncidentsPageProps>) => {
   const [type, setType] = useState<IncidentType | ''>('')
-  const [vehicles, setVehicles] = useState('')
+  const [selectedTeamIds, setSelectedTeamIds] = useState<number[]>([])
   const [severity, setSeverity] = useState<IncidentSeverity>('leger')
   const [sector, setSector] = useState<IncidentSector | ''>('')
   const [description, setDescription] = useState('')
+  const [vehicleMenuOpen, setVehicleMenuOpen] = useState(false)
+  const vehicleMenuRef = useRef<HTMLDivElement>(null)
+
+  const selectedVehiclesLabel = useMemo(() => {
+    if (selectedTeamIds.length === 0) {
+      return 'Sélectionner les voitures impliquées'
+    }
+
+    const selectedModels = teams
+      .filter((team) => selectedTeamIds.includes(team.id))
+      .map((team) => team.carModel)
+
+    return selectedModels.join(', ')
+  }, [selectedTeamIds, teams])
+
+  useEffect(() => {
+    const onPointerDown = (event: PointerEvent) => {
+      if (!vehicleMenuRef.current?.contains(event.target as Node)) {
+        setVehicleMenuOpen(false)
+      }
+    }
+
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setVehicleMenuOpen(false)
+      }
+    }
+
+    document.addEventListener('pointerdown', onPointerDown)
+    document.addEventListener('keydown', onEscape)
+
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown)
+      document.removeEventListener('keydown', onEscape)
+    }
+  }, [])
+
+  const toggleVehicle = (teamId: number) => {
+    setSelectedTeamIds((current) =>
+      current.includes(teamId) ? current.filter((id) => id !== teamId) : [...current, teamId]
+    )
+  }
 
   const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault()
 
+    const vehicles = teams
+      .filter((team) => selectedTeamIds.includes(team.id))
+      .map((team) => team.carModel)
+      .join(', ')
     if (!type || !vehicles.trim() || !sector || !description.trim()) {
       return
     }
@@ -87,17 +138,17 @@ const IncidentsPage = ({ incidents }: InertiaProps<IncidentsPageProps>) => {
     }, {
       onSuccess: () => {
         setType('')
-        setVehicles('')
         setSeverity('leger')
         setSector('')
         setDescription('')
+        setSelectedTeamIds([])
+        setVehicleMenuOpen(false)
       },
     })
   }
 
   return (
     <section className="incidents-page">
-      {/* Create form */}
       <div className="incidents-create">
         <h2 className="incidents-create__title">
           <span className="incidents-create__title-icon">+</span>{' '}
@@ -130,14 +181,47 @@ const IncidentsPage = ({ incidents }: InertiaProps<IncidentsPageProps>) => {
               <label className="incidents-create__label incidents-create__label--required" htmlFor="incident-vehicles">
                 Véhicules impliqués
               </label>
-              <input
-                id="incident-vehicles"
-                className="incidents-create__input"
-                type="text"
-                placeholder="Séparer par virgule"
-                value={vehicles}
-                onChange={(e) => setVehicles(e.target.value)}
-              />
+              <div className="incidents-vehicle-picker" ref={vehicleMenuRef}>
+                <button
+                  id="incident-vehicles"
+                  type="button"
+                  className="incidents-vehicle-picker__trigger"
+                  onClick={() => setVehicleMenuOpen((current) => !current)}
+                  aria-haspopup="menu"
+                  aria-expanded={vehicleMenuOpen}
+                >
+                  <span className="incidents-vehicle-picker__trigger-label">{selectedVehiclesLabel}</span>
+                  <ChevronDown size={16} className={`incidents-vehicle-picker__chevron${vehicleMenuOpen ? ' is-open' : ''}`} />
+                </button>
+
+                {vehicleMenuOpen && (
+                  <div className="incidents-vehicle-picker__menu" role="menu" aria-label="Sélection des voitures impliquées">
+                    {teams.length === 0 ? (
+                      <p className="incidents-vehicle-picker__empty">Aucune voiture disponible.</p>
+                    ) : (
+                      teams.map((team) => {
+                        const isSelected = selectedTeamIds.includes(team.id)
+
+                        return (
+                          <label key={team.id} className={`incidents-vehicle-picker__option${isSelected ? ' is-selected' : ''}`}>
+                            <input
+                              type="checkbox"
+                              className="incidents-vehicle-picker__checkbox"
+                              checked={isSelected}
+                              onChange={() => toggleVehicle(team.id)}
+                            />
+                            <span className="incidents-vehicle-picker__check" aria-hidden="true" />
+                            <span className="incidents-vehicle-picker__text">
+                              <strong>{team.carModel}</strong>
+                              <span>{team.name}</span>
+                            </span>
+                          </label>
+                        )
+                      })
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="incidents-create__field">
@@ -201,7 +285,6 @@ const IncidentsPage = ({ incidents }: InertiaProps<IncidentsPageProps>) => {
         </form>
       </div>
 
-      {/* Timeline */}
       <div className="incidents-timeline">
         <h2 className="incidents-timeline__title">
           <AlertTriangle size={20} className="incidents-timeline__title-icon" />

@@ -1,4 +1,5 @@
 import Incident from '#models/incident'
+import Team from '#models/team'
 import {
   INCIDENT_SECTORS,
   INCIDENT_SEVERITIES,
@@ -15,7 +16,10 @@ import type { HttpContext } from '@adonisjs/core/http'
 
 export default class IncidentsController {
   async index({ inertia }: HttpContext) {
-    const incidents = await Incident.query().orderBy('created_at', 'desc')
+    const [incidents, teams] = await Promise.all([
+      Incident.query().orderBy('created_at', 'desc'),
+      Team.query().select('id', 'name', 'carModel').orderBy('display_order', 'asc').orderBy('id', 'asc'),
+    ])
 
     return inertia.render('incidents/incidents', {
       incidents: incidents.map((incident) => ({
@@ -27,6 +31,11 @@ export default class IncidentsController {
         description: incident.description,
         createdAt: incident.createdAt.toISO() ?? '',
         updatedAt: incident.updatedAt?.toISO() ?? null,
+      })),
+      teams: teams.map((team) => ({
+        id: team.id,
+        name: team.name,
+        carModel: team.carModel,
       })),
     })
   }
