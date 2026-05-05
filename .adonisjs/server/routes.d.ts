@@ -13,6 +13,7 @@ export type ScannedRoutes = {
     'profile.me': { paramsTuple?: []; params?: {} }
     'profile.edit': { paramsTuple?: []; params?: {} }
     'profile.update': { paramsTuple?: []; params?: {} }
+    'profile.level.upgrade': { paramsTuple?: []; params?: {} }
     'networking.index': { paramsTuple?: []; params?: {} }
     'live-timing': { paramsTuple?: []; params?: {} }
     'api.live-timing': { paramsTuple?: []; params?: {} }
@@ -65,6 +66,7 @@ export type ScannedRoutes = {
     'new_account.store': { paramsTuple?: []; params?: {} }
     'session.store': { paramsTuple?: []; params?: {} }
     'profile.update': { paramsTuple?: []; params?: {} }
+    'profile.level.upgrade': { paramsTuple?: []; params?: {} }
     'session.destroy': { paramsTuple?: []; params?: {} }
     'admin.users.verify': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.users.role': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

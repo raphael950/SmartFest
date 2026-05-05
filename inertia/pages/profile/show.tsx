@@ -1,6 +1,7 @@
 import { Link } from '@adonisjs/inertia/react'
+import { router } from '@inertiajs/react'
 import { InertiaProps } from '~/types'
-import { Briefcase, Cake, Sparkles, Trophy, UserRound, VenusAndMars } from 'lucide-react'
+import { ArrowUp, Briefcase, Cake, Sparkles, Trophy, UserRound, VenusAndMars } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import profileBg from '~/images/profile/profile-bg.jpg'
 import ProfileEditModal from '@/components/profile/ProfileEditModal'
@@ -80,6 +81,11 @@ export default function ProfileShow({ profile, canEdit }: InertiaProps<ProfilePa
   const [isEditOpen, setIsEditOpen] = useState(false)
   const age = computeAge(profile.birthDate)
   const identity = splitIdentity(profile.fullName, profile.pseudo)
+  const canUpgradeLevel = canEdit && !profile.levelProgress.isMaxLevel && profile.levelProgress.pointsToNextLevel === 0
+
+  const upgradeLevel = () => {
+    router.post('/mon-profil/niveau', {}, { preserveScroll: true })
+  }
 
   useEffect(() => {
     setIsAvatarBroken(false)
@@ -181,7 +187,6 @@ export default function ProfileShow({ profile, canEdit }: InertiaProps<ProfilePa
                   <p className="profile-item-label">Points & niveau</p>
                   <p className="profile-item-value">{profile.levelLabel}</p>
                 </div>
-                <span className="profile-progress-card__target">{profile.points} pts</span>
               </div>
               <p className="profile-progress-card__summary">
                 {profile.levelProgress.isMaxLevel
@@ -195,9 +200,22 @@ export default function ProfileShow({ profile, canEdit }: InertiaProps<ProfilePa
                 />
               </div>
               <div className="profile-progress-card__scale">
-                <span>{profile.levelProgress.currentLevelMinPoints} pts</span>
+                <span>{profile.points} pts</span>
                 <span>{profile.levelProgress.nextLevelThreshold ?? profile.points} pts</span>
               </div>
+              {canUpgradeLevel ? (
+                <div className="profile-progress-card__actions">
+                  <button
+                    type="button"
+                    className="profile-progress-card__upgrade-btn"
+                    onClick={upgradeLevel}
+                    aria-label="Passer au niveau supérieur"
+                    title="Passer au niveau supérieur"
+                  >
+                    <ArrowUp size={16} />
+                  </button>
+                </div>
+              ) : null}
             </div>
           </article>
 

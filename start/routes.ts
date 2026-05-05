@@ -23,7 +23,7 @@ router.get('/', [HomeController, 'index']).as('home')
 router
   .get('/profil/:pseudo', async ({ params, inertia, auth }) => {
     const user = await User.query().where('pseudo', params.pseudo).firstOrFail()
-    const levelProgress = userLevelService.getProgress(user.points)
+    const levelProgress = userLevelService.getProgress(user.points, user.level)
 
     return inertia.render('profile/show', {
       profile: {
@@ -36,7 +36,7 @@ router
         jobTitle: user.jobTitle,
         followedTeam: user.followedTeam,
         points: user.points,
-        level: levelProgress.level,
+        level: user.level,
         levelLabel: levelProgress.levelLabel,
         levelProgress,
       },
@@ -70,6 +70,7 @@ router
 
     router.get('mon-profil/edition', [ProfileController, 'edit']).as('profile.edit')
     router.post('mon-profil/edition', [ProfileController, 'update']).as('profile.update')
+    router.post('mon-profil/niveau', [ProfileController, 'upgradeLevel']).as('profile.level.upgrade')
     router.get('networking', [NetworkingController, 'index']).as('networking.index')
     router.get('live-timing', [LiveTimingController, 'index']).as('live-timing')
     router.get('api/live-timing', [LiveTimingController, 'apiIndex']).as('api.live-timing')

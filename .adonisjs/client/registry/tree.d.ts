@@ -8,6 +8,9 @@ export interface ApiDefinition {
     me: typeof routes['profile.me']
     edit: typeof routes['profile.edit']
     update: typeof routes['profile.update']
+    level: {
+      upgrade: typeof routes['profile.level.upgrade']
+    }
   }
   newAccount: {
     create: typeof routes['new_account.create']

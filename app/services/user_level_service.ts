@@ -1,3 +1,5 @@
+import type { UserRole } from '#models/user_role'
+
 export type UserLevel = 'debutant' | 'intermediaire' | 'avance' | 'expert'
 
 type LevelDefinition = {
@@ -25,6 +27,19 @@ const LEVELS: LevelDefinition[] = [
   { key: 'expert', label: 'Expert', minPoints: 300 },
 ]
 
+const LEVEL_ROLES: Record<UserLevel, UserRole> = {
+  debutant: 'simple',
+  intermediaire: 'simple',
+  avance: 'complexe',
+  expert: 'admin',
+}
+
+const ROLE_LEVELS: Record<UserRole, UserLevel> = {
+  simple: 'debutant',
+  complexe: 'avance',
+  admin: 'expert',
+}
+
 class UserLevelService {
   getLevelFromPoints(points: number): UserLevel {
     const normalizedPoints = Math.max(0, points)
@@ -39,20 +54,40 @@ class UserLevelService {
     return 'debutant'
   }
 
-  getProgress(points: number): UserLevelProgress {
-    const normalizedPoints = Math.max(0, points)
-    const level = this.getLevelFromPoints(normalizedPoints)
+  getNextLevel(level: UserLevel): UserLevel | null {
     const currentIndex = LEVELS.findIndex((entry) => entry.key === level)
-    const currentLevel = LEVELS[currentIndex]
-    const nextLevel = LEVELS[currentIndex + 1] ?? null
+
+    return LEVELS[currentIndex + 1]?.key ?? null
+  }
+
+  getRoleForLevel(level: UserLevel): UserRole {
+    return LEVEL_ROLES[level]
+  }
+
+  getLevelAndPointsForRole(role: UserRole): { level: UserLevel; minPoints: number } {
+    const level = ROLE_LEVELS[role]
+    const levelDef = LEVELS.find((l) => l.key === level)
+
+    return {
+      level,
+      minPoints: levelDef?.minPoints ?? 0,
+    }
+  }
+
+  getProgress(points: number, activeLevel?: UserLevel): UserLevelProgress {
+    const normalizedPoints = Math.max(0, points)
+    const level = activeLevel ?? this.getLevelFromPoints(normalizedPoints)
+    const currentIndex = LEVELS.findIndex((entry) => entry.key === level)
+    const currentLevelDefinition = LEVELS[currentIndex]
+    const nextLevel = this.getNextLevel(level)
 
     if (!nextLevel) {
       return {
         level,
-        levelLabel: currentLevel.label,
+        levelLabel: currentLevelDefinition.label,
         nextLevel: null,
         nextLevelLabel: null,
-        currentLevelMinPoints: currentLevel.minPoints,
+        currentLevelMinPoints: currentLevelDefinition.minPoints,
         nextLevelThreshold: null,
         progressPercent: 100,
         pointsToNextLevel: 0,
@@ -60,21 +95,37 @@ class UserLevelService {
       }
     }
 
-    const span = nextLevel.minPoints - currentLevel.minPoints
+    const nextLevelDefinition = LEVELS.find((entry) => entry.key === nextLevel)
+
+    if (!nextLevelDefinition) {
+      return {
+        level,
+        levelLabel: currentLevelDefinition.label,
+        nextLevel: null,
+        nextLevelLabel: null,
+        currentLevelMinPoints: currentLevelDefinition.minPoints,
+        nextLevelThreshold: null,
+        progressPercent: 100,
+        pointsToNextLevel: 0,
+        isMaxLevel: true,
+      }
+    }
+
+    const span = nextLevelDefinition.minPoints - currentLevelDefinition.minPoints
     const progressPercent = Math.max(
       0,
-      Math.min(100, Math.round(((normalizedPoints - currentLevel.minPoints) / span) * 100))
+      Math.min(100, Math.round(((normalizedPoints - currentLevelDefinition.minPoints) / span) * 100))
     )
 
     return {
       level,
-      levelLabel: currentLevel.label,
-      nextLevel: nextLevel.key,
-      nextLevelLabel: nextLevel.label,
-      currentLevelMinPoints: currentLevel.minPoints,
-      nextLevelThreshold: nextLevel.minPoints,
+      levelLabel: currentLevelDefinition.label,
+      nextLevel,
+      nextLevelLabel: nextLevelDefinition.label,
+      currentLevelMinPoints: currentLevelDefinition.minPoints,
+      nextLevelThreshold: nextLevelDefinition.minPoints,
       progressPercent,
-      pointsToNextLevel: Math.max(0, nextLevel.minPoints - normalizedPoints),
+      pointsToNextLevel: Math.max(0, nextLevelDefinition.minPoints - normalizedPoints),
       isMaxLevel: false,
     }
   }

@@ -1,6 +1,7 @@
 import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
 import { USER_ROLE_LABELS, hasMinimumRole, parseUserRole } from '#models/user_role'
+import userLevelService from '#services/user_level_service'
 
 export default class AdminUsersController {
   async index({ inertia }: HttpContext) {
@@ -62,6 +63,10 @@ export default class AdminUsersController {
     }
 
     user.role = role
+
+    const { level, minPoints } = userLevelService.getLevelAndPointsForRole(role)
+    user.level = level
+    user.points = minPoints
 
     if (hasMinimumRole(role, 'complexe')) {
       user.isVerified = true
