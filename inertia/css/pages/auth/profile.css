@@ -11,6 +11,8 @@
   overflow: hidden;
   isolation: isolate;
   border-radius: var(--profile-card-radius);
+  clip-path: inset(0 round var(--profile-card-radius));
+  contain: paint;
   padding: 32px 24px 22px;
   background:
     radial-gradient(1200px 300px at 50% 10%, color-mix(in srgb, var(--racing-blue) 10%, transparent), transparent 20%),
@@ -48,6 +50,7 @@
   content: '';
   position: absolute;
   inset: 0;
+  border-radius: inherit;
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--racing-black) 22%, transparent) 0%, color-mix(in srgb, var(--racing-black) 68%, transparent) 100%),
     repeating-linear-gradient(
