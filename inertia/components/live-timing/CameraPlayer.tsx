@@ -24,7 +24,8 @@ const STATUS_MESSAGE: Record<'maintenance' | 'offline', string> = {
 export default function CameraPlayer({ camera, sourceUrl, raceState }: CameraPlayerProps) {
     const videoRef = useRef<HTMLVideoElement>(null)
     const liveAnchorRef = useRef<number>(0)
-    const [isPlaying, setIsPlaying] = useState(true)
+    const [isPlaying, setIsPlaying] = useState(false)
+    const [videoStatus, setVideoStatus] = useState<'loading' | 'ready' | 'error'>('loading')
     const [volume, setVolume] = useState(1)
 
     const isRaceStopped = raceState?.status === 'stopped'
@@ -40,7 +41,15 @@ export default function CameraPlayer({ camera, sourceUrl, raceState }: CameraPla
         video.removeAttribute('src')
         video.load()
         setIsPlaying(false)
+        setVideoStatus('ready')
     }, [isUnavailable])
+
+    useEffect(() => {
+        if (isUnavailable) return
+
+        setIsPlaying(false)
+        setVideoStatus('loading')
+    }, [camera.id, sourceUrl, isUnavailable, raceState?.startedAt])
 
     useEffect(() => {
         if (isUnavailable) return
@@ -151,7 +160,7 @@ export default function CameraPlayer({ camera, sourceUrl, raceState }: CameraPla
 
     return (
         <div className="lt-camera-player">
-            <div className={`lt-camera-player__frame${isUnavailable ? ' lt-camera-player__frame--blocked' : ''}`}>
+            <div className={`lt-camera-player__frame${isUnavailable ? ' lt-camera-player__frame--blocked' : ''}${videoStatus !== 'ready' && !isUnavailable ? ' lt-camera-player__frame--loading' : ''}`}>
                 <video
                     ref={videoRef}
                     className={`lt-camera-player__video${isUnavailable ? ' lt-camera-player__video--blocked' : ''}`}
@@ -166,12 +175,31 @@ export default function CameraPlayer({ camera, sourceUrl, raceState }: CameraPla
                     controlsList="nodownload noplaybackrate noremoteplayback"
                     onPlay={() => setIsPlaying(true)}
                     onPause={() => setIsPlaying(false)}
+                    onLoadStart={() => setVideoStatus('loading')}
+                    onLoadedData={() => setVideoStatus('ready')}
+                    onCanPlay={() => setVideoStatus('ready')}
+                    onPlaying={() => setVideoStatus('ready')}
+                    onWaiting={() => setVideoStatus('loading')}
+                    onStalled={() => setVideoStatus('loading')}
+                    onError={() => setVideoStatus('error')}
                 />
 
                 {isUnavailable ? (
                     <div className="lt-camera-player__status-panel lt-camera-player__status-panel--overlay" role="status" aria-live="polite">
                         <p className="lt-camera-player__status-title">{title}</p>
                         <p className="lt-camera-player__status-text">{message}</p>
+                    </div>
+                ) : videoStatus !== 'ready' ? (
+                    <div className="lt-camera-player__status-panel lt-camera-player__status-panel--overlay lt-camera-player__status-panel--loading" role="status" aria-live="polite" aria-busy="true">
+                        <div className="lt-camera-player__loading-spinner" aria-hidden="true" />
+                        <p className="lt-camera-player__status-title">
+                            {videoStatus === 'error' ? 'Flux temporairement indisponible' : 'Chargement de la caméra'}
+                        </p>
+                        <p className="lt-camera-player__status-text">
+                            {videoStatus === 'error'
+                                ? 'Impossible de lire la vidéo pour le moment. Le flux tente de se reconnecter.'
+                                : 'La vidéo est en cours de préparation. Le flux arrive dans quelques instants.'}
+                        </p>
                     </div>
                 ) : (
                     <>
