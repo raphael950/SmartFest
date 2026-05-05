@@ -7,7 +7,7 @@ import CarFocusBadge from './CarFocusBadge'
 import LedBadge from './LedBadge'
 import TrackObjectModal from './TrackObjectModal'
 import '@/css/components/live-timing/TrackDisplay.css'
-import '@/css/components/live-timing/TrackCamera.css'
+import '@/css/components/live-timing/TrackObject.css'
 
 const VIDEO_URLS = {
   S1: '/videos/sector1.mp4',
