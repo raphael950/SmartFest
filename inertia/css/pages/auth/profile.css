@@ -8,7 +8,7 @@
 .profile-hero-card {
   --profile-card-radius: 28px;
   position: relative;
-  overflow: visible;
+  overflow: hidden;
   isolation: isolate;
   border-radius: var(--profile-card-radius);
   padding: 32px 24px 22px;
@@ -26,6 +26,14 @@
   margin: 18px 0 0;
   display: flex;
   justify-content: flex-end;
+}
+
+.profile-actions--outside .profile-btn--primary {
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--racing-black) 42%, transparent);
+}
+
+.profile-actions--outside .profile-btn--primary:hover {
+  box-shadow: 0 14px 30px color-mix(in srgb, var(--racing-black) 52%, transparent);
 }
 
 .profile-hero-card--public {
