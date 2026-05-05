@@ -88,7 +88,7 @@ const ProfileEditForm = ({ profile, teams, hasPublicProfile }: ProfileEditFormPr
 
           <div className="profile-edit-grid">
             <div className="field">
-              <label htmlFor="fullName">Nom complet (optionnel)</label>
+              <label htmlFor="fullName">Nom complet</label>
               <div className="input-wrap">
                 <User size={18} className="field-icon" />
                 <input

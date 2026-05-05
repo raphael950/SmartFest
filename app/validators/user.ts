@@ -32,7 +32,7 @@ export const signupValidator = vine.create({
  * Validator to update current user public profile
  */
 export const updateProfileValidator = vine.create({
-  fullName: vine.string().trim().maxLength(140).nullable(),
+  fullName: vine.string().trim().minLength(2).maxLength(140),
   pseudo: vine
     .string()
     .trim()
