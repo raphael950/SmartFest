@@ -254,6 +254,10 @@
   gap: 0.65rem;
 }
 
+.admin-user-card__identity > div {
+  min-width: 0;
+}
+
 .admin-user-card__avatar {
   flex: 0 0 2.1rem;
   width: 2.1rem;
@@ -279,7 +283,15 @@
   font-size: 0.8rem;
   display: flex;
   align-items: center;
+  min-width: 0;
   gap: 0.35rem;
+}
+
+.admin-user-card__email span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .admin-user-card__badges {
