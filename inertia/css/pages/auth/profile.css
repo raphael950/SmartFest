@@ -116,8 +116,18 @@
 }
 
 .profile-avatar-frame__image--placeholder {
-  color: var(--shell-muted);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--racing-white) 5%, transparent), transparent);
+  display: grid;
+  place-items: center;
+  color: color-mix(in srgb, var(--racing-white) 76%, var(--shell-muted));
+  background:
+    radial-gradient(circle at 50% 38%, color-mix(in srgb, var(--racing-white) 9%, transparent), transparent 54%),
+    linear-gradient(180deg, color-mix(in srgb, var(--racing-white) 6%, transparent), color-mix(in srgb, var(--shell-menu-bg) 90%, transparent));
+}
+
+.profile-avatar-frame__image--placeholder svg {
+  width: 52px;
+  height: 52px;
+  opacity: 0.92;
 }
 
 .profile-headline {
