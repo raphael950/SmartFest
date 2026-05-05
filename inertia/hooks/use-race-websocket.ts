@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { io } from 'socket.io-client'
 
-import type { Driver, FlagState, LiveTimingCamera } from '@/types/live-timing.types'
+import type { Driver, FlagState, LiveTimingCamera, LiveTimingLed } from '@/types/live-timing.types'
 import type { RaceState } from '@/types/race-state.types'
 
 const DEFAULT_FLAG: FlagState = { color: 'vert', sectors: [] }
@@ -13,17 +13,27 @@ type CameraUpdatePayload = {
   status: LiveTimingCamera['status']
 }
 
-export function useRaceWebSocket(initialCameras: LiveTimingCamera[] = []) {
+type LedUpdatePayload = {
+  ledId: number
+  status: LiveTimingLed['status']
+}
+
+export function useRaceWebSocket(initialCameras: LiveTimingCamera[] = [], initialLeds: LiveTimingLed[] = []) {
   const [drivers, setDrivers] = useState<Driver[]>([])
   const [flag, setFlag] = useState<FlagState>(DEFAULT_FLAG)
   const [raceState, setRaceState] = useState<RaceState>(DEFAULT_RACE)
   const [cameras, setCameras] = useState<LiveTimingCamera[]>(initialCameras)
+  const [leds, setLeds] = useState<LiveTimingLed[]>(initialLeds)
   const [isConnected, setIsConnected] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     setCameras(initialCameras)
   }, [initialCameras])
+
+  useEffect(() => {
+    setLeds(initialLeds)
+  }, [initialLeds])
 
   useEffect(() => {
     const socket = io(import.meta.env.VITE_WS_URL || window.location.origin)
@@ -62,6 +72,16 @@ export function useRaceWebSocket(initialCameras: LiveTimingCamera[] = []) {
       )
     })
 
+    socket.on('led_update', ({ ledId, status }: LedUpdatePayload) => {
+      setLeds((prev) =>
+        prev.map((led) =>
+          led.id === ledId
+            ? { ...led, status }
+            : led,
+        ),
+      )
+    })
+
     socket.on('connect_error', () => {
       setError('Connexion au live timing perdue')
       setIsConnected(false)
@@ -72,5 +92,5 @@ export function useRaceWebSocket(initialCameras: LiveTimingCamera[] = []) {
     }
   }, [])
 
-  return { drivers, flag, raceState, cameras, isConnected, error }
+  return { drivers, flag, raceState, cameras, leds, isConnected, error }
 }

@@ -24,6 +24,11 @@ export interface CameraUpdatePayload {
   status: string
 }
 
+export interface LedUpdatePayload {
+  ledId: number
+  status: string
+}
+
 // ─── État drapeau par défaut ──────────────────────────────────────────────────
 
 const DEFAULT_FLAG: FlagState = { color: 'vert', sectors: [] }
@@ -181,6 +186,15 @@ class SocketService {
   public updateCamera(cameraId: number, status: string): CameraUpdatePayload {
     const payload: CameraUpdatePayload = { cameraId, status }
     this.io?.emit('camera_update', payload)
+    return payload
+  }
+
+  /**
+   * Diffuse un changement de statut LED à tous les clients connectés.
+   */
+  public updateLed(ledId: number, status: string): LedUpdatePayload {
+    const payload: LedUpdatePayload = { ledId, status }
+    this.io?.emit('led_update', payload)
     return payload
   }
 

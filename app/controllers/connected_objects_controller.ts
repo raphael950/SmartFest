@@ -192,6 +192,8 @@ export default class ConnectedObjectsController {
     await device.save()
     if (device.type === 'CAM') {
       socketService.updateCamera(device.id, device.status)
+    } else if (device.type === 'LED') {
+      socketService.updateLed(device.id, device.status)
     }
     await socketService.refreshLiveTiming()
     return response.redirect().back()

@@ -5,21 +5,22 @@ import Leaderboard from './Leaderboard'
 import '@/css/pages/live-timing/live-timing.base.css'
 import '@/css/pages/live-timing/LiveTimingPanel.css'
 import { useRaceWebSocket } from '@/hooks/use-race-websocket'
-import type { FlagState, LiveTimingCamera } from '@/types/live-timing.types'
+import type { FlagState, LiveTimingCamera, LiveTimingLed } from '@/types/live-timing.types'
 
 interface LiveTimingPanelProps {
   circuitPath: string
   cameras: LiveTimingCamera[]
+  leds: LiveTimingLed[]
 }
 
 const STACKED_BREAKPOINT = 1100
 const DEFAULT_FLAG: FlagState = { color: 'vert', sectors: [] }
 
-export default function LiveTimingPanel({ circuitPath, cameras }: LiveTimingPanelProps) {
+export default function LiveTimingPanel({ circuitPath, cameras, leds }: LiveTimingPanelProps) {
   const [isStacked, setIsStacked] = useState(false)
   const [selectedDriverIds, setSelectedDriverIds] = useState<number[]>([])
 
-  const { drivers, cameras: reactiveCameras, flag: wsFlag, raceState, isConnected, error } = useRaceWebSocket(cameras)
+  const { drivers, cameras: reactiveCameras, leds: reactiveLeds, flag: wsFlag, raceState, isConnected, error } = useRaceWebSocket(cameras, leds)
   const flag: FlagState = wsFlag ?? DEFAULT_FLAG
   const isRaceRunning = raceState?.status === 'running'
 
@@ -82,6 +83,7 @@ export default function LiveTimingPanel({ circuitPath, cameras }: LiveTimingPane
               circuitPath={circuitPath}
               drivers={drivers}
               cameras={reactiveCameras}
+              leds={reactiveLeds}
               flag={flag}
               raceState={raceState}
               selectedDriverIds={selectedDriverIds}

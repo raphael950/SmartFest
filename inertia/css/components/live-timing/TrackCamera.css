@@ -1,3 +1,5 @@
+/* ─── Camera Marker ──────────────────────────────────────────────────────────── */
+
 .lt-camera-marker {
   cursor: pointer;
 }
@@ -36,13 +38,16 @@
   letter-spacing: 0.06em;
 }
 
-.lt-camera-modal {
+/* ─── Modals ─────────────────────────────────────────────────────────────────── */
+
+.lt-camera-modal,
+.lt-track-modal {
   position: fixed;
   z-index: 9999;
   width: min(420px, calc(100vw - 28px));
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 18px;
-  background: rgba(7, 10, 18, 0.94);
+  background: rgba(15, 23, 42, 0.92);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(14px);
   color: var(--lt-white);
@@ -51,7 +56,8 @@
   touch-action: none;
 }
 
-.lt-camera-modal__header {
+.lt-camera-modal__header,
+.lt-track-modal__header {
   display: flex;
   justify-content: space-between;
   gap: 12px;
@@ -64,18 +70,21 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.lt-camera-modal__header:active {
+.lt-camera-modal__header:active,
+.lt-track-modal__header:active {
   cursor: grabbing;
 }
 
-.lt-camera-modal__title-wrap {
+.lt-camera-modal__title-wrap,
+.lt-track-modal__title-wrap {
   display: flex;
   gap: 10px;
   align-items: flex-start;
   min-width: 0;
 }
 
-.lt-camera-modal__badge {
+.lt-camera-modal__badge,
+.lt-track-modal__badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -89,21 +98,30 @@
   letter-spacing: 0.08em;
 }
 
-.lt-camera-modal__title {
+.lt-camera-modal__badge--led,
+.lt-track-modal__badge--led {
+  background: rgba(245, 158, 11, 0.18);
+  color: #fcd34d;
+}
+
+.lt-camera-modal__title,
+.lt-track-modal__title {
   margin: 0;
   font-size: 0.95rem;
   font-weight: 700;
   line-height: 1.2;
 }
 
-.lt-camera-modal__subtitle {
+.lt-camera-modal__subtitle,
+.lt-track-modal__subtitle {
   margin: 4px 0 0;
   font-size: 0.72rem;
   color: rgba(255, 255, 255, 0.68);
   letter-spacing: 0.02em;
 }
 
-.lt-camera-modal__close {
+.lt-camera-modal__close,
+.lt-track-modal__close {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -117,13 +135,52 @@
   flex: 0 0 auto;
 }
 
-.lt-camera-modal__close:hover {
+.lt-camera-modal__close:hover,
+.lt-track-modal__close:hover {
   background: rgba(255, 255, 255, 0.08);
 }
 
-.lt-camera-modal__body {
+.lt-camera-modal__body,
+.lt-track-modal__body {
   padding: 12px 14px 14px;
 }
+
+.lt-camera-modal__footer,
+.lt-track-modal__footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  margin-top: 10px;
+  font-size: 0.72rem;
+}
+
+.lt-camera-modal__meta,
+.lt-track-modal__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.84);
+}
+
+.lt-camera-modal__meta--muted,
+.lt-track-modal__meta--muted {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ─── Track Modal variants ───────────────────────────────────────────────────── */
+
+.lt-track-modal--led .lt-track-modal__header {
+  background:
+    linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(8, 11, 18, 0.95)),
+    radial-gradient(circle at top right, rgba(245, 158, 11, 0.22), transparent 40%);
+}
+
+.lt-track-modal--led .lt-track-modal__badge {
+  background: rgba(245, 158, 11, 0.18);
+  color: #fcd34d;
+}
+
+/* ─── Camera Player ──────────────────────────────────────────────────────────── */
 
 .lt-camera-player {
   display: flex;
@@ -193,8 +250,7 @@
   position: absolute;
   inset: 0;
   opacity: 0;
-  transform: translateY(0);
-  transition: opacity 0.18s ease, transform 0.18s ease;
+  transition: opacity 0.18s ease;
   pointer-events: none;
 }
 
@@ -301,21 +357,135 @@
   color: rgba(255, 255, 255, 0.74);
 }
 
-.lt-camera-modal__footer {
+/* ─── LED Badge ──────────────────────────────────────────────────────────────── */
+
+.lt-led-badge {
+  cursor: pointer;
+}
+
+.lt-led-badge__glow {
+  fill: rgba(255, 255, 255, 0.04);
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 1;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.lt-led-badge__tile {
+  stroke: #06101e;
+  stroke-width: 1.2;
+  filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.22));
+}
+
+.lt-led-badge--online .lt-led-badge__tile  { fill: rgba(34,  197, 94,  0.95); }
+.lt-led-badge--alert .lt-led-badge__tile   { fill: rgba(245, 158, 11,  0.95); }
+.lt-led-badge--maintenance .lt-led-badge__tile { fill: rgba(249, 115, 22, 0.92); }
+.lt-led-badge--offline .lt-led-badge__tile { fill: rgba(100, 116, 139, 0.84); }
+
+.lt-led-badge .lt-led-badge__tile--vert      { fill: #22c55e; }
+.lt-led-badge .lt-led-badge__tile--jaune     { fill: #f59e0b; }
+.lt-led-badge .lt-led-badge__tile--rouge     { fill: #ef4444; }
+.lt-led-badge .lt-led-badge__tile--chequered { fill: rgba(148, 163, 184, 0.92); }
+
+.lt-led-badge__tile--blink {
+  animation: lt-led-onoff 0.85s infinite ease-in-out;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.lt-led-badge__tile--blink + .lt-led-badge__label {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.lt-led-badge__label {
+  fill: #fff;
+  stroke: rgba(0, 0, 0, 0.8);
+  stroke-width: 1;
+  paint-order: stroke;
+  letter-spacing: 0.08em;
+}
+
+/* ─── LED Modal ──────────────────────────────────────────────────────────────── */
+
+.lt-led-modal__state {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px 14px;
-  margin-top: 10px;
-  font-size: 0.72rem;
-}
-
-.lt-camera-modal__meta {
-  display: inline-flex;
   align-items: center;
-  gap: 6px;
-  color: rgba(255, 255, 255, 0.84);
+  gap: 14px;
+  min-height: 96px;
+  padding: 8px 4px 4px;
 }
 
-.lt-camera-modal__meta--muted {
-  color: rgba(255, 255, 255, 0.6);
+.lt-led-modal__tile {
+  position: relative;
+  overflow: hidden;
+  width: 70px;
+  height: 70px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 0 18px rgba(245, 158, 11, 0.25);
+  flex: 0 0 auto;
+}
+
+.lt-led-modal__tile--vert {
+  background: linear-gradient(135deg, #2dd4bf, #22c55e);
+}
+
+.lt-led-modal__tile--jaune {
+  background: linear-gradient(135deg, #facc15, #f59e0b);
+  animation: lt-led-onoff 0.85s infinite ease-in-out;
+}
+
+.lt-led-modal__tile--rouge {
+  background: linear-gradient(135deg, #fb7185, #ef4444);
+}
+
+.lt-led-modal__tile--chequered {
+  background:
+    linear-gradient(45deg, rgba(255,255,255,0.92) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.92) 75%),
+    linear-gradient(45deg, rgba(17,24,39,0.95) 25%, rgba(17,24,39,0.95) 75%, transparent 75%, transparent);
+  background-size: 18px 18px;
+  background-position: 0 0, 9px 9px;
+}
+
+.lt-led-modal__tile--blink {
+  animation: lt-led-pulse 0.85s infinite ease-in-out;
+}
+
+.lt-led-modal__state-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.lt-led-modal__state-text {
+  margin: 6px 0 0;
+  font-size: 0.76rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.74);
+}
+
+/* ─── Animations ─────────────────────────────────────────────────────────────── */
+
+@keyframes lt-led-onoff {
+  0%, 100% {
+    opacity: 1;
+    filter: brightness(1.12);
+  }
+  50% {
+    opacity: 0.25;
+    filter: brightness(0.6);
+  }
+}
+
+@keyframes lt-led-pulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.08);
+    filter: brightness(1.2);
+  }
 }
