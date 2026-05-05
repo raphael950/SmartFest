@@ -163,7 +163,7 @@ export default function ProfileShow({ profile, teams, canEdit }: InertiaProps<Pr
         </article>
 
         <div className="profile-grid">
-          <article className="profile-item">
+          <article className="profile-item profile-item--job">
             <span className="profile-item-icon">
               <Briefcase size={16} />
             </span>
