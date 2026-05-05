@@ -11,11 +11,13 @@ const DEFAULT_RACE: RaceState = { status: 'stopped', startedAt: null }
 type CameraUpdatePayload = {
   cameraId: number
   status: LiveTimingCamera['status']
+  sector: LiveTimingCamera['sector']
 }
 
 type LedUpdatePayload = {
   ledId: number
   status: LiveTimingLed['status']
+  sector: LiveTimingLed['sector']
 }
 
 export function useRaceWebSocket(initialCameras: LiveTimingCamera[] = [], initialLeds: LiveTimingLed[] = []) {
@@ -62,21 +64,21 @@ export function useRaceWebSocket(initialCameras: LiveTimingCamera[] = [], initia
       setRaceState(data)
     })
 
-    socket.on('camera_update', ({ cameraId, status }: CameraUpdatePayload) => {
+    socket.on('camera_update', ({ cameraId, status, sector }: CameraUpdatePayload) => {
       setCameras((prev) =>
         prev.map((camera) =>
           camera.id === cameraId
-            ? { ...camera, status }
+            ? { ...camera, status, sector }
             : camera,
         ),
       )
     })
 
-    socket.on('led_update', ({ ledId, status }: LedUpdatePayload) => {
+    socket.on('led_update', ({ ledId, status, sector }: LedUpdatePayload) => {
       setLeds((prev) =>
         prev.map((led) =>
           led.id === ledId
-            ? { ...led, status }
+            ? { ...led, status, sector }
             : led,
         ),
       )

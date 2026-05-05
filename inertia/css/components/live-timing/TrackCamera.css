@@ -380,7 +380,7 @@
 .lt-led-badge--online .lt-led-badge__tile  { fill: rgba(34,  197, 94,  0.95); }
 .lt-led-badge--alert .lt-led-badge__tile   { fill: rgba(245, 158, 11,  0.95); }
 .lt-led-badge--maintenance .lt-led-badge__tile { fill: rgba(249, 115, 22, 0.92); }
-.lt-led-badge--offline .lt-led-badge__tile { fill: rgba(100, 116, 139, 0.84); }
+.lt-led-badge--offline .lt-led-badge__tile { opacity: 0.45; filter: grayscale(0.8) brightness(0.82) drop-shadow(0 0 8px rgba(100, 116, 139, 0.18)); }
 
 .lt-led-badge .lt-led-badge__tile--vert      { fill: #22c55e; }
 .lt-led-badge .lt-led-badge__tile--jaune     { fill: #f59e0b; }
@@ -419,37 +419,52 @@
 .lt-led-modal__tile {
   position: relative;
   overflow: hidden;
+  flex: 0 0 auto;
   width: 70px;
   height: 70px;
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.16);
   box-shadow: 0 0 18px rgba(245, 158, 11, 0.25);
-  flex: 0 0 auto;
+  background: rgba(15, 23, 42, 0.9);
 }
 
-.lt-led-modal__tile--vert {
+.lt-led-modal__tile::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.lt-led-modal__tile--vert::before {
   background: linear-gradient(135deg, #2dd4bf, #22c55e);
+  opacity: 1;
 }
 
-.lt-led-modal__tile--jaune {
+.lt-led-modal__tile--jaune::before {
   background: linear-gradient(135deg, #facc15, #f59e0b);
-  animation: lt-led-onoff 0.85s infinite ease-in-out;
 }
 
-.lt-led-modal__tile--rouge {
+.lt-led-modal__tile--rouge::before {
   background: linear-gradient(135deg, #fb7185, #ef4444);
 }
 
-.lt-led-modal__tile--chequered {
+.lt-led-modal__tile--chequered::before {
   background:
-    linear-gradient(45deg, rgba(255,255,255,0.92) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.92) 75%),
-    linear-gradient(45deg, rgba(17,24,39,0.95) 25%, rgba(17,24,39,0.95) 75%, transparent 75%, transparent);
+    linear-gradient(45deg, rgba(255,255,255,0.92) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.92) 75%, rgba(255,255,255,0.92)),
+    linear-gradient(45deg, rgba(17,24,39,0.95) 25%, rgba(17,24,39,0.95) 25%, rgba(17,24,39,0.95) 75%, transparent 75%, transparent);
   background-size: 18px 18px;
   background-position: 0 0, 9px 9px;
+  opacity: 1;
 }
 
-.lt-led-modal__tile--blink {
-  animation: lt-led-pulse 0.85s infinite ease-in-out;
+.lt-led-modal__tile--offline::before {
+  background: linear-gradient(135deg, rgba(148, 163, 184, 0.96), rgba(100, 116, 139, 0.9));
+  opacity: 1;
+}
+
+.lt-led-modal__tile--blink::before {
+  animation: lt-led-onoff 0.85s infinite ease-in-out;
 }
 
 .lt-led-modal__state-title {

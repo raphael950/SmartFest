@@ -416,7 +416,7 @@ export default function TrackDisplay({ circuitPath, drivers, cameras, leds, flag
           >
             <div className="lt-led-modal">
               <div className="lt-led-modal__state">
-                <div className={`lt-led-modal__tile lt-led-modal__tile--${sectorFlag.kind} ${sectorFlag.kind === 'jaune' || sectorFlag.kind === 'rouge' ? 'lt-led-modal__tile--blink' : ''}`} aria-hidden="true" />
+                <div className={`lt-led-modal__tile lt-led-modal__tile--${sectorFlag.kind} ${activeLed.status === 'offline' ? 'lt-led-modal__tile--offline' : ''} ${sectorFlag.kind === 'jaune' || sectorFlag.kind === 'rouge' ? 'lt-led-modal__tile--blink' : ''}`} aria-hidden="true" />
                 <div>
                   <p className="lt-led-modal__state-title">{sectorFlag.label}</p>
                   <p className="lt-led-modal__state-text">
