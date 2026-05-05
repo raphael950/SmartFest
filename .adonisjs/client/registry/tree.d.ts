@@ -43,8 +43,10 @@ export interface ApiDefinition {
   incidents: typeof routes['incidents'] & {
     store: typeof routes['incidents.store']
   }
-  flags: typeof routes['flags'] & {
-    store: typeof routes['flags.store']
+  race: typeof routes['race'] & {
+    store: typeof routes['race.store']
+    start: typeof routes['race.start']
+    stop: typeof routes['race.stop']
   }
   objets: typeof routes['objets'] & {
     store: typeof routes['objets.store']

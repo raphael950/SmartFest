@@ -34,7 +34,7 @@ const NAV_ITEMS: RoleNavItem[] = [
   { label: 'Accueil', icon: Home, route: 'home' },
   { label: 'Live Timing', icon: Clock3, route: 'live-timing', minRole: 'simple' },
   { label: 'Networking', icon: UserRound, href: '/networking', minRole: 'simple' },
-  { label: 'Gestion Drapeaux', icon: Flag, href: '/drapeaux', minRole: 'complexe' },
+  { label: 'Gestion Course', icon: Flag, href: '/course', minRole: 'complexe' },
   { label: 'Gestion Incidents', icon: AlertTriangle, route: 'incidents', minRole: 'complexe' },
   { label: 'Objets', icon: BarChart3, route: 'objets', minRole: 'complexe' },
   { label: 'Admin', icon: Shield, href: '/admin', minRole: 'admin' },
@@ -54,8 +54,8 @@ const PATH_MATCHERS: Array<{
     test: (pathname) => pathname === '/networking' || pathname.startsWith('/networking/'),
   },
   {
-    label: 'Gestion Drapeaux',
-    test: (pathname) => pathname === '/drapeaux' || pathname.startsWith('/drapeaux/'),
+    label: 'Gestion Course',
+    test: (pathname) => pathname === '/course' || pathname.startsWith('/course/'),
   },
   {
     label: 'Gestion Incidents',

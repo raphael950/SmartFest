@@ -18,6 +18,7 @@ import LiveTimingController from '#controllers/live_timing_controller'
 import NewAccountController from '#controllers/new_account_controller'
 import SessionController from '#controllers/session_controller'
 import FlagsController from '#controllers/flags_controller'
+import RaceController from '#controllers/race_controller'
 import ConnectedObjectsController from '#controllers/connected_objects_controller'
 import User from '#models/user'
 import Team from '#models/team'
@@ -102,8 +103,10 @@ router
   .group(() => {
     router.get('/incidents', [IncidentsController, 'index']).as('incidents')
     router.post('/incidents', [IncidentsController, 'store']).as('incidents.store')
-    router.get('/drapeaux', [FlagsController, 'index']).as('flags')
-    router.post('/drapeaux', [FlagsController, 'store']).as('flags.store')
+    router.get('/course', [RaceController, 'index']).as('race')
+    router.post('/course', [RaceController, 'store']).as('race.store')
+    router.post('/course/start', [RaceController, 'startRace']).as('race.start')
+    router.post('/course/stop', [RaceController, 'stopRace']).as('race.stop')
     router.get('/objets', [ConnectedObjectsController, 'index']).as('objets')
     router.post('/objets', [ConnectedObjectsController, 'store']).as('objets.store')
     router.put('/objets/:identifier', [ConnectedObjectsController, 'update']).as('objets.update')

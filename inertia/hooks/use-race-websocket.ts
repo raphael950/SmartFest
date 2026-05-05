@@ -3,12 +3,15 @@ import { useEffect, useState } from 'react'
 import { io } from 'socket.io-client'
 
 import type { Driver, FlagState } from '@/types/live-timing.types'
+import type { RaceState } from '@/types/race-state.types'
 
 const DEFAULT_FLAG: FlagState = { color: 'vert', sectors: [] }
+const DEFAULT_RACE: RaceState = { status: 'stopped', startedAt: null }
 
 export function useRaceWebSocket() {
   const [drivers, setDrivers] = useState<Driver[]>([])
   const [flag, setFlag] = useState<FlagState>(DEFAULT_FLAG)
+  const [raceState, setRaceState] = useState<RaceState>(DEFAULT_RACE)
   const [isConnected, setIsConnected] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -23,14 +26,20 @@ export function useRaceWebSocket() {
     socket.on('initial_state', (data) => {
       setDrivers(data.drivers)
       if (data.flag) setFlag(data.flag)
+      if (data.raceState) setRaceState(data.raceState)
     })
 
     socket.on('race_update', (data) => {
       setDrivers(data.drivers)
+      if (data.raceState) setRaceState(data.raceState)
     })
 
     socket.on('flag_update', (data: FlagState) => {
       setFlag(data)
+    })
+
+    socket.on('race_state_update', (data: RaceState) => {
+      setRaceState(data)
     })
 
     socket.on('connect_error', () => {
@@ -43,5 +52,5 @@ export function useRaceWebSocket() {
     }
   }, [])
 
-  return { drivers, flag, isConnected, error }
+  return { drivers, flag, raceState, isConnected, error }
 }

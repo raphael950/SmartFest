@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import type { Driver, FlagState } from '@/types/live-timing.types'
+import type { RaceState } from '@/types/race-state.types'
+import './TrackDisplay.css'
 import CarFocusBadge from './CarFocusBadge'
 import '@/css/components/live-timing/TrackDisplay.css'
 
@@ -7,6 +9,8 @@ interface TrackDisplayProps {
   circuitPath: string
   drivers: Driver[]
   flag: FlagState
+  raceState?: RaceState
+  selectedDriverId: number | null
   selectedDriverIds: number[]
   onDriverClick: (id: number) => void
 }
@@ -22,7 +26,7 @@ const MIN_SCALE = 1
 const MAX_SCALE = 8
 const ZOOM_SENSITIVITY = 0.005
 
-export default function TrackDisplay({ circuitPath, drivers, flag, selectedDriverIds, onDriverClick }: TrackDisplayProps) {
+export default function TrackDisplay({ circuitPath, drivers, flag, raceState, selectedDriverIds, onDriverClick }: TrackDisplayProps) {
   const pathRef = useRef<SVGPathElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
   const [totalLength, setTotalLength] = useState(0)
@@ -132,10 +136,12 @@ export default function TrackDisplay({ circuitPath, drivers, flag, selectedDrive
   })
   const pitAnchor = getPitLaneAnchor()
 
+  const isRaceStopped = raceState?.status === 'stopped'
+
   return (
     <div className="lt-glass lt-track-container lt-panel-section">
-      <div className={`lt-track-flag lt-track-flag--${flag.color}`}>
-        {flag.color.toUpperCase()}
+      <div className={isRaceStopped ? 'lt-track-flag lt-track-flag--chequered' : `lt-track-flag lt-track-flag--${flag.color}`}>
+        {isRaceStopped ? 'Course arrêtée' : flag.color.toUpperCase()}
       </div>
 
       {transform.scale > 1.05 && (

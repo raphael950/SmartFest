@@ -122,6 +122,7 @@ function makeEmptySectors() {
 export default class RaceEngineService {
   private static drivers: DriverState[] = []
   private static flagState: FlagState = { color: 'vert', sectors: [] }
+  private static raceRunning: boolean = false
   private static bestOverallSector1Ms: number | null = null
   private static bestOverallSector2Ms: number | null = null
   private static bestOverallSector3Ms: number | null = null
@@ -145,6 +146,55 @@ export default class RaceEngineService {
       await this.refreshGpsAssignments()
       this.repositionForRedFlag()
     }
+  }
+
+  /**
+   * Envoie toutes les voitures aux stands (arrêt de la course)
+   */
+  public static async sendAllCarsToStandby(): Promise<void> {
+    this.raceRunning = false
+    const total = this.drivers.length
+    const now = performance.now()
+
+    this.drivers.forEach((driver, idx) => {
+      // Repositionne toutes les voitures à la ligne d'arrêt (progression 0.95-0.99)
+      const newProgression = 0.95 + ((total - 1 - idx) / Math.max(total - 1, 1)) * 0.04
+
+      driver.trackProgression = newProgression
+      driver._prevProgression = newProgression
+      driver.speed = randomSpeed()
+      driver._speedRerolledForRestart = false
+      driver._lapStartedAt = now
+      driver._s1EnteredAt = null
+      driver._s2EnteredAt = null
+      driver._s1Crossed = false
+      driver._s2Crossed = false
+      driver._isFirstLap = true
+      driver._sectorDisplays = [makeSectorDisplay(), makeSectorDisplay(), makeSectorDisplay()]
+      driver.sectors = makeEmptySectors()
+
+      // Réinitialise les données de tour
+      driver.lapsCompleted = 0
+      driver.gap = '---'
+      driver.lastLap = '---'
+      driver.bestLap = '---'
+    })
+
+    this.rebuildLeaderboard()
+  }
+
+  /**
+   * Démarre la course
+   */
+  public static async startRace(): Promise<void> {
+    this.raceRunning = true
+  }
+
+  /**
+   * Arrête la course
+   */
+  public static async stopRace(): Promise<void> {
+    this.raceRunning = false
   }
 
   public static getCurrentState(): Driver[] {
@@ -356,6 +406,13 @@ export default class RaceEngineService {
       }
 
       const prev = d._prevProgression
+
+      // ── Course arrêtée : gel total (comme le drapeau rouge) ──────────
+      if (!this.raceRunning) {
+        d.trackProgression = prev
+        d._prevProgression = prev
+        return
+      }
 
       // ── Drapeau rouge : gel total ────────────────────────────────────
       if (flag.color === 'rouge') {
