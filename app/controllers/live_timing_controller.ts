@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { access } from 'node:fs/promises'
 import Team from '#models/team'
 import ConnectedObject from '#models/connected_object'
+import pointsService from '#services/points_service'
 
 // État en mémoire des progressions — persiste entre les requêtes
 const driverProgressions = new Map<number, number>()
@@ -12,7 +13,11 @@ const driverProgressions = new Map<number, number>()
 const driverSpeeds = new Map<number, number>()
 
 export default class LiveTimingController {
-  async index({ inertia }: HttpContext) {
+  async index({ inertia, auth }: HttpContext) {
+    if (auth.user) {
+      await pointsService.awardLiveTimingConsultation(auth.user)
+    }
+
     const gpxPath = fileURLToPath(
       new URL('../../resources/circuits/circuit-du-mans.gpx', import.meta.url)
     )

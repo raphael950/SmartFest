@@ -115,6 +115,18 @@ export interface Registry {
       errorResponse: unknown
     }
   }
+  'profile.level.upgrade': {
+    methods: ["POST"]
+    pattern: '/mon-profil/niveau'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
   'networking.index': {
     methods: ["GET","HEAD"]
     pattern: '/networking'

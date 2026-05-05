@@ -60,6 +60,12 @@ const routes = {
     tokens: [{"old":"/mon-profil/edition","type":0,"val":"mon-profil","end":""},{"old":"/mon-profil/edition","type":0,"val":"edition","end":""}],
     types: placeholder as Registry['profile.update']['types'],
   },
+  'profile.level.upgrade': {
+    methods: ["POST"],
+    pattern: '/mon-profil/niveau',
+    tokens: [{"old":"/mon-profil/niveau","type":0,"val":"mon-profil","end":""},{"old":"/mon-profil/niveau","type":0,"val":"niveau","end":""}],
+    types: placeholder as Registry['profile.level.upgrade']['types'],
+  },
   'networking.index': {
     methods: ["GET","HEAD"],
     pattern: '/networking',

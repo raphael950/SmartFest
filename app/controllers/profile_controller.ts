@@ -16,7 +16,7 @@ export default class ProfileController {
     const user = auth.user!
     const teams = await Team.query().orderBy('display_order', 'asc').orderBy('name', 'asc')
     const selectedTeam = user.followedTeamId ? await Team.find(user.followedTeamId) : null
-    const levelProgress = userLevelService.getProgress(user.points)
+    const levelProgress = userLevelService.getProgress(user.points, user.level)
 
     return inertia.render('profile/edit', {
       profile: {
@@ -36,6 +36,40 @@ export default class ProfileController {
       teams: teams.map((team) => ({ id: team.id, name: team.name })),
       hasPublicProfile: Boolean(user.pseudo),
     })
+  }
+
+  async upgradeLevel({ auth, response, session }: HttpContext) {
+    const user = auth.user!
+    const currentLevelProgress = userLevelService.getProgress(user.points, user.level)
+
+    if (currentLevelProgress.isMaxLevel) {
+      session.flash('error', 'Ton niveau est deja au maximum.')
+      return response.redirect().back()
+    }
+
+    if (currentLevelProgress.pointsToNextLevel > 0) {
+      session.flash('error', 'Tu dois encore gagner des points avant de monter de niveau.')
+      return response.redirect().back()
+    }
+
+    const nextLevel = userLevelService.getNextLevel(user.level)
+
+    if (!nextLevel) {
+      session.flash('error', 'Ton niveau est deja au maximum.')
+      return response.redirect().back()
+    }
+
+    user.level = nextLevel
+    user.role = userLevelService.getRoleForLevel(nextLevel)
+
+    if (user.role !== 'simple') {
+      user.isVerified = true
+    }
+
+    await user.save()
+
+    session.flash('success', `Niveau passe a ${userLevelService.getProgress(user.points, user.level).levelLabel}.`)
+    return response.redirect().back()
   }
 
   async update({ auth, request, response, session }: HttpContext) {
