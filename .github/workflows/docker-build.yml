@@ -6,7 +6,16 @@ on:
     paths:
       - 'Dockerfile'
       - 'package.json'
+      - 'package-lock.json'
+      - 'yarn.lock'
+      - 'pnpm-lock.yaml'
       - 'app/**'
+      - 'config/**'
+      - 'inertia/**'
+      - 'public/**'
+      - 'resources/**'
+      - 'start/**'
+      - 'vite.config.ts'
       - '.github/workflows/docker-build.yml'
   workflow_dispatch:
 
