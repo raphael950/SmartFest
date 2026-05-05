@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import type { Driver, FlagState } from '@/types/live-timing.types'
 import type { RaceState } from '@/types/race-state.types'
-import './TrackDisplay.css'
 import CarFocusBadge from './CarFocusBadge'
 import '@/css/components/live-timing/TrackDisplay.css'
 
@@ -10,7 +9,6 @@ interface TrackDisplayProps {
   drivers: Driver[]
   flag: FlagState
   raceState?: RaceState
-  selectedDriverId: number | null
   selectedDriverIds: number[]
   onDriverClick: (id: number) => void
 }

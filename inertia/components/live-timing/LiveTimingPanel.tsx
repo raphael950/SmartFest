@@ -82,7 +82,7 @@ export default function LiveTimingPanel({ circuitPath }: LiveTimingPanelProps) {
               drivers={drivers}
               flag={flag}
               raceState={raceState}
-              selectedDriverId={selectedDriverIds}
+              selectedDriverIds={selectedDriverIds}
               onDriverClick={handleTrackClick}
             />
           </ResizablePanel>
