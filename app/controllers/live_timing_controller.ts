@@ -34,6 +34,12 @@ export default class LiveTimingController {
       .orderBy('sector', 'asc')
       .orderBy('id', 'asc')
 
+    const leds = await ConnectedObject.query()
+      .select(['id', 'identifier', 'name', 'type', 'sector', 'status'])
+      .where('type', 'LED')
+      .orderBy('sector', 'asc')
+      .orderBy('id', 'asc')
+
     let circuitPath = ''
 
     try {
@@ -61,6 +67,14 @@ export default class LiveTimingController {
         type: camera.type,
         sector: camera.sector,
         status: camera.status,
+      })),
+      leds: leds.map((led) => ({
+        id: led.id,
+        identifier: led.identifier,
+        name: led.name,
+        type: led.type,
+        sector: led.sector,
+        status: led.status,
       })),
     })
   }

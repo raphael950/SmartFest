@@ -5,10 +5,11 @@ import LiveTimingPanel from '@/components/live-timing/LiveTimingPanel'
 export default function LiveTimingPage({
   circuitPath,
   cameras,
+  leds,
 }: InertiaProps<LiveTimingPageProps>) {
   return (
     <div className="lt-page">
-      <LiveTimingPanel circuitPath={circuitPath} cameras={cameras} />
+      <LiveTimingPanel circuitPath={circuitPath} cameras={cameras} leds={leds} />
     </div>
   )
 }

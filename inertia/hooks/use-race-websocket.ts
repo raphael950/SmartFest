@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { io } from 'socket.io-client'
 
-import type { Driver, FlagState, LiveTimingCamera } from '@/types/live-timing.types'
+import type { Driver, FlagState, LiveTimingCamera, LiveTimingLed } from '@/types/live-timing.types'
 import type { RaceState } from '@/types/race-state.types'
 
 const DEFAULT_FLAG: FlagState = { color: 'vert', sectors: [] }
@@ -11,19 +11,31 @@ const DEFAULT_RACE: RaceState = { status: 'stopped', startedAt: null }
 type CameraUpdatePayload = {
   cameraId: number
   status: LiveTimingCamera['status']
+  sector: LiveTimingCamera['sector']
 }
 
-export function useRaceWebSocket(initialCameras: LiveTimingCamera[] = []) {
+type LedUpdatePayload = {
+  ledId: number
+  status: LiveTimingLed['status']
+  sector: LiveTimingLed['sector']
+}
+
+export function useRaceWebSocket(initialCameras: LiveTimingCamera[] = [], initialLeds: LiveTimingLed[] = []) {
   const [drivers, setDrivers] = useState<Driver[]>([])
   const [flag, setFlag] = useState<FlagState>(DEFAULT_FLAG)
   const [raceState, setRaceState] = useState<RaceState>(DEFAULT_RACE)
   const [cameras, setCameras] = useState<LiveTimingCamera[]>(initialCameras)
+  const [leds, setLeds] = useState<LiveTimingLed[]>(initialLeds)
   const [isConnected, setIsConnected] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     setCameras(initialCameras)
   }, [initialCameras])
+
+  useEffect(() => {
+    setLeds(initialLeds)
+  }, [initialLeds])
 
   useEffect(() => {
     const socket = io(import.meta.env.VITE_WS_URL || window.location.origin)
@@ -52,12 +64,22 @@ export function useRaceWebSocket(initialCameras: LiveTimingCamera[] = []) {
       setRaceState(data)
     })
 
-    socket.on('camera_update', ({ cameraId, status }: CameraUpdatePayload) => {
+    socket.on('camera_update', ({ cameraId, status, sector }: CameraUpdatePayload) => {
       setCameras((prev) =>
         prev.map((camera) =>
           camera.id === cameraId
-            ? { ...camera, status }
+            ? { ...camera, status, sector }
             : camera,
+        ),
+      )
+    })
+
+    socket.on('led_update', ({ ledId, status, sector }: LedUpdatePayload) => {
+      setLeds((prev) =>
+        prev.map((led) =>
+          led.id === ledId
+            ? { ...led, status, sector }
+            : led,
         ),
       )
     })
@@ -72,5 +94,5 @@ export function useRaceWebSocket(initialCameras: LiveTimingCamera[] = []) {
     }
   }, [])
 
-  return { drivers, flag, raceState, cameras, isConnected, error }
+  return { drivers, flag, raceState, cameras, leds, isConnected, error }
 }

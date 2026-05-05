@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { createPortal } from 'react-dom'
-import type { Driver, FlagState, LiveTimingCamera } from '@/types/live-timing.types'
+import type { Driver, FlagState, LiveTimingCamera, LiveTimingLed } from '@/types/live-timing.types'
 import type { RaceState } from '@/types/race-state.types'
 import CameraPlayer from './CameraPlayer'
 import CarFocusBadge from './CarFocusBadge'
+import LedBadge from './LedBadge'
+import TrackObjectModal from './TrackObjectModal'
 import '@/css/components/live-timing/TrackDisplay.css'
-import '@/css/components/live-timing/TrackCamera.css'
+import '@/css/components/live-timing/TrackObject.css'
 
 const VIDEO_URLS = {
   S1: '/videos/sector1.mp4',
@@ -17,6 +19,7 @@ interface TrackDisplayProps {
   circuitPath: string
   drivers: Driver[]
   cameras: LiveTimingCamera[]
+  leds: LiveTimingLed[]
   flag: FlagState
   raceState?: RaceState
   selectedDriverIds: number[]
@@ -44,13 +47,26 @@ const CAMERA_SECTOR_OFFSET: Record<string, number> = {
   S3: 44,
 }
 
-export default function TrackDisplay({ circuitPath, drivers, cameras, flag, raceState, selectedDriverIds, onDriverClick }: TrackDisplayProps) {
+const LED_SECTOR_BASE: Record<string, number> = {
+  S1: 0.08,
+  S2: 0.41,
+  S3: 0.74,
+}
+
+const LED_SECTOR_OFFSET : Record<string, number> = {
+  S1: 30,
+  S2: 28,
+  S3: 32,
+}
+
+export default function TrackDisplay({ circuitPath, drivers, cameras, leds, flag, raceState, selectedDriverIds, onDriverClick }: TrackDisplayProps) {
   const pathRef = useRef<SVGPathElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
   const [totalLength, setTotalLength] = useState(0)
   const [baseViewBox, setBaseViewBox] = useState({ x: 0, y: 0, w: 500, h: 300 })
   const [transform, setTransform] = useState<ViewTransform>({ x: 0, y: 0, scale: 1 })
   const [activeCameraId, setActiveCameraId] = useState<number | null>(null)
+  const [activeLedId, setActiveLedId] = useState<number | null>(null)
   const isDragging = useRef(false)
   const lastMousePos = useRef({ x: 0, y: 0 })
 
@@ -170,6 +186,35 @@ export default function TrackDisplay({ circuitPath, drivers, cameras, flag, race
 
   const isRaceStopped = raceState?.status === 'stopped'
   const activeCamera = cameras.find((camera) => camera.id === activeCameraId) ?? null
+  const activeLed = leds.find((led) => led.id === activeLedId) ?? null
+
+  const getSectorFlagState = (sector: string) => {
+    if (isRaceStopped) {
+      return {
+        kind: 'chequered' as const,
+        label: 'Course arrêtée',
+      }
+    }
+
+    if (flag.color === 'rouge') {
+      return {
+        kind: 'rouge' as const,
+        label: 'Drapeau rouge',
+      }
+    }
+
+    if (flag.color === 'jaune' && flag.sectors.includes(sector)) {
+      return {
+        kind: 'jaune' as const,
+        label: `Drapeau jaune secteur ${sector.replace('S', '')}`,
+      }
+    }
+
+    return {
+      kind: 'vert' as const,
+      label: 'Drapeau vert',
+    }
+  }
 
   // ── Modal drag ──────────────────────────────────────────────────────────────
   const modalDragRef = useRef<{ startX: number; startY: number; originX: number; originY: number } | null>(null)
@@ -185,6 +230,16 @@ export default function TrackDisplay({ circuitPath, drivers, cameras, flag, race
       y: Math.max(16, window.innerHeight - height - 16),
     })
   }, [activeCamera?.id])
+
+  useEffect(() => {
+    if (!activeLed) return
+    const width = Math.min(320, window.innerWidth - 28)
+    const height = 180
+    setModalPos({
+      x: Math.max(16, window.innerWidth - width - 16),
+      y: Math.max(16, window.innerHeight - height - 16),
+    })
+  }, [activeLed?.id])
 
   useEffect(() => {
     if (!modalDragging) return
@@ -250,12 +305,50 @@ export default function TrackDisplay({ circuitPath, drivers, cameras, flag, race
           style={{ cursor: 'pointer' }}
           onClick={(event) => {
             event.stopPropagation()
+            setActiveLedId(null)
             setActiveCameraId(camera.id)
           }}
         >
           <circle cx={0} cy={0} r={size} fill="rgba(34,197,94,0.9)" stroke="#051122" strokeWidth={1 / transform.scale} />
           <text x={size * 1.8} y={size * 0.8} fontSize={9 / Math.sqrt(transform.scale)} fontWeight={700} fill="#fff" stroke="#000" strokeWidth={1 / transform.scale} paintOrder="stroke">CAM</text>
         </g>
+      )
+    }),
+  )
+
+  const ledMarkers = leds
+    .filter((led) => led.type === 'LED')
+    .reduce<Record<string, LiveTimingLed[]>>((accumulator, led) => {
+      if (!accumulator[led.sector]) accumulator[led.sector] = []
+      accumulator[led.sector].push(led)
+      return accumulator
+    }, {})
+
+  const ledElements = Object.entries(ledMarkers).flatMap(([sector, sectorLeds]) =>
+    sectorLeds.map((led, index) => {
+      const sectorBase = LED_SECTOR_BASE[sector] ?? 0.08
+      const sectorOffset = LED_SECTOR_OFFSET[sector] ?? 30
+      const progression = sectorBase + (index - (Math.max(sectorLeds.length, 1) - 1) / 2) * 0.015
+      const frame = getTrackFrame(progression)
+      if (!frame) return []
+      const position = {
+        x: frame.point.x + frame.normalX * (sectorOffset / Math.sqrt(transform.scale)),
+        y: frame.point.y + frame.normalY * (sectorOffset / Math.sqrt(transform.scale)),
+      }
+      const sectorFlag = getSectorFlagState(led.sector)
+      return (
+        <LedBadge
+          key={led.identifier}
+          led={led}
+          scale={transform.scale}
+          x={position.x}
+          y={position.y}
+          sectorFlagKind={sectorFlag.kind}
+          onClick={() => {
+            setActiveCameraId(null)
+            setActiveLedId(led.id)
+          }}
+        />
       )
     }),
   )
@@ -305,6 +398,40 @@ export default function TrackDisplay({ circuitPath, drivers, cameras, flag, race
         </div>,
         document.body
       )
+    : null
+
+  const ledModal = activeLed
+    ? (() => {
+        const sectorFlag = getSectorFlagState(activeLed.sector)
+        return (
+          <TrackObjectModal
+            variant="led"
+            badge="LED"
+            title={activeLed.name}
+            subtitle={`Secteur ${activeLed.sector.replace('S', '')} · ${activeLed.status.toUpperCase()}`}
+            position={modalPos}
+            onClose={() => setActiveLedId(null)}
+            onHeaderPointerDown={startModalDrag}
+            footer={<span className="lt-track-modal__meta lt-track-modal__meta--muted">Glisser l'en-tête pour déplacer</span>}
+          >
+            <div className="lt-led-modal">
+              <div className="lt-led-modal__state">
+                <div className={`lt-led-modal__tile lt-led-modal__tile--${sectorFlag.kind} ${activeLed.status === 'offline' ? 'lt-led-modal__tile--offline' : ''} ${sectorFlag.kind === 'jaune' || sectorFlag.kind === 'rouge' ? 'lt-led-modal__tile--blink' : ''}`} aria-hidden="true" />
+                <div>
+                  <p className="lt-led-modal__state-title">{sectorFlag.label}</p>
+                  <p className="lt-led-modal__state-text">
+                    {activeLed.status === 'offline'
+                      ? 'La LED est hors-ligne : informations désactivées.'
+                      : isRaceStopped
+                        ? 'La LED est en mode arrêt de course.'
+                        : 'La LED suit le drapeau du secteur en temps réel.'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </TrackObjectModal>
+        )
+      })()
     : null
 
   return (
@@ -395,6 +522,7 @@ export default function TrackDisplay({ circuitPath, drivers, cameras, flag, race
           })}
 
           {cameraElements}
+          {ledElements}
 
           {/* 4. Pit lane */}
           {pitAnchor && pitDrivers.length > 0 && (
@@ -458,6 +586,7 @@ export default function TrackDisplay({ circuitPath, drivers, cameras, flag, race
 
       {/* Portal — rendu dans document.body, échappe à overflow:hidden et backdrop-filter */}
       {cameraModal}
+      {ledModal}
     </div>
   )
 }

@@ -22,6 +22,13 @@ export interface RaceState {
 export interface CameraUpdatePayload {
   cameraId: number
   status: string
+  sector: string
+}
+
+export interface LedUpdatePayload {
+  ledId: number
+  status: string
+  sector: string
 }
 
 // ─── État drapeau par défaut ──────────────────────────────────────────────────
@@ -178,9 +185,18 @@ class SocketService {
   /**
    * Diffuse un changement de statut caméra à tous les clients connectés.
    */
-  public updateCamera(cameraId: number, status: string): CameraUpdatePayload {
-    const payload: CameraUpdatePayload = { cameraId, status }
+  public updateCamera(cameraId: number, status: string, sector: string): CameraUpdatePayload {
+    const payload: CameraUpdatePayload = { cameraId, status, sector }
     this.io?.emit('camera_update', payload)
+    return payload
+  }
+
+  /**
+   * Diffuse un changement de statut LED à tous les clients connectés.
+   */
+  public updateLed(ledId: number, status: string, sector: string): LedUpdatePayload {
+    const payload: LedUpdatePayload = { ledId, status, sector }
+    this.io?.emit('led_update', payload)
     return payload
   }
 
