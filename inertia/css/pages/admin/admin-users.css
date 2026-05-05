@@ -255,6 +255,7 @@
 }
 
 .admin-user-card__avatar {
+  flex: 0 0 2.1rem;
   width: 2.1rem;
   height: 2.1rem;
   border-radius: 9999px;
@@ -283,6 +284,7 @@
 
 .admin-user-card__badges {
   display: flex;
+  flex: 0 0 auto;
   flex-direction: column;
   align-items: flex-end;
   max-width: 100%;
@@ -298,6 +300,12 @@
   font-size: 0.7rem;
   font-weight: 700;
   border: 1px solid transparent;
+}
+
+.admin-user-card__badge svg,
+.admin-user-card__avatar svg,
+.admin-user-card__email svg {
+  flex-shrink: 0;
 }
 
 .admin-user-card__badge.is-admin {
