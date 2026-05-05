@@ -166,6 +166,7 @@ export default class RaceEngineService {
     this.drivers = teams.map((team, idx) => {
       const startProgression = 0.95 + (idx / Math.max(teams.length, 1)) * 0.04
       const gpsState = gpsStateByTeamId.get(team.id) ?? { hasGps: false, gpsActive: false }
+      const isInitialPit = gpsState.hasGps && !gpsState.gpsActive
 
       return {
         id: team.id,
@@ -177,12 +178,12 @@ export default class RaceEngineService {
           ? team.pilote.split(' ').map((w: string) => w[0]).join('').slice(0, 3).toUpperCase()
           : '???',
         speed: randomSpeed(),
-        trackProgression: startProgression,
+        trackProgression: isInitialPit ? PIT_POSITION : startProgression,
         position: idx + 1,
         hasGps: gpsState.hasGps,
         gpsActive: gpsState.gpsActive,
         ...makeEmptyLapData(),
-        _prevProgression: startProgression,
+        _prevProgression: isInitialPit ? PIT_POSITION : startProgression,
         _lapStartedAt: now,
         _s1EnteredAt: null,
         _s2EnteredAt: null,
@@ -196,7 +197,7 @@ export default class RaceEngineService {
         _sectorDisplays: [makeSectorDisplay(), makeSectorDisplay(), makeSectorDisplay()],
         _isFirstLap: true,
         _redFlagJoinPriority: 0,
-        _gpsRevealPending: false,
+        _gpsRevealPending: isInitialPit,
         _speedRerolledForRestart: false,
       }
     })
