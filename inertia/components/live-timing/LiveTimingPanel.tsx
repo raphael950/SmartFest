@@ -5,16 +5,17 @@ import Leaderboard from './Leaderboard'
 import '@/css/pages/live-timing/live-timing.base.css'
 import '@/css/pages/live-timing/LiveTimingPanel.css'
 import { useRaceWebSocket } from '@/hooks/use-race-websocket'
-import { FlagState } from '@/types/live-timing.types'
+import type { FlagState, LiveTimingCamera } from '@/types/live-timing.types'
 
 interface LiveTimingPanelProps {
   circuitPath: string
+  cameras: LiveTimingCamera[]
 }
 
 const STACKED_BREAKPOINT = 1100
 const DEFAULT_FLAG: FlagState = { color: 'vert', sectors: [] }
 
-export default function LiveTimingPanel({ circuitPath }: LiveTimingPanelProps) {
+export default function LiveTimingPanel({ circuitPath, cameras }: LiveTimingPanelProps) {
   const [isStacked, setIsStacked] = useState(false)
   const [selectedDriverIds, setSelectedDriverIds] = useState<number[]>([])
 
@@ -80,6 +81,7 @@ export default function LiveTimingPanel({ circuitPath }: LiveTimingPanelProps) {
             <TrackDisplay
               circuitPath={circuitPath}
               drivers={drivers}
+              cameras={cameras}
               flag={flag}
               raceState={raceState}
               selectedDriverIds={selectedDriverIds}

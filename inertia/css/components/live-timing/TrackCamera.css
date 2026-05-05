@@ -1,0 +1,170 @@
+.lt-camera-marker {
+  cursor: pointer;
+}
+
+.lt-camera-marker__hitbox {
+  fill: transparent;
+  pointer-events: all;
+}
+
+.lt-camera-marker__body {
+  fill: rgba(255, 255, 255, 0.72);
+  stroke: rgba(255, 255, 255, 0.92);
+  stroke-width: 1;
+  opacity: 0.92;
+}
+
+.lt-camera-marker.is-active .lt-camera-marker__body {
+  fill: rgba(34, 197, 94, 0.78);
+  opacity: 1;
+}
+
+.lt-camera-marker__lens {
+  fill: none;
+  stroke: #f8fafc;
+  stroke-width: 1.4;
+}
+
+.lt-camera-marker__stem {
+  fill: #f8fafc;
+}
+
+.lt-camera-marker__label {
+  fill: #fff;
+  stroke: rgba(0, 0, 0, 0.75);
+  stroke-width: 1.1;
+  letter-spacing: 0.06em;
+}
+
+.lt-camera-modal {
+  position: fixed;
+  z-index: 9999;
+  width: min(420px, calc(100vw - 28px));
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 18px;
+  background: rgba(7, 10, 18, 0.94);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(14px);
+  color: var(--lt-white);
+  overflow: hidden;
+  user-select: none;
+  touch-action: none;
+}
+
+.lt-camera-modal__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  cursor: grab;
+  background:
+    linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(8, 11, 18, 0.95)),
+    radial-gradient(circle at top right, rgba(34, 197, 94, 0.22), transparent 40%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lt-camera-modal__header:active {
+  cursor: grabbing;
+}
+
+.lt-camera-modal__title-wrap {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.lt-camera-modal__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(34, 197, 94, 0.18);
+  color: #86efac;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.lt-camera-modal__title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.lt-camera-modal__subtitle {
+  margin: 4px 0 0;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.68);
+  letter-spacing: 0.02em;
+}
+
+.lt-camera-modal__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--lt-white);
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.lt-camera-modal__close:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.lt-camera-modal__body {
+  padding: 12px 14px 14px;
+}
+
+.lt-camera-modal__play {
+  margin-top: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--lt-white);
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.lt-camera-modal__play:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.lt-camera-modal__video {
+  display: block;
+  width: 100%;
+  max-height: 240px;
+  border-radius: 12px;
+  background: #000;
+  object-fit: cover;
+}
+
+.lt-camera-modal__footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  margin-top: 10px;
+  font-size: 0.72rem;
+}
+
+.lt-camera-modal__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.84);
+}
+
+.lt-camera-modal__meta--muted {
+  color: rgba(255, 255, 255, 0.6);
+}

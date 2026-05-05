@@ -19,9 +19,19 @@ export type Driver = {
   gpsRevealPending?: boolean
 }
 
+export type LiveTimingCamera = {
+  id: number
+  identifier: string
+  name: string
+  type: 'CAM' | string
+  sector: 'S1' | 'S2' | 'S3' | string
+  status: 'online' | 'alert' | 'maintenance' | 'offline'
+}
+
 export type LiveTimingPageProps = {
   drivers: Driver[]
   circuitPath: string
+  cameras: LiveTimingCamera[]
 }
 
 // types/live-timing.types.ts — ajouter ces types
