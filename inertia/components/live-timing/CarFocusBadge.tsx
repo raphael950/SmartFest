@@ -1,6 +1,6 @@
 import { useId, type CSSProperties } from 'react'
 import { resolveImageSrc } from '@/lib/home_team_media'
-import './CarFocusBadge.css'
+import  '@/css/components/live-timing/CarFocusBadge.css'
 
 interface CarFocusBadgeProps {
     anchorX: number

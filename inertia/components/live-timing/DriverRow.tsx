@@ -1,8 +1,8 @@
 import { ChevronRight } from 'lucide-react'
 import type { CSSProperties } from 'react'
 import { useEffect, useRef } from 'react'
-import './live-timing.base.css'
-import './DriverRow.css'
+import '@/css/pages/live-timing/live-timing.base.css'
+import '@/css/components/live-timing/DriverRow.css'
 import { resolveImageSrc } from '@/lib/home_team_media'
 import type { Driver } from '@/types/live-timing.types'
 

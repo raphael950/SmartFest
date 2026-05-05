@@ -1,7 +1,7 @@
 import DataPanelTable, { type DataPanelTableColumn } from '@/components/ui/DataPanelTable'
 import DriverRow, { type LeaderboardDriver } from './DriverRow'
-import './live-timing.base.css'
-import './Leaderboard.css'
+import '@/css/pages/live-timing/live-timing.base.css'
+import '@/css/components/live-timing/Leaderboard.css'
 import type { Driver } from '@/types/live-timing.types'
 
 interface LeaderboardProps {

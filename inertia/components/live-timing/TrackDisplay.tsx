@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import type { Driver, FlagState } from '@/types/live-timing.types'
 import CarFocusBadge from './CarFocusBadge'
-import './TrackDisplay.css'
-
+import '@/css/components/live-timing/TrackDisplay.css'
 interface TrackDisplayProps {
   circuitPath: string
   drivers: Driver[]
