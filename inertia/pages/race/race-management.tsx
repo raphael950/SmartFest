@@ -1,9 +1,10 @@
 import { router } from '@inertiajs/react'
 import { Clock } from 'lucide-react'
 import { useState } from 'react'
+import type { FC } from 'react'
 import '@/css/pages/race/race-management.css'
-import { Flag, FlagColor } from '@/types/flag.types.js'
-import type { RaceState } from '@/types/race-state.types.js'
+import type { Flag, FlagColor } from '@/types/flag.types'
+import type { RaceState } from '@/types/race-state.types'
 
 const SECTOR_OPTIONS = ['S1', 'S2', 'S3']
 
@@ -28,7 +29,7 @@ const formatSector = (sector: string) => {
   return `Secteur ${sector.replace('S', '')}`
 }
 
-const RaceManagementPage = ({ flags, raceState }: RaceManagementPageProps) => {
+const RaceManagementPage: FC<RaceManagementPageProps> = ({ flags, raceState }) => {
   const [sector, setSector] = useState('S1')
   const isRaceRunning = raceState.status === 'running'
 

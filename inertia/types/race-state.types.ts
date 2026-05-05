@@ -1,6 +1,6 @@
 export type RaceStatus = 'stopped' | 'running'
 
-export interface RaceState {
+export type RaceState = {
   status: RaceStatus
   startedAt: number | null
 }
