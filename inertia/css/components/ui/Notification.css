@@ -7,15 +7,19 @@
   top: 16px;
   right: 16px;
   z-index: 9000;
-  max-width: 420px;
+  width: 500px;
+  max-width: calc(100vw - 32px);
   pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 @media (max-width: 640px) {
   .notif-panel {
     left: 16px;
     right: 16px;
-    max-width: none;
+    width: auto;
   }
 }
 
@@ -163,12 +167,4 @@
 
 .notif-panel__action:active {
   transform: translateY(0);
-}
-
-.notif-panel__queue {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
-  text-align: center;
-  padding-top: 4px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }

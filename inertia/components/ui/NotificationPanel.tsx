@@ -47,38 +47,32 @@ export default function NotificationPanel() {
     }
   }
 
-  const latestNotif = notifications[notifications.length - 1]
-
   return (
     <div className="notif-panel">
-      <div className={`notif-panel__item ${getColorClass(latestNotif.color)}`}>
-        <div className="notif-panel__header">
-          <div className="notif-panel__header-content">
-            {getIcon(latestNotif.type)}
-            <div>
-              <h3 className="notif-panel__title">{latestNotif.title}</h3>
-              <p className="notif-panel__message">{latestNotif.message}</p>
+      {notifications.map((notif) => (
+        <div key={notif.id} className={`notif-panel__item ${getColorClass(notif.color)}`}>
+          <div className="notif-panel__header">
+            <div className="notif-panel__header-content">
+              {getIcon(notif.type)}
+              <div>
+                <h3 className="notif-panel__title">{notif.title}</h3>
+                <p className="notif-panel__message">{notif.message}</p>
+              </div>
             </div>
+            <button
+              className="notif-panel__close"
+              onClick={() => removeNotification(notif.id)}
+              aria-label="Fermer"
+            >
+              <X size={20} />
+            </button>
           </div>
-          <button
-            className="notif-panel__close"
-            onClick={() => removeNotification(latestNotif.id)}
-            aria-label="Fermer"
-          >
-            <X size={20} />
-          </button>
+
+          <Link href="/live-timing" className="notif-panel__action">
+            Accéder au live timing
+          </Link>
         </div>
-
-        <Link href="/live-timing" className="notif-panel__action">
-          Accéder au live timing
-        </Link>
-
-        {notifications.length > 1 && (
-          <div className="notif-panel__queue">
-            +{notifications.length - 1} notification{notifications.length > 2 ? 's' : ''} en attente
-          </div>
-        )}
-      </div>
+      ))}
     </div>
   )
 }
