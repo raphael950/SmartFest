@@ -23,10 +23,12 @@ const STATUS_MESSAGE: Record<'maintenance' | 'offline', string> = {
 
 export default function CameraPlayer({ camera, sourceUrl, raceState }: CameraPlayerProps) {
     const videoRef = useRef<HTMLVideoElement>(null)
+    const frameRef = useRef<HTMLDivElement>(null)
     const liveAnchorRef = useRef<number>(0)
     const [isPlaying, setIsPlaying] = useState(false)
     const [videoStatus, setVideoStatus] = useState<'loading' | 'ready' | 'error'>('loading')
     const [volume, setVolume] = useState(1)
+    const [isFullscreen, setIsFullscreen] = useState(false)
 
     const isRaceStopped = raceState?.status === 'stopped'
     const isUnavailable = camera.status === 'maintenance' || camera.status === 'offline' || isRaceStopped
@@ -72,6 +74,17 @@ export default function CameraPlayer({ camera, sourceUrl, raceState }: CameraPla
         video.volume = volume
         video.muted = volume === 0
     }, [volume])
+
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            setIsFullscreen(document.fullscreenElement === frameRef.current)
+        }
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange)
+        handleFullscreenChange()
+
+        return () => document.removeEventListener('fullscreenchange', handleFullscreenChange)
+    }, [])
 
     useEffect(() => {
         if (isUnavailable) return
@@ -144,6 +157,28 @@ export default function CameraPlayer({ camera, sourceUrl, raceState }: CameraPla
         }
     }
 
+    const toggleFullscreen = async () => {
+        const target = videoRef.current ?? frameRef.current
+        if (!target) return
+
+        const fullscreenDocument = document as Document & {
+            webkitFullscreenElement?: Element | null
+            webkitExitFullscreen?: (() => Promise<void> | void) | undefined
+        }
+        const fullscreenElement = fullscreenDocument.fullscreenElement ?? fullscreenDocument.webkitFullscreenElement
+        if (fullscreenElement) {
+            const exitFullscreen = fullscreenDocument.exitFullscreen ?? fullscreenDocument.webkitExitFullscreen
+            await exitFullscreen?.call(fullscreenDocument).catch(() => { })
+            return
+        }
+
+        const fullscreenTarget = target as HTMLElement & {
+            webkitRequestFullscreen?: (() => Promise<void> | void) | undefined
+        }
+        const requestFullscreen = fullscreenTarget.requestFullscreen ?? fullscreenTarget.webkitRequestFullscreen
+        await requestFullscreen?.call(target).catch(() => { })
+    }
+
     let title = 'Flux indisponible'
     let message = 'La caméra est actuellement indisponible.'
 
@@ -160,7 +195,7 @@ export default function CameraPlayer({ camera, sourceUrl, raceState }: CameraPla
 
     return (
         <div className="lt-camera-player">
-            <div className={`lt-camera-player__frame${isUnavailable ? ' lt-camera-player__frame--blocked' : ''}${videoStatus !== 'ready' && !isUnavailable ? ' lt-camera-player__frame--loading' : ''}`}>
+            <div ref={frameRef} className={`lt-camera-player__frame${isUnavailable ? ' lt-camera-player__frame--blocked' : ''}${videoStatus !== 'ready' && !isUnavailable ? ' lt-camera-player__frame--loading' : ''}`}>
                 <video
                     ref={videoRef}
                     className={`lt-camera-player__video${isUnavailable ? ' lt-camera-player__video--blocked' : ''}`}
@@ -212,6 +247,14 @@ export default function CameraPlayer({ camera, sourceUrl, raceState }: CameraPla
                         <div className="lt-camera-player__controls" aria-label="Contrôles du lecteur caméra">
                             <button type="button" className="lt-camera-player__control-button" onClick={togglePlayback}>
                                 {isPlaying ? 'Pause' : 'Lecture'}
+                            </button>
+
+                            <button
+                                type="button"
+                                className="lt-camera-player__control-button lt-camera-player__control-button--fullscreen"
+                                onClick={toggleFullscreen}
+                            >
+                                {isFullscreen ? 'Quitter' : 'Plein écran'}
                             </button>
 
                             <label className="lt-camera-player__volume" aria-label="Volume du lecteur caméra">
