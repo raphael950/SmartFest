@@ -238,6 +238,36 @@
   color: var(--lt-white);
 }
 
+/* Also support data-role attribute in case class names mismatch */
+[data-role="admin"] .lt-chat__message-author,
+.lt-chat__message-author[data-role="admin"] {
+  color: #86efac;
+}
+[data-role="moderator"] .lt-chat__message-author,
+.lt-chat__message-author[data-role="moderator"] {
+  color: #a78bfa;
+}
+[data-role="organizer"] .lt-chat__message-author,
+.lt-chat__message-author[data-role="organizer"] {
+  color: #f97316;
+}
+
+.lt-chat__role-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-family: var(--lt-font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.04);
+}
+.lt-chat__role-badge--admin { background: rgba(34,197,94,0.12); color: #86efac }
+.lt-chat__role-badge--moderator { background: rgba(167,139,250,0.08); color: #a78bfa }
+.lt-chat__role-badge--organizer { background: rgba(249,115,22,0.08); color: #f97316 }
+
 .lt-chat__message-time {
   color: var(--lt-muted);
   font-family: var(--lt-font-mono);

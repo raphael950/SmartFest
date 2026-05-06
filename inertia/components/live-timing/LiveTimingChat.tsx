@@ -165,7 +165,15 @@ export default function LiveTimingChat({
 
             <div className="lt-chat__message-content">
               <div className="lt-chat__message-meta">
-                <span className={`lt-chat__message-author lt-chat__author--${(group as any).authorRole ? String((group as any).authorRole).toLowerCase().replace(/[^a-z0-9_-]/g, '-') : 'user'}`}>{group.authorName}</span>
+                {(() => {
+                  const role = (group as any).authorRole ? String((group as any).authorRole).toLowerCase().replace(/[^a-z0-9_-]/g, '-') : 'user'
+                  return (
+                    <>
+                      <span data-role={role} className={`lt-chat__message-author lt-chat__author--${role}`}>{group.authorName}</span>
+                      <span className={`lt-chat__role-badge lt-chat__role-badge--${role}`}>{role === 'user' ? '' : role}</span>
+                    </>
+                  )
+                })()}
               </div>
 
               <div className="lt-chat__message-group-lines">
