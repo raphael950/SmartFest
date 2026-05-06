@@ -10,7 +10,7 @@ const mailConfig = defineConfig({
   },
 
   globals: {
-    brandName: 'SmartFest',
+    brandName: 'SmartRace',
   },
 
   mailers: {

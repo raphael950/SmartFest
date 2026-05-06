@@ -27,7 +27,7 @@ const AuthBar = () => {
             <div className="sf-navbar__logo">
               <Zap className="sf-navbar__logo-icon" />
             </div>
-            <span className="sf-navbar__title">SmartFest</span>
+            <span className="sf-navbar__title">SmartRace</span>
           </div>
         </div>
       </div>

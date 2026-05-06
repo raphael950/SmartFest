@@ -32,7 +32,7 @@ const NetworkingPage = ({ users, teams }: InertiaProps<NetworkingPageProps>) => 
       <header className="networking-hero">
         <div className="networking-hero__copy">
           <p className="networking-hero__eyebrow">Community Hub</p>
-          <h1>Networking SmartFest</h1>
+          <h1>Networking SmartRace</h1>
           <p>
             Retrouve les profils de la communaute, accede vite a ton profil et explore les passionnes du circuit.
           </p>
@@ -84,7 +84,7 @@ const NetworkingPage = ({ users, teams }: InertiaProps<NetworkingPageProps>) => 
 
                 <div className="networking-card__identity">
                   <p className="networking-card__pseudo">@{user.pseudo}</p>
-                  <p className="networking-card__name">{user.fullName || 'Membre SmartFest'}</p>
+                  <p className="networking-card__name">{user.fullName || 'Membre SmartRace'}</p>
                 </div>
 
                 {user.isCurrentUser ? (

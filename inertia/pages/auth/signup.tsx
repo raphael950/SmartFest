@@ -36,7 +36,7 @@ export default function Signup({ teams }: InertiaProps<SignupProps>) {
           <div className="auth-inner">
             <div className="auth-header signup-header">
               <h1>Creer votre compte</h1>
-              <p>Entrez votre adresse email pour commencer votre inscription sur SmartFest.</p>
+              <p>Entrez votre adresse email pour commencer votre inscription sur SmartRace.</p>
               <div className="signup-step">Étape 1/2</div>
             </div>
 
@@ -86,7 +86,7 @@ export default function Signup({ teams }: InertiaProps<SignupProps>) {
         <div className="auth-inner">
           <div className="auth-header signup-header">
             <h1>Creer votre compte</h1>
-            <p>Complétez vos informations pour accéder à votre espace et aux services SmartFest.</p>
+            <p>Complétez vos informations pour accéder à votre espace et aux services SmartRace.</p>
             <div className="signup-step">Étape 2/2</div>
           </div>
 
