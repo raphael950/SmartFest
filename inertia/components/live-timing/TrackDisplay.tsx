@@ -53,7 +53,7 @@ const LED_SECTOR_BASE: Record<string, number> = {
   S3: 0.74,
 }
 
-const LED_SECTOR_OFFSET : Record<string, number> = {
+const LED_SECTOR_OFFSET: Record<string, number> = {
   S1: 30,
   S2: 28,
   S3: 32,
@@ -228,6 +228,15 @@ export default function TrackDisplay({ circuitPath, drivers, cameras, leds, flag
     return flag.color === 'rouge' ? 'RED FLAG' : 'GREEN FLAG'
   }
 
+  // ── Modal position calculation ──────────────────────────────────────────────
+  const getModalPosition = (width: number, height: number, bottomMargin: number) => {
+    const margin = 16
+    return {
+      x: Math.max(margin, window.innerWidth - width - margin),
+      y: Math.max(margin, window.innerHeight - height - bottomMargin),
+    }
+  }
+
   // ── Modal drag ──────────────────────────────────────────────────────────────
   const modalDragRef = useRef<{ startX: number; startY: number; originX: number; originY: number } | null>(null)
   const [modalPos, setModalPos] = useState({ x: 0, y: 0 })
@@ -237,20 +246,14 @@ export default function TrackDisplay({ circuitPath, drivers, cameras, leds, flag
     if (!activeCamera) return
     const width = Math.min(420, window.innerWidth - 28)
     const height = 352
-    setModalPos({
-      x: Math.max(16, window.innerWidth - width - 16),
-      y: Math.max(16, window.innerHeight - height - 16),
-    })
+    setModalPos(getModalPosition(width -12, height, 16))
   }, [activeCamera?.id])
 
   useEffect(() => {
     if (!activeLed) return
     const width = Math.min(320, window.innerWidth - 28)
     const height = 180
-    setModalPos({
-      x: Math.max(16, window.innerWidth - width - 16),
-      y: Math.max(16, window.innerHeight - height - 16),
-    })
+    setModalPos(getModalPosition(width +87, height, 43))
   }, [activeLed?.id])
 
   useEffect(() => {
@@ -427,82 +430,82 @@ export default function TrackDisplay({ circuitPath, drivers, cameras, leds, flag
   // ── Modal via portal (rendu dans document.body, hors de toute hiérarchie CSS) ──
   const cameraModal = activeCamera
     ? createPortal(
-        <div
-          className="lt-camera-modal"
-          style={{ left: `${modalPos.x}px`, top: `${modalPos.y}px` }}
-          onPointerDown={(e) => e.stopPropagation()}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="lt-camera-modal__header" onPointerDown={startModalDrag}>
-            <div className="lt-camera-modal__title-wrap">
-              <span className="lt-camera-modal__badge">LIVE</span>
-              <div>
-                <p className="lt-camera-modal__title">{activeCamera.name}</p>
-                <p className="lt-camera-modal__subtitle">
-                  Secteur {activeCamera.sector.replace('S', '')} · {activeCamera.status.toUpperCase()}
-                </p>
-              </div>
-            </div>
-            <button
-              type="button"
-              className="lt-camera-modal__close"
-              onPointerDown={(e) => e.stopPropagation()}
-              onClick={(e) => {
-                e.stopPropagation()
-                setActiveCameraId(null)
-              }}
-              aria-label="Fermer la vidéo"
-            >
-              ✕
-            </button>
-          </div>
-          <div className="lt-camera-modal__body">
-            <CameraPlayer
-              camera={activeCamera}
-              sourceUrl={CAMERA_VIDEO_BY_SECTOR[activeCamera.sector] ?? VIDEO_URLS.S1}
-              raceState={raceState}
-            />
-            <div className="lt-camera-modal__footer">
-              <span className="lt-camera-modal__meta lt-camera-modal__meta--muted">Glisser l'en-tête pour déplacer</span>
+      <div
+        className="lt-camera-modal"
+        style={{ left: `${modalPos.x}px`, top: `${modalPos.y}px` }}
+        onPointerDown={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="lt-camera-modal__header" onPointerDown={startModalDrag}>
+          <div className="lt-camera-modal__title-wrap">
+            <span className="lt-camera-modal__badge">LIVE</span>
+            <div>
+              <p className="lt-camera-modal__title">{activeCamera.name}</p>
+              <p className="lt-camera-modal__subtitle">
+                Secteur {activeCamera.sector.replace('S', '')} · {activeCamera.status.toUpperCase()}
+              </p>
             </div>
           </div>
-        </div>,
-        document.body
-      )
+          <button
+            type="button"
+            className="lt-camera-modal__close"
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation()
+              setActiveCameraId(null)
+            }}
+            aria-label="Fermer la vidéo"
+          >
+            ✕
+          </button>
+        </div>
+        <div className="lt-camera-modal__body">
+          <CameraPlayer
+            camera={activeCamera}
+            sourceUrl={CAMERA_VIDEO_BY_SECTOR[activeCamera.sector] ?? VIDEO_URLS.S1}
+            raceState={raceState}
+          />
+          <div className="lt-camera-modal__footer">
+            <span className="lt-camera-modal__meta lt-camera-modal__meta--muted">Glisser l'en-tête pour déplacer</span>
+          </div>
+        </div>
+      </div>,
+      document.body
+    )
     : null
 
   const ledModal = activeLed
     ? (() => {
-        const sectorFlag = getSectorFlagState(activeLed.sector)
-        return (
-          <TrackObjectModal
-            variant="led"
-            badge="LED"
-            title={activeLed.name}
-            subtitle={`Secteur ${activeLed.sector.replace('S', '')} · ${activeLed.status.toUpperCase()}`}
-            position={modalPos}
-            onClose={() => setActiveLedId(null)}
-            onHeaderPointerDown={startModalDrag}
-            footer={<span className="lt-track-modal__meta lt-track-modal__meta--muted">Glisser l'en-tête pour déplacer</span>}
-          >
-            <div className="lt-led-modal">
-              <div className="lt-led-modal__state">
-                <div className={`lt-led-modal__tile lt-led-modal__tile--${sectorFlag.kind} ${activeLed.status === 'offline' ? 'lt-led-modal__tile--offline' : ''} ${sectorFlag.kind === 'jaune' || sectorFlag.kind === 'rouge' ? 'lt-led-modal__tile--blink' : ''}`} aria-hidden="true" />
-                <div>
-                  <p className="lt-led-modal__state-title">{sectorFlag.label}</p>
-                  <p className="lt-led-modal__state-text">
-                    {activeLed.status === 'offline'
-                      ? 'La LED est hors-ligne : informations désactivées.'
-                      : isRaceStopped
-                        ? 'La LED est en mode arrêt de course.'
-                        : 'La LED suit le drapeau du secteur en temps réel.'}
-                  </p>
-                </div>
+      const sectorFlag = getSectorFlagState(activeLed.sector)
+      return (
+        <TrackObjectModal
+          variant="led"
+          badge="LED"
+          title={activeLed.name}
+          subtitle={`Secteur ${activeLed.sector.replace('S', '')} · ${activeLed.status.toUpperCase()}`}
+          position={modalPos}
+          onClose={() => setActiveLedId(null)}
+          onHeaderPointerDown={startModalDrag}
+          footer={<span className="lt-track-modal__meta lt-track-modal__meta--muted">Glisser l'en-tête pour déplacer</span>}
+        >
+          <div className="lt-led-modal">
+            <div className="lt-led-modal__state">
+              <div className={`lt-led-modal__tile lt-led-modal__tile--${sectorFlag.kind} ${activeLed.status === 'offline' ? 'lt-led-modal__tile--offline' : ''} ${sectorFlag.kind === 'jaune' || sectorFlag.kind === 'rouge' ? 'lt-led-modal__tile--blink' : ''}`} aria-hidden="true" />
+              <div>
+                <p className="lt-led-modal__state-title">{sectorFlag.label}</p>
+                <p className="lt-led-modal__state-text">
+                  {activeLed.status === 'offline'
+                    ? 'La LED est hors-ligne : informations désactivées.'
+                    : isRaceStopped
+                      ? 'La LED est en mode arrêt de course.'
+                      : 'La LED suit le drapeau du secteur en temps réel.'}
+                </p>
               </div>
             </div>
-          </TrackObjectModal>
-        )
-      })()
+          </div>
+        </TrackObjectModal>
+      )
+    })()
     : null
 
   return (
@@ -560,11 +563,6 @@ export default function TrackDisplay({ circuitPath, drivers, cameras, leds, flag
             const point = getPointAt(driver.trackProgression ?? 0)
             if (!point) return null
             const dotSize = 7 / Math.sqrt(transform.scale)
-            const isSelected = selectedDriverIds.includes(driver.id)
-            const labelWidth = 126 / labelScale
-            const labelHeight = 78 / labelScale
-            const labelX = point.x - labelWidth / 2
-            const labelY = point.y - dotSize * 5.8 - labelHeight
             return (
               <g key={driver.id} style={{ cursor: 'pointer', transition: 'all 0.1s linear' }} onClick={() => onDriverClick(driver.id)}>
                 <circle cx={point.x} cy={point.y} r={dotSize * 1.6} fill={driver.accentColor} opacity={0.3} />
