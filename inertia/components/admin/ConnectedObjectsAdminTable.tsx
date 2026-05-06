@@ -115,7 +115,7 @@ const ConnectedObjectsAdminTable = ({ devices: initialDevices }: ConnectedObject
             {filteredDevices.length === 0 ? (
               <tr>
                 <td className="iot-table__empty" colSpan={11}>
-                  {initialDevices.length === 0 ? 'Aucune demande de suppression en attente.' : 'Aucune demande ne correspond a la recherche.'}
+                  {initialDevices.length === 0 ? 'Aucune demande de suppression en attente.' : 'Aucune demande ne correspond à la recherche.'}
                 </td>
               </tr>
             ) : (
@@ -196,7 +196,7 @@ const ConnectedObjectsAdminTable = ({ devices: initialDevices }: ConnectedObject
           <AlertDialogHeader>
             <AlertDialogTitle>Rejeter la demande ?</AlertDialogTitle>
             <AlertDialogDescription>
-              La demande de suppression pour <strong>{candidateToReject?.name}</strong> sera rejetee. L'objet restera accessible et un nouvel email sera envoye a l'utilisateur.
+              La demande de suppression pour <strong>{candidateToReject?.name}</strong> sera rejetée. L'objet restera accessible et un nouvel email sera envoyé à l'utilisateur.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

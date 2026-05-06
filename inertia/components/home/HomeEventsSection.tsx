@@ -16,7 +16,7 @@ const HomeEventsSection = ({ sectionId, events, onSelectEvent }: HomeEventsSecti
       <header className="home-section__header">
         <div className="home-section__title">
           <CalendarDays className="home-section__title-icon" />
-          <h3>Calendrier des evenements</h3>
+          <h3>Calendrier des événements</h3>
         </div>
       </header>
 
@@ -35,13 +35,13 @@ const HomeEventsSection = ({ sectionId, events, onSelectEvent }: HomeEventsSecti
               <span className="home-status-pill" data-tone={event.tone}>
                 {event.status}
               </span>
-              <span className="home-event-card__cta">Voir le detail</span>
+              <span className="home-event-card__cta">Voir le détail</span>
             </button>
           ))
         ) : (
           <article className="home-event-card home-event-card--empty">
-            <p className="home-event-card__date">Aucun evenement</p>
-            <h4>Le calendrier sera rempli automatiquement quand des evenements seront ajoutes en base.</h4>
+            <p className="home-event-card__date">Aucun événement</p>
+            <h4>Aucun événement prévu pour le moment</h4>
           </article>
         )}
       </div>

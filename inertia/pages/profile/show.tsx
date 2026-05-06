@@ -33,7 +33,7 @@ type ProfilePageProps = {
 
 const formatBirthDate = (value: string | null) => {
   if (!value) {
-    return 'Non renseignee'
+    return 'Non renseigné'
   }
 
   return new Date(value).toLocaleDateString('fr-FR', {
@@ -137,9 +137,9 @@ export default function ProfileShow({ profile, teams, canEdit }: InertiaProps<Pr
                 {identity.lastName ? <span className="identity-last"> {identity.lastName}</span> : null}
               </h2>
               <p className="identity-meta">
-                {age !== null ? `${age} ans` : 'Age non renseignee'} • {profile.gender || 'Sexe non renseigne'} • {formatBirthDate(profile.birthDate)}
+                {age !== null ? `${age} ans` : 'Âge non renseigné'} • {profile.gender || 'Sexe non renseigné'} • {formatBirthDate(profile.birthDate)}
               </p>
-              <p className="identity-job"><Briefcase size={14} /> {profile.jobTitle || 'Metier non renseigne'}</p>
+              <p className="identity-job"><Briefcase size={14} /> {profile.jobTitle || 'Métier non renseigné'}</p>
             </div>
           </div>
 

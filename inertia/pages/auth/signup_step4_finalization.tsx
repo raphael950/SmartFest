@@ -126,7 +126,7 @@ export default function SignupStep4Finalization() {
                     </div>
 
                     <div className="field">
-                      <label htmlFor="jobTitle">Nom du metier</label>
+                      <label htmlFor="jobTitle">Nom du métier</label>
                       <div className="input-wrap">
                         <Briefcase size={18} className="field-icon" />
                         <input

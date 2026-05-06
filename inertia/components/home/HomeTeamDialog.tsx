@@ -57,7 +57,7 @@ const HomeTeamDialog = ({ team, onClose }: HomeTeamDialogProps) => {
                 <strong>{team.country}</strong>
               </article>
               <article className="home-team-dialog__info-card">
-                <span className="home-team-dialog__label">Categorie</span>
+                <span className="home-team-dialog__label">Catégorie</span>
                 <strong>{team.category}</strong>
               </article>
             </div>

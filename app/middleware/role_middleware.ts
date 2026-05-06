@@ -16,13 +16,13 @@ export default class RoleMiddleware {
     const user = ctx.auth.user
 
     if (!user) {
-      ctx.session.flash('error', 'Vous devez etre connecte pour acceder a cette page.')
+      ctx.session.flash('error', 'Vous devez être connecté pour accéder à cette page.')
       return ctx.response.redirect().toRoute('session.create')
     }
 
     if (!hasMinimumRole(user.role, minimumRole)) {
       const label = USER_ROLE_LABELS[minimumRole]
-      ctx.session.flash('error', `Acces reserve aux utilisateurs ${label.toLowerCase()}s ou superieurs.`)
+      ctx.session.flash('error', `Accès réservé aux utilisateurs ${label.toLowerCase()}s ou supérieurs.`)
       return ctx.response.redirect().toRoute('home')
     }
 

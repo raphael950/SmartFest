@@ -17,7 +17,7 @@ export default function Login() {
         <div className="auth-inner">
           <div className="auth-header">
             <h1>Bon retour !</h1>
-            <p>Connectez-vous pour accéder au tableau de bord et aux outils en temps reel.</p>
+            <p>Connectez-vous pour accéder au tableau de bord et aux outils en temps réel.</p>
           </div>
 
           {flash?.error ? (

@@ -8,7 +8,7 @@ export default function SignupStep1() {
       <div className="auth-card signup-card">
         <div className="auth-inner">
           <div className="auth-header signup-header">
-            <h1>Creer votre compte</h1>
+            <h1>Créer votre compte</h1>
             <p>Commençons par vos informations de base.</p>
             <div className="signup-step">Étape 1/4</div>
           </div>

@@ -16,13 +16,13 @@ const HomeHero = () => {
             <span>Circuit Bugatti</span>
           </h2>
           <p>
-            Suivez en temps reel les evenements de course automobile sur le mythique circuit du
+            Suivez en temps réel les événements de course automobile sur le mythique circuit du
             Mans.
           </p>
         </div>
 
         <a href="/live-timing" className="home-hero__cta">
-          <span>Suivre l&apos;evenement en direct</span>
+          <span>Suivre l&apos;événement en direct</span>
           <ArrowRight className="home-hero__cta-icon" />
         </a>
       </div>

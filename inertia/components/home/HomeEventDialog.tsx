@@ -34,19 +34,19 @@ const HomeEventDialog = ({ event, onClose }: HomeEventDialogProps) => {
 
             <div className="home-team-dialog__grid">
               <article className="home-team-dialog__info-card">
-                <span className="home-team-dialog__label">Debut</span>
+                <span className="home-team-dialog__label">Début</span>
                 <strong>{event.startDate}</strong>
               </article>
               <article className="home-team-dialog__info-card">
                 <span className="home-team-dialog__label">Fin</span>
-                <strong>{event.endDate ?? 'Date unique'}</strong>
+                <strong>{event.endDate ?? 'Sur une journée'}</strong>
               </article>
               <article className="home-team-dialog__info-card">
                 <span className="home-team-dialog__label">Format</span>
                 <strong>{event.format}</strong>
               </article>
               <article className="home-team-dialog__info-card">
-                <span className="home-team-dialog__label">Duree</span>
+                <span className="home-team-dialog__label">Durée</span>
                 <strong>{event.duration}</strong>
               </article>
             </div>

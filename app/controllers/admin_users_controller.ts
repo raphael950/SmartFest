@@ -27,7 +27,7 @@ export default class AdminUsersController {
     const password = String(request.input('password', '')).trim()
 
     if (password.length < 8) {
-      session.flash('error', 'Le mot de passe doit contenir au moins 8 caracteres.')
+      session.flash('error', 'Le mot de passe doit contenir au moins 8 caractères.')
       return response.redirect().back()
     }
 

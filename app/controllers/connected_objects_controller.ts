@@ -220,7 +220,7 @@ export default class ConnectedObjectsController {
 
     const user = auth.user
     if (!user) {
-      session.flash('error', 'Vous devez etre connecte pour demander une suppression.')
+      session.flash('error', 'Vous devez être connecté pour demander une suppression.')
       return response.redirect().back()
     }
 
@@ -233,7 +233,7 @@ export default class ConnectedObjectsController {
     device.requestedDeletionByUserId = user.id
     await device.save()
 
-    session.flash('success', 'Demande de suppression envoyee. En attente de validation administrateur.')
+    session.flash('success', 'Demande de suppression envoyée. En attente de validation administrateur.')
     return response.redirect().back()
   }
 
@@ -261,7 +261,7 @@ export default class ConnectedObjectsController {
     device.requestedDeletionByUserId = null
     await device.save()
 
-    session.flash('success', 'Demande de suppression rejetee.')
+    session.flash('success', 'Demande de suppression rejetée.')
     return response.redirect().back()
   }
 
