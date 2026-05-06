@@ -222,9 +222,8 @@ export default function LiveTimingChat({
             disabled={!isConnected}
           />
         </div>
-        <button type="submit" className="lt-chat__send" disabled={!isConnected || !draft.trim()}>
+        <button type="submit" className="lt-chat__send" disabled={!isConnected || !draft.trim()} aria-label="Envoyer le message">
           <Send size={15} />
-          Envoyer
         </button>
       </form>
 
