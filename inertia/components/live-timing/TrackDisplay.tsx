@@ -216,6 +216,18 @@ export default function TrackDisplay({ circuitPath, drivers, cameras, leds, flag
     }
   }
 
+  const getFlagLabel = () => {
+    if (isRaceStopped) return 'Course arrêtée'
+
+    if (flag.color === 'jaune') {
+      if (flag.sectors.length === 3) return 'FULL COURSE YELLOW'
+      const sectorNumbers = flag.sectors.map((s) => s.replace('S', '')).join(' & ')
+      return `YELLOW FLAG SECTOR ${sectorNumbers}`
+    }
+
+    return flag.color === 'rouge' ? 'RED FLAG' : 'GREEN FLAG'
+  }
+
   // ── Modal drag ──────────────────────────────────────────────────────────────
   const modalDragRef = useRef<{ startX: number; startY: number; originX: number; originY: number } | null>(null)
   const [modalPos, setModalPos] = useState({ x: 0, y: 0 })
@@ -496,7 +508,7 @@ export default function TrackDisplay({ circuitPath, drivers, cameras, leds, flag
   return (
     <div className="lt-glass lt-track-container lt-panel-section">
       <div className={isRaceStopped ? 'lt-track-flag lt-track-flag--chequered' : `lt-track-flag lt-track-flag--${flag.color}`}>
-        {isRaceStopped ? 'Course arrêtée' : flag.color.toUpperCase()}
+        {getFlagLabel()}
       </div>
 
       {transform.scale > 1.05 && (
@@ -595,9 +607,7 @@ export default function TrackDisplay({ circuitPath, drivers, cameras, leds, flag
                 const spacing = dotSize * 2.5
                 const x = pitAnchor.baseX + pitAnchor.alongX * index * spacing
                 const y = pitAnchor.baseY + pitAnchor.alongY * index * spacing
-                const isSelected = selectedDriverIds.includes(driver.id)
-                const labelWidth = 126 / labelScale
-                const labelHeight = 78 / labelScale
+
                 return (
                   <g
                     key={`pit-${driver.id}`}
