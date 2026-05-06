@@ -10,7 +10,7 @@ import { TuyauProvider } from '@adonisjs/inertia/react'
 import { resolvePageComponent } from '@adonisjs/inertia/helpers'
 import { NotificationProvider } from '@/contexts/NotificationContext'
 
-const appName = import.meta.env.VITE_APP_NAME || 'AdonisJS'
+const appName = import.meta.env.VITE_APP_NAME ?? ''
 const pages = import.meta.glob('./pages/**/*.tsx')
 
 const resolvePagePath = (name: string) => {
@@ -30,7 +30,12 @@ const resolvePagePath = (name: string) => {
 }
 
 createInertiaApp({
-  title: (title) => (title ? `${title} - ${appName}` : appName),
+  title: (title) => {
+    if (title) {
+      return appName ? `${title} - ${appName}` : title
+    }
+    return appName || ''
+  },
   resolve: (name) => {
     const Layout = name.startsWith('auth/') ? AuthLayout : DefaultLayout
 

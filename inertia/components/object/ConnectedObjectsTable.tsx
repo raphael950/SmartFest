@@ -496,7 +496,7 @@ const ConnectedObjectsTable = ({ devices: initialDevices, teams, pendingDeletion
           <AlertDialogHeader>
             <AlertDialogTitle>Supprimer cet objet ?</AlertDialogTitle>
             <AlertDialogDescription>
-              {isAdmin ? 'Cette action est irreversible. L\'objet' : 'Cette demande sera envoyee a un administrateur pour validation de suppression de l\'objet'}
+              {isAdmin ? 'Cette action est irréversible. L\'objet' : 'Cette demande sera envoyée à un administrateur pour validation de suppression de l\'objet'}
               {deleteCandidate ? ` ${deleteCandidate.name}` : ''}
               {isAdmin ? ' sera supprime definitivement.' : '.'}
             </AlertDialogDescription>

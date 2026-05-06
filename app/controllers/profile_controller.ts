@@ -81,7 +81,7 @@ export default class ProfileController {
     })
 
     if (profilePhoto && !profilePhoto.isValid) {
-      session.flash('error', 'La photo doit etre une image valide (jpg, png, webp, avif) de 4MB max.')
+      session.flash('error', 'La photo doit être une image valide (jpg, png, webp, avif) de 4MB max.')
       return response.redirect().back()
     }
 

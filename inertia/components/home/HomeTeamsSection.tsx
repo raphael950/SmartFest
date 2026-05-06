@@ -26,14 +26,14 @@ const HomeTeamsSection = ({
       <header className="home-section__header">
         <div className="home-section__title">
           <Flag className="home-section__title-icon" />
-          <h3>Equipes engagees</h3>
+          <h3>Équipes engagées</h3>
         </div>
 
         <div className="home-section__controls">
           <button
             type="button"
             className="home-section__control"
-            aria-label="Voir les equipes precedentes"
+            aria-label="Voir les équipes précédentes"
             disabled={!canSlideTeams}
             onClick={onPrevious}
           >
@@ -42,7 +42,7 @@ const HomeTeamsSection = ({
           <button
             type="button"
             className="home-section__control"
-            aria-label="Voir les equipes suivantes"
+            aria-label="Voir les équipes suivantes"
             disabled={!canSlideTeams}
             onClick={onNext}
           >
@@ -77,7 +77,7 @@ const HomeTeamsSection = ({
               </span>
               <h4>{team.name}</h4>
               <p>{team.country}</p>
-              <span className="home-team-card__cta">Voir la fiche equipe</span>
+              <span className="home-team-card__cta">Voir la fiche équipe</span>
             </button>
           ))
         ) : (
@@ -85,8 +85,8 @@ const HomeTeamsSection = ({
             <span className="home-team-card__emoji" aria-hidden="true">
               {teamEmoji}
             </span>
-            <h4>Aucune equipe</h4>
-            <p>Ajoute des equipes dans la base pour remplir cette section.</p>
+            <h4>Aucune équipe</h4>
+            <p>Les équipes seront visibles une fois inscrites au calendrier.</p>
           </article>
         )}
       </div>

@@ -57,7 +57,7 @@ const NetworkingPage = ({ users, teams }: InertiaProps<NetworkingPageProps>) => 
               type="search"
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder="Rechercher par pseudo, email, nom, metier, equipe"
+              placeholder="Rechercher par pseudo, email, nom, métier, équipe"
               aria-label="Recherche profils"
             />
           </div>
@@ -102,15 +102,15 @@ const NetworkingPage = ({ users, teams }: InertiaProps<NetworkingPageProps>) => 
                 </p>
                 <p>
                   <UserRound size={14} />
-                  <span>{user.jobTitle || 'Metier non renseigne'}</span>
+                  <span>{user.jobTitle || 'Métier non renseigné'}</span>
                 </p>
                 <p>
                   <Trophy size={14} />
                   <span>
                     {String(
                       user.followedTeamId
-                        ? new Map(teams.map((t: { id: any; name: any }) => [t.id, t.name])).get(user.followedTeamId) ?? 'Equipe non renseignee'
-                        : 'Equipe non renseignee'
+                        ? new Map(teams.map((t: { id: any; name: any }) => [t.id, t.name])).get(user.followedTeamId) ?? 'Équipe non renseignée'
+                        : 'Équipe non renseignée'
                     )}
                   </span>
                 </p>

@@ -1,6 +1,6 @@
 import { Data } from '@generated/data'
 import { toast, Toaster } from 'sonner'
-import { usePage } from '@inertiajs/react'
+import { usePage, Head } from '@inertiajs/react'
 import { Menu } from 'lucide-react'
 import { ReactElement, useEffect, useState } from 'react'
 import Navbar from '@/components/layout/Navbar'
@@ -10,6 +10,22 @@ import NotificationPanel from '@/components/ui/NotificationPanel'
 export default function Layout({ children }: { children: ReactElement<Data.SharedProps> }) {
   const page = usePage<Data.SharedProps>()
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false)
+
+  const computeTitle = () => {
+    // prefer explicit title from page props or child props
+    const childTitle = (children as any)?.props?.title
+    const propsTitle = (page.props as any)?.title
+    if (childTitle) return childTitle
+    if (propsTitle) return propsTitle
+
+    // fallback: derive from component name (e.g. "flags/flags" -> "Flags")
+    const componentName = page.component?.split('/')?.pop() ?? ''
+    const human = componentName
+      .replace(/[-_]/g, ' ')
+      .replace(/([a-z])([A-Z])/g, '$1 $2')
+      .replace(/\b\w/g, (c) => c.toUpperCase())
+    return human || ''
+  }
 
   useEffect(() => {
     toast.dismiss()
@@ -49,6 +65,7 @@ export default function Layout({ children }: { children: ReactElement<Data.Share
 
   return (
     <div className="sf-shell">
+      <Head title={computeTitle()} />
       <NotificationGateway />
       <Navbar isMobileOpen={isMobileNavOpen} onMobileClose={() => setIsMobileNavOpen(false)} />
       <div className="sf-shell__main">

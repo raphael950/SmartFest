@@ -103,7 +103,7 @@ const AdminUsersPanel = ({ users }: Props) => {
           <p className="admin-users-hero__eyebrow">Administration</p>
           <h1 className="admin-users-hero__title">Gestion des utilisateurs</h1>
           <p className="admin-users-hero__subtitle">
-            Controlez les nouveaux comptes, validez les inscriptions et mettez a jour les acces en direct.
+            Contrôlez les nouveaux comptes, validez les inscriptions et mettez à jour les accès en direct.
           </p>
         </div>
         <div className="admin-users-stats" aria-label="Statistiques utilisateurs">
@@ -112,7 +112,7 @@ const AdminUsersPanel = ({ users }: Props) => {
             <strong>{stats.total}</strong>
           </article>
           <article className="admin-users-stat-card is-verified">
-            <span>Verifies</span>
+            <span>Vérifiés</span>
             <strong>{stats.verified}</strong>
           </article>
           <article className="admin-users-stat-card is-pending">
@@ -184,7 +184,7 @@ const AdminUsersPanel = ({ users }: Props) => {
                     className="admin-user-card__input"
                     type="password"
                     value={passwordValue}
-                    placeholder="8 caracteres minimum"
+                    placeholder="8 caractères minimum"
                     onChange={(event) => setPassword(user.id, event.target.value)}
                   />
                   <button
@@ -201,7 +201,7 @@ const AdminUsersPanel = ({ users }: Props) => {
 
               <div className="admin-user-card__password-row">
                 <label htmlFor={`role-${user.id}`} className="admin-user-card__label">
-                  Role utilisateur
+                  Rôle utilisateur
                 </label>
                 <div className="admin-user-card__password-controls">
                   <select

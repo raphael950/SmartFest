@@ -86,7 +86,7 @@ export default function Signup({ teams }: InertiaProps<SignupProps>) {
         <div className="auth-inner">
           <div className="auth-header signup-header">
             <h1>Creer votre compte</h1>
-            <p>Completez vos informations pour acceder a votre espace et aux services SmartFest.</p>
+            <p>Complétez vos informations pour accéder à votre espace et aux services SmartFest.</p>
             <div className="signup-step">Étape 2/2</div>
           </div>
 
@@ -163,7 +163,7 @@ export default function Signup({ teams }: InertiaProps<SignupProps>) {
                             data-invalid={errors.gender ? 'true' : undefined}
                           >
                             <option value="" disabled>
-                              Selectionner
+                              Sélectionner
                             </option>
                             <option value="Homme">Homme</option>
                             <option value="Femme">Femme</option>
@@ -188,7 +188,7 @@ export default function Signup({ teams }: InertiaProps<SignupProps>) {
                     </div>
 
                     <div className="field">
-                      <label htmlFor="jobTitle">Nom du metier</label>
+                      <label htmlFor="jobTitle">Nom du métier</label>
                       <div className="input-wrap">
                         <Briefcase size={18} className="field-icon" />
                         <input

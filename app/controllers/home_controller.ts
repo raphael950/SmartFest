@@ -47,10 +47,10 @@ const getEventDescription = (title: string, status: 'live' | 'upcoming', startDa
   }
 
   if (endDate && !startDate.hasSame(endDate, 'day')) {
-    return `${title} se deroulera sur plusieurs jours au circuit Bugatti, avec une preparation equipee pour les seances, la course et les operations de stand.`
+    return `${title} se déroulera sur plusieurs jours au circuit Bugatti, avec une préparation équipée pour les séances, la course et les opérations de stand.`
   }
 
-  return `${title} est programme sur une journee au circuit Bugatti, avec un suivi centre sur la session en piste et l execution sportive.`
+  return `${title} est programmé sur une journée au circuit Bugatti, avec un suivi centré sur la session en piste et l'exécution sportive.`
 }
 
 export default class HomeController {

@@ -68,7 +68,7 @@ const ProfileEditForm = ({ profile, teams, hasPublicProfile }: ProfileEditFormPr
 
             <div className="profile-avatar-copy">
               <h2>Photo de profil</h2>
-              <p>Ajoute une photo claire pour etre reconnaissable sur ton profil public.</p>
+              <p>Ajoute une photo claire pour être reconnaissable sur ton profil public.</p>
             </div>
 
             <label htmlFor="profilePhoto" className="profile-avatar-upload-btn">
@@ -131,7 +131,7 @@ const ProfileEditForm = ({ profile, teams, hasPublicProfile }: ProfileEditFormPr
                   data-invalid={errors.gender ? 'true' : undefined}
                 >
                   <option value="" disabled>
-                    Selectionner
+                    Sélectionner
                   </option>
                   <option value="Homme">Homme</option>
                   <option value="Femme">Femme</option>
