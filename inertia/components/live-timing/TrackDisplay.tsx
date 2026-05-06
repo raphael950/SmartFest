@@ -316,6 +316,65 @@ export default function TrackDisplay({ circuitPath, drivers, cameras, leds, flag
     }),
   )
 
+  const focusBadgeElements = drivers.flatMap((driver) => {
+    if (!selectedDriverIds.includes(driver.id)) return []
+
+    if (pitDriverIds.has(driver.id)) {
+      if (!pitAnchor) return []
+
+      const pitIndex = pitDrivers.findIndex((pitDriver) => pitDriver.id === driver.id)
+      if (pitIndex < 0) return []
+
+      const dotSize = 5.5 / Math.sqrt(transform.scale)
+      const spacing = dotSize * 2.5
+      const x = pitAnchor.baseX + pitAnchor.alongX * pitIndex * spacing
+      const y = pitAnchor.baseY + pitAnchor.alongY * pitIndex * spacing
+      const labelWidth = 126 / labelScale
+      const labelHeight = 78 / labelScale
+
+      return [
+        <CarFocusBadge
+          key={`focus-pit-${driver.id}`}
+          anchorX={x}
+          anchorY={y}
+          badgeX={x - labelWidth / 2}
+          badgeY={y - dotSize * 4.8 - labelHeight}
+          badgeWidth={labelWidth}
+          badgeHeight={labelHeight}
+          scale={transform.scale}
+          team={driver.team}
+          carModel={driver.carModel}
+          accentColor={driver.accentColor}
+        />,
+      ]
+    }
+
+    const point = getPointAt(driver.trackProgression ?? 0)
+    if (!point) return []
+
+    const dotSize = 7 / Math.sqrt(transform.scale)
+    const labelWidth = 126 / labelScale
+    const labelHeight = 78 / labelScale
+    const labelX = point.x - labelWidth / 2
+    const labelY = point.y - dotSize * 5.8 - labelHeight
+
+    return [
+      <CarFocusBadge
+        key={`focus-track-${driver.id}`}
+        anchorX={point.x}
+        anchorY={point.y}
+        badgeX={labelX}
+        badgeY={labelY}
+        badgeWidth={labelWidth}
+        badgeHeight={labelHeight}
+        scale={transform.scale}
+        team={driver.team}
+        carModel={driver.carModel}
+        accentColor={driver.accentColor}
+      />,
+    ]
+  })
+
   const ledMarkers = leds
     .filter((led) => led.type === 'LED')
     .reduce<Record<string, LiveTimingLed[]>>((accumulator, led) => {
@@ -496,15 +555,6 @@ export default function TrackDisplay({ circuitPath, drivers, cameras, leds, flag
             const labelY = point.y - dotSize * 5.8 - labelHeight
             return (
               <g key={driver.id} style={{ cursor: 'pointer', transition: 'all 0.1s linear' }} onClick={() => onDriverClick(driver.id)}>
-                {isSelected && (
-                  <CarFocusBadge
-                    anchorX={point.x} anchorY={point.y}
-                    badgeX={labelX} badgeY={labelY}
-                    badgeWidth={labelWidth} badgeHeight={labelHeight}
-                    scale={transform.scale}
-                    team={driver.team} carModel={driver.carModel} accentColor={driver.accentColor}
-                  />
-                )}
                 <circle cx={point.x} cy={point.y} r={dotSize * 1.6} fill={driver.accentColor} opacity={0.3} />
                 <circle cx={point.x} cy={point.y} r={dotSize * 1.2} fill="white" />
                 <circle cx={point.x} cy={point.y} r={dotSize} fill={driver.accentColor} />
@@ -554,16 +604,6 @@ export default function TrackDisplay({ circuitPath, drivers, cameras, leds, flag
                     style={{ cursor: 'pointer', transition: 'all 0.1s linear' }}
                     onClick={() => onDriverClick(driver.id)}
                   >
-                    {isSelected && (
-                      <CarFocusBadge
-                        anchorX={x} anchorY={y}
-                        badgeX={x - labelWidth / 2}
-                        badgeY={y - dotSize * 4.8 - labelHeight}
-                        badgeWidth={labelWidth} badgeHeight={labelHeight}
-                        scale={transform.scale}
-                        team={driver.team} carModel={driver.carModel} accentColor={driver.accentColor}
-                      />
-                    )}
                     <circle cx={x} cy={y} r={dotSize * 1.45} fill={driver.accentColor} opacity={0.24} />
                     <circle cx={x} cy={y} r={dotSize} fill="#202124" opacity={0.92} />
                     <circle cx={x} cy={y} r={dotSize * 0.7} fill={driver.accentColor} opacity={0.9} />
@@ -581,6 +621,8 @@ export default function TrackDisplay({ circuitPath, drivers, cameras, leds, flag
               })}
             </g>
           )}
+
+          {focusBadgeElements}
         </svg>
       </div>
 
