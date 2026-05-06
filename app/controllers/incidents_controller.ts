@@ -1,5 +1,6 @@
 import Incident from '#models/incident'
 import Team from '#models/team'
+import socketService from '#services/socket_service'
 import {
   INCIDENT_SECTORS,
   INCIDENT_SEVERITIES,
@@ -62,6 +63,18 @@ export default class IncidentsController {
     }
 
     await Incident.create({ type, vehicles, severity, sector, description })
+
+    // Émet une notification via WebSocket
+    const incident = await Incident.query().orderBy('created_at', 'desc').limit(1)
+    if (incident.length > 0) {
+      socketService.reportIncident({
+        id: incident[0].id,
+        type: incident[0].type,
+        severity: incident[0].severity,
+        sector: incident[0].sector,
+        description: incident[0].description,
+      })
+    }
 
     return response.redirect().back()
   }

@@ -4,6 +4,8 @@ import { usePage } from '@inertiajs/react'
 import { Menu } from 'lucide-react'
 import { ReactElement, useEffect, useState } from 'react'
 import Navbar from '@/components/layout/Navbar'
+import NotificationGateway from '@/components/NotificationGateway'
+import NotificationPanel from '@/components/ui/NotificationPanel'
 
 export default function Layout({ children }: { children: ReactElement<Data.SharedProps> }) {
   const page = usePage<Data.SharedProps>()
@@ -47,6 +49,7 @@ export default function Layout({ children }: { children: ReactElement<Data.Share
 
   return (
     <div className="sf-shell">
+      <NotificationGateway />
       <Navbar isMobileOpen={isMobileNavOpen} onMobileClose={() => setIsMobileNavOpen(false)} />
       <div className="sf-shell__main">
         <button
@@ -60,6 +63,7 @@ export default function Layout({ children }: { children: ReactElement<Data.Share
         </button>
         <main className="sf-shell__content">{children}</main>
       </div>
+      <NotificationPanel />
       <Toaster position="top-center" richColors />
     </div>
   )
