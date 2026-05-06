@@ -31,6 +31,31 @@ export interface LedUpdatePayload {
   sector: string
 }
 
+export interface LiveTimingChatMessage {
+  id: string
+  authorName: string
+  authorInitials: string
+  avatarPath?: string | null
+  authorRole?: string | null
+  text: string
+  clientId: string
+  createdAt: number
+}
+
+export interface ChatMessagePayload {
+  authorName: string
+  authorInitials: string
+  avatarPath?: string | null
+  authorRole?: string | null
+  text: string
+  clientId: string
+}
+
+export interface DeleteChatMessagePayload {
+  messageId: string
+  requesterRole: string
+}
+
 // ─── État drapeau par défaut ──────────────────────────────────────────────────
 
 const DEFAULT_FLAG: FlagState = { color: 'vert', sectors: [] }
@@ -96,6 +121,11 @@ class SocketService {
   /** État courant de la course, partagé entre toutes les connexions */
   private raceState: RaceState = { ...DEFAULT_RACE }
 
+  /** Derniers messages du chat live, partagés entre toutes les connexions */
+  private chatMessages: LiveTimingChatMessage[] = []
+
+  private chatSequence = 0
+
   public boot() {
     if (this.io) return
 
@@ -128,11 +158,72 @@ class SocketService {
       // Envoie l'état courant au nouveau connecté
       socket.emit('flag_update', this.flagState)
       socket.emit('race_state_update', this.raceState)
+      socket.emit('chat_history', this.chatMessages)
+
+      socket.on('chat_message', (payload: ChatMessagePayload) => {
+        const authorName = this.normalizeAuthorName(payload.authorName)
+        const authorInitials = this.normalizeInitials(payload.authorInitials, authorName)
+        const text = this.normalizeChatText(payload.text)
+
+        if (!authorName || !text) return
+
+        const message: LiveTimingChatMessage = {
+          id: `${Date.now()}-${this.chatSequence++}`,
+          authorName,
+          authorInitials,
+          avatarPath: payload.avatarPath ?? null,
+          authorRole: payload.authorRole ?? null,
+          text,
+          clientId: payload.clientId || socket.id,
+          createdAt: Date.now(),
+        }
+
+        this.chatMessages = [...this.chatMessages, message].slice(-50)
+        this.io?.emit('chat_message', message)
+      })
+
+      socket.on('chat_delete_message', (payload: DeleteChatMessagePayload) => {
+        if (payload.requesterRole !== 'admin') return
+
+        this.chatMessages = this.chatMessages.filter((message) => message.id !== payload.messageId)
+        this.io?.emit('chat_history', this.chatMessages)
+      })
 
       socket.on('disconnect', () => {
         console.log('👋 Spectateur déconnecté')
       })
     })
+  }
+
+  private normalizeAuthorName(value: string): string {
+    return String(value ?? '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 28)
+  }
+
+  private normalizeInitials(value: string, fallbackName: string): string {
+    const normalized = String(value ?? '')
+      .replace(/[^a-zA-ZÀ-ÿ0-9]/g, '')
+      .trim()
+      .slice(0, 3)
+      .toUpperCase()
+    if (normalized) return normalized
+
+    return fallbackName
+      .split(' ')
+      .filter(Boolean)
+      .map((part) => part[0] ?? '')
+      .join('')
+      .slice(0, 3)
+      .toUpperCase()
+  }
+
+  private normalizeChatText(value: string): string {
+    return String(value ?? '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 160)
   }
 
   /**

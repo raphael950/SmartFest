@@ -6,10 +6,11 @@ export default function LiveTimingPage({
   circuitPath,
   cameras,
   leds,
+  user,
 }: InertiaProps<LiveTimingPageProps>) {
   return (
     <div className="lt-page">
-      <LiveTimingPanel circuitPath={circuitPath} cameras={cameras} leds={leds} />
+      <LiveTimingPanel circuitPath={circuitPath} cameras={cameras} leds={leds} user={user} />
     </div>
   )
 }

@@ -39,6 +39,17 @@ export type LiveTimingPageProps = {
   leds: LiveTimingLed[]
 }
 
+export type LiveTimingChatMessage = {
+  id: string
+  authorName: string
+  authorInitials: string
+  avatarPath?: string | null
+  authorRole?: string | null
+  text: string
+  clientId: string
+  createdAt: number
+}
+
 // types/live-timing.types.ts — ajouter ces types
 
 export type FlagColor = 'vert' | 'jaune' | 'rouge'

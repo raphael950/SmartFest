@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
 import TrackDisplay from './TrackDisplay'
-import Leaderboard from './Leaderboard'
+import LiveTimingSidebar from './LiveTimingSidebar'
 import '@/css/pages/live-timing/live-timing.base.css'
 import '@/css/pages/live-timing/LiveTimingPanel.css'
 import { useRaceWebSocket } from '@/hooks/use-race-websocket'
@@ -11,16 +11,34 @@ interface LiveTimingPanelProps {
   circuitPath: string
   cameras: LiveTimingCamera[]
   leds: LiveTimingLed[]
+  user?: {
+    fullName?: string | null
+    pseudo?: string | null
+    initials?: string | null
+    avatarPath?: string | null
+    role?: string | null
+  }
 }
 
 const STACKED_BREAKPOINT = 1100
 const DEFAULT_FLAG: FlagState = { color: 'vert', sectors: [] }
 
-export default function LiveTimingPanel({ circuitPath, cameras, leds }: LiveTimingPanelProps) {
+export default function LiveTimingPanel({ circuitPath, cameras, leds, user }: LiveTimingPanelProps) {
   const [isStacked, setIsStacked] = useState(false)
   const [selectedDriverIds, setSelectedDriverIds] = useState<number[]>([])
 
-  const { drivers, cameras: reactiveCameras, leds: reactiveLeds, flag: wsFlag, raceState, isConnected, error } = useRaceWebSocket(cameras, leds)
+  const {
+    drivers,
+    cameras: reactiveCameras,
+    leds: reactiveLeds,
+    flag: wsFlag,
+    raceState,
+    chatMessages,
+    sendChatMessage,
+    deleteChatMessage,
+    isConnected,
+    error,
+  } = useRaceWebSocket(cameras, leds)
   const flag: FlagState = wsFlag ?? DEFAULT_FLAG
   const isRaceRunning = raceState?.status === 'running'
 
@@ -102,10 +120,18 @@ export default function LiveTimingPanel({ circuitPath, cameras, leds }: LiveTimi
             defaultSize={isStacked ? 58 : 48}
             minSize={30}
           >
-            <Leaderboard
+            <LiveTimingSidebar
               drivers={drivers}
               selectedDriverIds={selectedDriverIds}
               onDriverClick={handleLeaderboardClick}
+              chatMessages={chatMessages}
+              isConnected={isConnected}
+              onSendChatMessage={sendChatMessage}
+              onDeleteChatMessage={deleteChatMessage}
+              currentUserName={user?.fullName || user?.pseudo || 'Spectateur'}
+              currentUserInitials={user?.initials || null}
+              currentUserAvatarPath={user?.avatarPath || null}
+              currentUserRole={user?.role || null}
             />
           </ResizablePanel>
         </ResizablePanelGroup>
