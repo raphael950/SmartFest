@@ -43,9 +43,81 @@ export interface Registry {
       errorResponse: unknown
     }
   }
+  'new_account.store_identity': {
+    methods: ["POST"]
+    pattern: '/signup/identity'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'new_account.email_step': {
+    methods: ["GET","HEAD"]
+    pattern: '/signup/email'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'new_account.send_verification': {
+    methods: ["POST"]
+    pattern: '/signup/send-verification'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'new_account.waiting_step': {
+    methods: ["GET","HEAD"]
+    pattern: '/signup/waiting'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'new_account.finalization_step': {
+    methods: ["GET","HEAD"]
+    pattern: '/signup/finalization'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
   'new_account.store': {
     methods: ["POST"]
     pattern: '/signup'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'verify.email': {
+    methods: ["GET","HEAD"]
+    pattern: '/verify-email'
     types: {
       body: {}
       paramsTuple: []
@@ -70,6 +142,42 @@ export interface Registry {
   'session.store': {
     methods: ["POST"]
     pattern: '/login'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'password.send_reset': {
+    methods: ["POST"]
+    pattern: '/forgot-password'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'password.reset': {
+    methods: ["GET","HEAD"]
+    pattern: '/reset-password'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
+  'password.update': {
+    methods: ["POST"]
+    pattern: '/reset-password'
     types: {
       body: {}
       paramsTuple: []

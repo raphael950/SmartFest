@@ -24,11 +24,47 @@ const routes = {
     tokens: [{"old":"/signup","type":0,"val":"signup","end":""}],
     types: placeholder as Registry['new_account.create']['types'],
   },
+  'new_account.store_identity': {
+    methods: ["POST"],
+    pattern: '/signup/identity',
+    tokens: [{"old":"/signup/identity","type":0,"val":"signup","end":""},{"old":"/signup/identity","type":0,"val":"identity","end":""}],
+    types: placeholder as Registry['new_account.store_identity']['types'],
+  },
+  'new_account.email_step': {
+    methods: ["GET","HEAD"],
+    pattern: '/signup/email',
+    tokens: [{"old":"/signup/email","type":0,"val":"signup","end":""},{"old":"/signup/email","type":0,"val":"email","end":""}],
+    types: placeholder as Registry['new_account.email_step']['types'],
+  },
+  'new_account.send_verification': {
+    methods: ["POST"],
+    pattern: '/signup/send-verification',
+    tokens: [{"old":"/signup/send-verification","type":0,"val":"signup","end":""},{"old":"/signup/send-verification","type":0,"val":"send-verification","end":""}],
+    types: placeholder as Registry['new_account.send_verification']['types'],
+  },
+  'new_account.waiting_step': {
+    methods: ["GET","HEAD"],
+    pattern: '/signup/waiting',
+    tokens: [{"old":"/signup/waiting","type":0,"val":"signup","end":""},{"old":"/signup/waiting","type":0,"val":"waiting","end":""}],
+    types: placeholder as Registry['new_account.waiting_step']['types'],
+  },
+  'new_account.finalization_step': {
+    methods: ["GET","HEAD"],
+    pattern: '/signup/finalization',
+    tokens: [{"old":"/signup/finalization","type":0,"val":"signup","end":""},{"old":"/signup/finalization","type":0,"val":"finalization","end":""}],
+    types: placeholder as Registry['new_account.finalization_step']['types'],
+  },
   'new_account.store': {
     methods: ["POST"],
     pattern: '/signup',
     tokens: [{"old":"/signup","type":0,"val":"signup","end":""}],
     types: placeholder as Registry['new_account.store']['types'],
+  },
+  'verify.email': {
+    methods: ["GET","HEAD"],
+    pattern: '/verify-email',
+    tokens: [{"old":"/verify-email","type":0,"val":"verify-email","end":""}],
+    types: placeholder as Registry['verify.email']['types'],
   },
   'session.create': {
     methods: ["GET","HEAD"],
@@ -41,6 +77,24 @@ const routes = {
     pattern: '/login',
     tokens: [{"old":"/login","type":0,"val":"login","end":""}],
     types: placeholder as Registry['session.store']['types'],
+  },
+  'password.send_reset': {
+    methods: ["POST"],
+    pattern: '/forgot-password',
+    tokens: [{"old":"/forgot-password","type":0,"val":"forgot-password","end":""}],
+    types: placeholder as Registry['password.send_reset']['types'],
+  },
+  'password.reset': {
+    methods: ["GET","HEAD"],
+    pattern: '/reset-password',
+    tokens: [{"old":"/reset-password","type":0,"val":"reset-password","end":""}],
+    types: placeholder as Registry['password.reset']['types'],
+  },
+  'password.update': {
+    methods: ["POST"],
+    pattern: '/reset-password',
+    tokens: [{"old":"/reset-password","type":0,"val":"reset-password","end":""}],
+    types: placeholder as Registry['password.update']['types'],
   },
   'profile.me': {
     methods: ["GET","HEAD"],
