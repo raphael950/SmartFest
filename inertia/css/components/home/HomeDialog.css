@@ -99,6 +99,8 @@
   .home-team-dialog {
     width: min(92vw, 720px);
     padding: 22px 18px;
+    max-height: 80vh;
+    overflow-y: auto;
   }
 
   .home-team-dialog__header {
@@ -109,5 +111,9 @@
 
   .home-team-dialog__grid {
     grid-template-columns: 1fr;
+  }
+
+  .home-team-dialog__body {
+    display: none;
   }
 }
