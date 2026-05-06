@@ -209,6 +209,19 @@ class SocketService {
   public getRaceState(): RaceState {
     return this.raceState
   }
+
+  /**
+   * Émet une notification d'incident aux clients
+   */
+  public reportIncident(data: {
+    id: number
+    type: string
+    severity: string
+    sector: string
+    description?: string
+  }): void {
+    this.io?.emit('incident_reported', data)
+  }
 }
 
 const socketService = new SocketService()
