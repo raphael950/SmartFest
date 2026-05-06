@@ -10,6 +10,7 @@ export default class AccountApprovedMailer extends BaseMail {
   prepare() {
     this.message.htmlView('emails/account_approved', {
       user: this.user,
+      loginUrl: `${env.get('APP_URL')}/login`,
     })
     this.message.from(env.get('MAIL_FROM_ADDRESS'), env.get('MAIL_FROM_NAME'))
     this.message.to(this.user.email)
