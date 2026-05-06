@@ -100,7 +100,7 @@ export default function Login() {
               )}
             </Form>
           ) : (
-            <Form route="password.send_reset" method="POST" className="auth-form">
+            <Form route="password.send_reset" className="auth-form">
               {({ errors }) => (
                 <>
                   <div className="field">

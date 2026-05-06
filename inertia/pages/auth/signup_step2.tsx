@@ -28,7 +28,7 @@ export default function SignupStep2() {
             </div>
           ) : null}
 
-          <Form route="new_account.send_verification" method="POST" className="auth-form">
+          <Form route="new_account.send_verification" className="auth-form">
             {({ errors }) => (
               <>
                 <div className="field">

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Mail, CheckCircle2 } from 'lucide-react'
+import { Mail } from 'lucide-react'
 import { router } from '@inertiajs/react'
 import { usePage } from '@inertiajs/react'
 import '~/css/pages/auth/signup.css'
@@ -7,7 +7,7 @@ import '~/css/pages/auth/signup.css'
 export default function SignupStep3Waiting() {
   const { props } = usePage()
   const email = (props.email as string) || ''
-  const firstName = (props.firstName as string) || ''
+  // const firstName = (props.firstName as string) || ''
   const [resendIn, setResendIn] = useState(0)
 
   useEffect(() => {

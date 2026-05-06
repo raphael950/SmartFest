@@ -10,6 +10,7 @@ interface LiveTimingChatProps {
     authorName: string
     authorInitials: string
     avatarPath?: string | null
+    authorRole?: string | null
     text: string
     clientId: string
   }) => boolean
@@ -18,13 +19,6 @@ interface LiveTimingChatProps {
   currentUserInitials: string | null
   currentUserAvatarPath: string | null
   currentUserRole: string | null
-}
-
-function formatTime(timestamp: number) {
-  return new Intl.DateTimeFormat('fr-FR', {
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(timestamp)
 }
 
 function getInitials(name: string) {
@@ -50,6 +44,7 @@ function groupMessages(messages: LiveTimingChatMessage[]) {
       authorName: string
       authorInitials: string
       authorAvatarPath?: string | null
+      authorRole?: string | null
       clientId: string
       items: LiveTimingChatMessage[]
     }>
@@ -66,8 +61,8 @@ function groupMessages(messages: LiveTimingChatMessage[]) {
       key: message.id,
       authorName: message.authorName,
       authorInitials: message.authorInitials,
-      authorAvatarPath: (message as any).avatarPath ?? null,
-      authorRole: (message as any).authorRole ?? null,
+      authorAvatarPath: message.avatarPath ?? null,
+      authorRole: message.authorRole ?? null,
       clientId: message.clientId,
       items: [message],
     })

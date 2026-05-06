@@ -43,10 +43,10 @@ export default class PasswordController {
     // Validate the signed URL
     if (!request.hasValidSignature()) {
       session.flash('error', 'Lien de réinitialisation invalide ou expiré.')
-      return inertia.render('auth/login')
+      return inertia.render('auth/login', {})
     }
 
-    return inertia.render('auth/reset_password')
+    return inertia.render('auth/reset_password', {})
   }
 
   /**

@@ -13,7 +13,7 @@ export default class NewAccountController {
    * Step 1: Get identity (name, firstname)
    */
   async create({ inertia }: HttpContext) {
-    return inertia.render('auth/signup_step1')
+    return inertia.render('auth/signup_step1', {})
   }
 
   /**
@@ -42,7 +42,7 @@ export default class NewAccountController {
     const firstName = session.get('signup_firstName')
 
     if (!fullName || !firstName) {
-      return inertia.render('auth/signup_step1')
+      return inertia.render('auth/signup_step1', {})
     }
 
     return inertia.render('auth/signup_step2', {
@@ -60,7 +60,7 @@ export default class NewAccountController {
         .string()
         .email()
         .maxLength(254)
-        .unique({ table: 'users', column: 'email' }, { message: 'Cet email est déjà utilisé par un autre compte.' }),
+        .unique({ table: 'users', column: 'email' }),
     })
 
     const { email } = await request.validateUsing(emailValidator)
@@ -105,7 +105,7 @@ export default class NewAccountController {
     const firstName = session.get('signup_firstName')
 
     if (!email || !fullName || !firstName) {
-      return inertia.render('auth/signup_step1')
+      return inertia.render('auth/signup_step1', {})
     }
 
     return inertia.render('auth/signup_step3_waiting', {
@@ -146,7 +146,7 @@ export default class NewAccountController {
     const firstName = session.get('signup_firstName')
 
     if (!email || !fullName || !firstName) {
-      return inertia.render('auth/signup_step1')
+      return inertia.render('auth/signup_step1', {})
     }
 
     const teams = await Team.query().orderBy('display_order', 'asc').orderBy('name', 'asc')
@@ -214,7 +214,10 @@ export default class NewAccountController {
     })
 
     // Clear session data
-    session.forget(['signup_email_verified', 'signup_fullName', 'signup_firstName', 'signup_email'])
+    session.forget('signup_email_verified')
+    session.forget('signup_fullName')
+    session.forget('signup_firstName')
+    session.forget('signup_email')
 
     // If first user, auto-login
     if (!hasExistingUser) {

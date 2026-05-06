@@ -40,8 +40,8 @@ export default function Signup({ teams }: InertiaProps<SignupProps>) {
               <div className="signup-step">Étape 1/2</div>
             </div>
 
-            <Form route="register.verify_email" method="POST" className="auth-form">
-              {({ errors, isSubmitting }) => (
+            <Form route="new_account.send_verification" className="auth-form">
+              {({ errors }) => (
                 <>
                   <div className="field">
                     <label htmlFor="email">Adresse Email</label>
@@ -61,8 +61,8 @@ export default function Signup({ teams }: InertiaProps<SignupProps>) {
                     {errors.email ? <div className="field-error">{errors.email}</div> : null}
                   </div>
 
-                  <button type="submit" className="auth-submit" disabled={isSubmitting}>
-                    {isSubmitting ? 'Envoi...' : 'Confirmer l\'email'}
+                  <button type="submit" className="auth-submit">
+                    Confirmer l'email
                   </button>
 
                   <div className="signup-footer-inline">

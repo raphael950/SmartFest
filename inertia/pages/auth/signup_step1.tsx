@@ -13,7 +13,7 @@ export default function SignupStep1() {
             <div className="signup-step">Étape 1/4</div>
           </div>
 
-          <Form route="new_account.store_identity" method="POST" className="auth-form">
+          <Form route="new_account.store_identity" className="auth-form">
             {({ errors }) => (
               <>
                 <div className="field">

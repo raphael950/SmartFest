@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react'
 import { Briefcase, CalendarDays, Eye, EyeOff, Lock, Mail, Trophy, UserRound, VenusAndMars } from 'lucide-react'
 import { usePage } from '@inertiajs/react'
 import '~/css/pages/auth/signup.css'
-import type { InertiaProps } from '~/types'
+
 
 interface TeamOption {
   id: number

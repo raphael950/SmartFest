@@ -8,7 +8,6 @@ export default function ResetPassword() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const [isLoading, setIsLoading] = useState(false)
   const { flash } = usePage().props as {
     flash?: { error?: string; success?: string }
   }
@@ -21,7 +20,6 @@ export default function ResetPassword() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setErrors({})
-    setIsLoading(true)
     
     const formData = new FormData(e.currentTarget)
     const password = formData.get('password') as string
@@ -30,19 +28,16 @@ export default function ResetPassword() {
     // Client-side validation
     if (!password || !passwordConfirmation) {
       setErrors({ form: 'Veuillez remplir tous les champs.' })
-      setIsLoading(false)
       return
     }
 
     if (password !== passwordConfirmation) {
       setErrors({ form: 'Les mots de passe ne correspondent pas.' })
-      setIsLoading(false)
       return
     }
 
     if (password.length < 8) {
       setErrors({ form: 'Le mot de passe doit contenir au moins 8 caractères.' })
-      setIsLoading(false)
       return
     }
 
