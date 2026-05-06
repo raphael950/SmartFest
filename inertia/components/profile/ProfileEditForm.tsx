@@ -96,7 +96,7 @@ const ProfileEditForm = ({ profile, teams, hasPublicProfile }: ProfileEditFormPr
                   name="fullName"
                   type="text"
                   defaultValue={profile.fullName || ''}
-                  placeholder="Alex Martin"
+                  placeholder="Votre nom complet"
                   data-invalid={errors.fullName ? 'true' : undefined}
                 />
               </div>

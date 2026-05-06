@@ -14,12 +14,25 @@ export interface ApiDefinition {
   }
   newAccount: {
     create: typeof routes['new_account.create']
+    storeIdentity: typeof routes['new_account.store_identity']
+    emailStep: typeof routes['new_account.email_step']
+    sendVerification: typeof routes['new_account.send_verification']
+    waitingStep: typeof routes['new_account.waiting_step']
+    finalizationStep: typeof routes['new_account.finalization_step']
     store: typeof routes['new_account.store']
+  }
+  verify: {
+    email: typeof routes['verify.email']
   }
   session: {
     create: typeof routes['session.create']
     store: typeof routes['session.store']
     destroy: typeof routes['session.destroy']
+  }
+  password: {
+    sendReset: typeof routes['password.send_reset']
+    reset: typeof routes['password.reset']
+    update: typeof routes['password.update']
   }
   networking: {
     index: typeof routes['networking.index']

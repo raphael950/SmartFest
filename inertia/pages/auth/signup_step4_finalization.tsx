@@ -1,20 +1,24 @@
 import { Form, Link } from '@adonisjs/inertia/react'
 import { useMemo, useState } from 'react'
-import { Briefcase, CalendarDays, Eye, EyeOff, Lock, Mail, Trophy, User, UserRound, VenusAndMars } from 'lucide-react'
+import { Briefcase, CalendarDays, Eye, EyeOff, Lock, Mail, Trophy, UserRound, VenusAndMars } from 'lucide-react'
 import { usePage } from '@inertiajs/react'
 import '~/css/pages/auth/signup.css'
-import type { InertiaProps } from '~/types'
-import type { SignupProps, TeamOption } from '~/types/signup.types'
 
-export default function Signup({ teams }: InertiaProps<SignupProps>) {
+
+interface TeamOption {
+  id: number
+  label: string
+}
+
+export default function SignupStep4Finalization() {
   const { props } = usePage()
-  const step = (props.step as number) || 1
-  const verifiedEmail = (props.verifiedEmail as string) || null
+  const email = (props.email as string) || ''
+  const firstName = (props.firstName as string) || ''
+  const teams = (props.teams as TeamOption[]) || []
 
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
   const [password, setPassword] = useState('')
-  const [email, setEmail] = useState('')
 
   const strength = useMemo(() => {
     if (!password) return 0
@@ -28,77 +32,46 @@ export default function Signup({ teams }: InertiaProps<SignupProps>) {
 
   const strengthText = ['', 'Faible', 'Moyen', 'Bon', 'Excellent']
 
-  // Step 1: Email verification
-  if (step === 1) {
-    return (
-      <div className="auth-page signup-page">
-        <div className="auth-card signup-card">
-          <div className="auth-inner">
-            <div className="auth-header signup-header">
-              <h1>Creer votre compte</h1>
-              <p>Entrez votre adresse email pour commencer votre inscription sur SmartFest.</p>
-              <div className="signup-step">Étape 1/2</div>
-            </div>
-
-            <Form route="new_account.send_verification" className="auth-form">
-              {({ errors }) => (
-                <>
-                  <div className="field">
-                    <label htmlFor="email">Adresse Email</label>
-                    <div className="input-wrap">
-                      <Mail size={18} className="field-icon" />
-                      <input
-                        id="email"
-                        name="email"
-                        type="email"
-                        autoComplete="email"
-                        placeholder="festivalier@gmail.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        data-invalid={errors.email ? 'true' : undefined}
-                      />
-                    </div>
-                    {errors.email ? <div className="field-error">{errors.email}</div> : null}
-                  </div>
-
-                  <button type="submit" className="auth-submit">
-                    Confirmer l'email
-                  </button>
-
-                  <div className="signup-footer-inline">
-                    <p>
-                      Déjà un compte ? <Link route="session.create">Se connecter</Link>
-                    </p>
-                  </div>
-                </>
-              )}
-            </Form>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  // Step 2: Complete registration
   return (
     <div className="auth-page signup-page">
       <div className="auth-card signup-card">
         <div className="auth-inner">
           <div className="auth-header signup-header">
-            <h1>Creer votre compte</h1>
-            <p>Completez vos informations pour acceder a votre espace et aux services SmartFest.</p>
-            <div className="signup-step">Étape 2/2</div>
+            <h1>Finalisez votre profil</h1>
+            <p>Bienvenue {firstName} ! Complétez vos informations pour créer votre compte.</p>
+            <div className="signup-step">Étape 4/4</div>
           </div>
 
           <Form route="new_account.store" className="auth-form">
             {({ errors }) => (
               <>
                 {/* Hidden email input to submit with form */}
-                <input type="hidden" name="email" value={verifiedEmail || ''} />
+                <input type="hidden" name="email" value={email} />
 
                 <div className="signup-columns">
                   <section className="signup-section">
-                    <h2>Identité</h2>
+                    <h2>Email vérifié</h2>
+
+                    <div className="field">
+                      <label htmlFor="email-display">Adresse Email</label>
+                      <div className="input-wrap">
+                        <Mail size={18} className="field-icon" />
+                        <input
+                          id="email-display"
+                          type="email"
+                          disabled
+                          value={email}
+                          style={{ opacity: 0.6, cursor: 'not-allowed' }}
+                        />
+                      </div>
+                      <small style={{ color: '#64748b', fontSize: '12px' }}>
+                        Email vérifié et ne peut pas être modifié
+                      </small>
+                    </div>
+                  </section>
+
+                  <section className="signup-section">
+                    <h2>Profil public</h2>
 
                     <div className="field">
                       <label htmlFor="pseudo">Pseudo public</label>
@@ -115,41 +88,6 @@ export default function Signup({ teams }: InertiaProps<SignupProps>) {
                       </div>
                       {errors.pseudo ? <div className="field-error">{errors.pseudo}</div> : null}
                     </div>
-
-                    {/* Display verified email but disabled */}
-                    <div className="field">
-                      <label htmlFor="email-display">Adresse Email</label>
-                      <div className="input-wrap">
-                        <Mail size={18} className="field-icon" />
-                        <input
-                          id="email-display"
-                          type="email"
-                          placeholder={verifiedEmail || 'festivalier@gmail.com'}
-                          disabled
-                          value={verifiedEmail || ''}
-                          style={{ opacity: 0.6 }}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="field">
-                      <label htmlFor="fullName">Nom complet</label>
-                      <div className="input-wrap">
-                        <User size={18} className="field-icon" />
-                        <input
-                          id="fullName"
-                          name="fullName"
-                          type="text"
-                          placeholder="Votre nom complet"
-                          data-invalid={errors.fullName ? 'true' : undefined}
-                        />
-                      </div>
-                      {errors.fullName ? <div className="field-error">{errors.fullName}</div> : null}
-                    </div>
-                  </section>
-
-                  <section className="signup-section">
-                    <h2>Profil public</h2>
 
                     <div className="signup-grid-two">
                       <div className="field">

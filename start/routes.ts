@@ -17,6 +17,7 @@ import NetworkingController from '#controllers/networking_controller'
 import LiveTimingController from '#controllers/live_timing_controller'
 import NewAccountController from '#controllers/new_account_controller'
 import SessionController from '#controllers/session_controller'
+import PasswordController from '#controllers/password_controller'
 import RaceController from '#controllers/race_controller'
 import ConnectedObjectsController from '#controllers/connected_objects_controller'
 import User from '#models/user'
@@ -55,11 +56,21 @@ router
 
 router
   .group(() => {
+    // Registration flow (4 steps)
     router.get('signup', [NewAccountController, 'create']).as('new_account.create')
+    router.post('signup/identity', [NewAccountController, 'storeIdentity']).as('new_account.store_identity')
+    router.get('signup/email', [NewAccountController, 'emailStep']).as('new_account.email_step')
+    router.post('signup/send-verification', [NewAccountController, 'sendVerificationEmail']).as('new_account.send_verification')
+    router.get('signup/waiting', [NewAccountController, 'waitingStep']).as('new_account.waiting_step')
+    router.get('signup/finalization', [NewAccountController, 'finalizationStep']).as('new_account.finalization_step')
     router.post('signup', [NewAccountController, 'store']).as('new_account.store')
+    router.get('verify-email', [NewAccountController, 'confirmEmail']).as('verify.email')
 
     router.get('login', [SessionController, 'create']).as('session.create')
     router.post('login', [SessionController, 'store']).as('session.store')
+    router.post('forgot-password', [PasswordController, 'sendResetLink']).as('password.send_reset')
+    router.get('reset-password', [PasswordController, 'showResetForm']).as('password.reset')
+    router.post('reset-password', [PasswordController, 'resetPassword']).as('password.update')
   })
   .use(middleware.guest())
 

@@ -2,6 +2,8 @@ import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
 import { USER_ROLE_LABELS, hasMinimumRole, parseUserRole } from '#models/user_role'
 import userLevelService from '#services/user_level_service'
+import mail from '@adonisjs/mail/services/main'
+import AccountApprovedMailer from '#mailers/account_approved_mailer'
 
 export default class AdminUsersController {
   async index({ inertia }: HttpContext) {
@@ -42,6 +44,9 @@ export default class AdminUsersController {
     if (!user.isVerified) {
       user.isVerified = true
       await user.save()
+
+      // Send account approval email
+      await mail.send(new AccountApprovedMailer(user))
     }
 
     session.flash('success', `Compte valide pour ${user.email}.`)
