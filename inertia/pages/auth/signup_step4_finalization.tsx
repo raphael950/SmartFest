@@ -13,7 +13,7 @@ interface TeamOption {
 export default function SignupStep4Finalization() {
   const { props } = usePage()
   const email = (props.email as string) || ''
-  const firstName = (props.firstName as string) || ''
+  const fullName = (props.fullName as string) || ''
   const teams = (props.teams as TeamOption[]) || []
 
   const [showPassword, setShowPassword] = useState(false)
@@ -38,7 +38,7 @@ export default function SignupStep4Finalization() {
         <div className="auth-inner">
           <div className="auth-header signup-header">
             <h1>Finalisez votre profil</h1>
-            <p>Bienvenue {firstName} ! Complétez vos informations pour créer votre compte.</p>
+            <p>Bienvenue {fullName} ! Complétez vos informations pour créer votre compte.</p>
             <div className="signup-step">Étape 4/4</div>
           </div>
 

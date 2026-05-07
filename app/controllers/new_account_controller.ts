@@ -22,14 +22,12 @@ export default class NewAccountController {
   async storeIdentity({ request, response, session }: HttpContext) {
     const identityValidator = vine.create({
       fullName: vine.string().trim().minLength(2).maxLength(140),
-      firstName: vine.string().trim().minLength(2).maxLength(140),
     })
 
-    const { fullName, firstName } = await request.validateUsing(identityValidator)
+    const { fullName } = await request.validateUsing(identityValidator)
 
     // Store in session
     session.put('signup_fullName', fullName)
-    session.put('signup_firstName', firstName)
 
     return response.redirect().toRoute('new_account.email_step')
   }
@@ -39,15 +37,13 @@ export default class NewAccountController {
    */
   async emailStep({ inertia, session }: HttpContext) {
     const fullName = session.get('signup_fullName')
-    const firstName = session.get('signup_firstName')
 
-    if (!fullName || !firstName) {
+    if (!fullName) {
       return inertia.render('auth/signup_step1', {})
     }
 
     return inertia.render('auth/signup_step2', {
       fullName,
-      firstName,
     })
   }
 
@@ -66,7 +62,6 @@ export default class NewAccountController {
     const { email } = await request.validateUsing(emailValidator)
 
     const fullName = session.get('signup_fullName')
-    const firstName = session.get('signup_firstName')
 
     // Generate a signed verification URL (1 hour expiry)
     const signedPath = router.makeSignedUrl(
@@ -74,7 +69,7 @@ export default class NewAccountController {
       {},
       {
         expiresIn: '1h',
-        qs: { email, fullName, firstName },
+        qs: { email, fullName },
       }
     )
     const verificationUrl = `${env.get('APP_URL')}${signedPath}`
@@ -83,11 +78,11 @@ export default class NewAccountController {
     const tempUser = {
       email,
       fullName,
-      pseudo: firstName,
+      pseudo: fullName,
     }
 
-    // Send verification email with firstName included
-    await mail.send(new VerifyEmailMailer(tempUser as any, verificationUrl, firstName))
+    // Send verification email
+    await mail.send(new VerifyEmailMailer(tempUser as any, verificationUrl))
 
     // Store email in session
     session.put('signup_email', email)
@@ -102,15 +97,14 @@ export default class NewAccountController {
   async waitingStep({ inertia, session }: HttpContext) {
     const email = session.get('signup_email')
     const fullName = session.get('signup_fullName')
-    const firstName = session.get('signup_firstName')
 
-    if (!email || !fullName || !firstName) {
+    if (!email || !fullName) {
       return inertia.render('auth/signup_step1', {})
     }
 
     return inertia.render('auth/signup_step3_waiting', {
       email,
-      firstName,
+      fullName,
     })
   }
 
@@ -126,12 +120,10 @@ export default class NewAccountController {
 
     const email = request.input('email')
     const fullName = request.input('fullName')
-    const firstName = request.input('firstName')
 
     // Store verified info in session
     session.put('signup_email_verified', email)
     session.put('signup_fullName', fullName)
-    session.put('signup_firstName', firstName)
 
     // Redirect to finalization page
     return response.redirect().toRoute('new_account.finalization_step')
@@ -143,9 +135,8 @@ export default class NewAccountController {
   async finalizationStep({ inertia, session }: HttpContext) {
     const email = session.get('signup_email_verified')
     const fullName = session.get('signup_fullName')
-    const firstName = session.get('signup_firstName')
 
-    if (!email || !fullName || !firstName) {
+    if (!email || !fullName) {
       return inertia.render('auth/signup_step1', {})
     }
 
@@ -154,7 +145,6 @@ export default class NewAccountController {
     return inertia.render('auth/signup_step4_finalization', {
       email,
       fullName,
-      firstName,
       teams: teams.map((team) => ({
         id: team.id,
         label: team.name,
@@ -168,9 +158,8 @@ export default class NewAccountController {
   async store({ request, response, session, auth }: HttpContext) {
     const email = session.get('signup_email_verified')
     const fullName = session.get('signup_fullName')
-    const firstName = session.get('signup_firstName')
 
-    if (!email || !fullName || !firstName) {
+    if (!email || !fullName) {
       session.flash('error', 'Session expirée. Veuillez recommencer.')
       return response.redirect().toRoute('new_account.create')
     }
@@ -216,7 +205,6 @@ export default class NewAccountController {
     // Clear session data
     session.forget('signup_email_verified')
     session.forget('signup_fullName')
-    session.forget('signup_firstName')
     session.forget('signup_email')
 
     // If first user, auto-login

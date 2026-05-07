@@ -5,7 +5,7 @@ import '~/css/pages/auth/signup.css'
 
 export default function SignupStep2() {
   const { props } = usePage()
-  const firstName = (props.firstName as string) || ''
+  const fullName = (props.fullName as string) || ''
 
   const { flash } = usePage().props as {
     flash?: { error?: string; success?: string }
@@ -17,7 +17,7 @@ export default function SignupStep2() {
         <div className="auth-inner">
           <div className="auth-header signup-header">
             <h1>Creer votre compte</h1>
-            <p>Entrez votre adresse email pour continuer, {firstName}.</p>
+            <p>Entrez votre adresse email pour continuer, {fullName}.</p>
             <div className="signup-step">Étape 2/4</div>
           </div>
 

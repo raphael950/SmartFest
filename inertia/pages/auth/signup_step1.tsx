@@ -31,21 +31,6 @@ export default function SignupStep1() {
                   {errors.fullName ? <div className="field-error">{errors.fullName}</div> : null}
                 </div>
 
-                <div className="field">
-                  <label htmlFor="firstName">Prénom</label>
-                  <div className="input-wrap">
-                    <User size={18} className="field-icon" />
-                    <input
-                      id="firstName"
-                      name="firstName"
-                      type="text"
-                      placeholder="Prénom"
-                      data-invalid={errors.firstName ? 'true' : undefined}
-                    />
-                  </div>
-                  {errors.firstName ? <div className="field-error">{errors.firstName}</div> : null}
-                </div>
-
                 <button type="submit" className="auth-submit">
                   Suivant
                 </button>
